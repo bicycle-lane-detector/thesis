@@ -1,0 +1,90 @@
+% Hier wird der theoretische Teil vorgenommen. 
+
+\chapter{Stand der Technik}
+
+Im Folgenden werden die theoretischen Grundlagen dargelegt. Hierzu wird zunächst etwas Graphentheorie behandelt, um diese dann im Kapitel zu Submodellen anzuwenden. Hier wird auch die Grundlegende Struktur der Supply-Chain und des Problems untersucht, welche für das weitere Vorgehen essentiell ist. Dann werden Algorithmen zur Ähnlichkeitsbestimmung aus der Literatur vorgestellt und schließlich  verschiedene Datenstrukturen der C++ Standardbibliothek untersucht und verglichen, um im Implementationsteil damit hohe Performanz zu gewährleisten.
+
+\section{Graphentheorie}
+
+Dieser Abschnitt wird grundlegende graphentheoretische Begriffe definieren, die Darstellung in Computersystemen diskutieren, sowie einige einfache Algorithmen anführen, die für die weitere Arbeit relevant sind.
+
+\subsection{Definitionen}
+
+
+\textbf{Teilgraph} \\
+Sei $G = (V, E)$ ein Graph. $T = (V', E') \subseteq G$ mit $V' \subseteq V$ und $E' \subseteq \{\{x,y\} \in E \mid x, y \in V'\}$ heißt \textit{Teilgraph} von $G$ ~\cite[S.~4]{Diestel.2016}.  
+
+
+\textbf{Eingangs- und Ausgangsgrad im Digraph} \\
+Sei $G = (V, E)$ ein Digraph und $v \in V$ ein Knoten in $G$, dann heißt $d^-_G(v) = | \{(x, y) \in E \mid y = v\} |$ der \textit{Eingangsgrad} von $v$ und $d^+_G(v) = | \{(x, y) \in E \mid x = v\} |$ der \textit{Ausgangsgrad} von $v$. Im klaren Kontext kann die Indizierung mit dem Graphen weggelassen werden. Knoten $v$ mit $d^-(v) = 0$ heißen  \textit{Quellen} und Knoten $v$ mit $d^+(v) = 0$ heißen  \textit{Senken} ~\cite[S.~460]{Satyanarayana.2014}.
+
+\textbf{Pfade} \\ 
+Ein \textit{Pfad} ist ein nicht-leerer, gerichteter Graph $P = (V, E)$ der Form $V = \{x_0, x_1, ..., x_k\};~E=\{(x_0,x_1), (x_1, x_2), ..., (x_{k-1}, x_k)\}$ wobei alle $x_i$ paarweise verschieden sind. Die Knoten $x_0$ und $x_k$ heißen \textit{Endknoten} (bzw. \textit{Start-} und \textit{Endknoten} im Digraph) und sind \textit{verbunden} durch $P$ ~\cite[S.~6]{Diestel.2016}. Pfade lassen sich auch als Folge ihrer aufeinander folgenden Knoten schreiben: $P = x_0x_1...x_k$ ~\cite[S.~7]{Diestel.2016}~\cite[S.~475]{Sedgewick.1992}. 
+
+
+\textbf{Zyklen} \\
+Sei $P = x_0...x_{k-1}$ ein Pfad und $k \geq 3$, dann ist der Graph $C := P + x_{k-1}x_0 = x_0...x_{k-1}x_0$ ein \textit{Zyklus} ~\cite[S.~8]{Diestel.2016}~\cite[S.~475]{Sedgewick.1992}.
+
+
+\textbf{Transitive Hülle eines Knotens} \\
+Sei $G = (V, E)$ ein Graph und $v \in V$ ein Knoten in $G$. Im Kontext
+ dieser Arbeit sei die \textit{transitive Hülle eines Knotens} $v$ definiert
+  als der Teilgraph $v^*_G := (V_v, E_v) \subseteq G$ 
+  mit $V_v = \{x \in V \mid \exists P \subseteq G: P=x...v\}$ 
+  und $E_v = \{ (x,y) \in E \mid x,y \in V_v \}$. 
+  Also der Teilgraph in $G$, der alle Knoten und dazugehörigen Kanten enthält, von denen $v$ erreichbar ist. Es handelt sich bei dieser Definition also um einen \enquote{umgekehrten Erreichbarkeits-Teilgraph} ~\cite[S.~41--42]{Sandner.01.09.1998}.
+
+
+
+\subsection{Tiefensuche (DFS)}
+
+\autoref{code:dfs} zeigt eine Implementation der Funktion zur rekursiven Tiefensuche in C++ mit Adjazenzlisten als Graphrepräsentation. Hierbei ist \code{adj} ein Feld mit den (Adjazenz-)Listen und \code{visited} ein Array, welches jedem Knoten die Markierung ob er schon besucht wurde zuweist.
+
+\lstinputlisting[
+	label=code:dfs,    % Label; genutzt für Referenzen auf dieses Code-Beispiel
+	caption=Rekursive Implementation der Tiefensuche mit Adjazenzlisten in C++. (In Anlehnung an \cite{GeeksforGeeks.2012}.),
+	captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
+	style=EigenerCppStyle,   % Eigener Style der vor dem Dokument festgelegt wurde
+	firstline=1,                % Zeilennummer im Dokument welche als erste angezeigt wird
+	lastline=8                 % Letzte Zeile welche ins LaTeX Dokument übernommen wird
+]{Quellcode/dfs.cpp}
+
+
+\section{Submodelle} \label{sec:submodelle}
+
+Die Submodelle werden durch die \ac{ProdDeco} aus dem (Haupt-)Modell des Szenarios erstellt. Dabei wird für \ac{SNP} und \ac{SOP} gleichermaßen verfahren. 
+
+\subsection{Elementtypen} \label{sec:elements}
+Das Modell eines Szenarios beinhaltet Elemente mit verschiedenen Elementtypen, wovon die wichtigsten im Folgenden vereinfacht vorgestellt werden:
+
+\begin{itemize}
+\item \textit{Quota Arrangement} - Ein vordefiniertes Kontingent an Materialbezug bzw. Materialverteilung, welches während des Optimierungslaufs strikt eingehalten werden muss \cite{.20220812c}. \\ Ein Beispiel wäre hierfür: Es werden 100 Stück von Produkt P1 an Lokation L1 benötigt. Es bestehen folgende Quota Arrangements: \begin{itemize}
+\item Genau 40\% des Bedarfs müssen über einen Transport von Lokation L2 gedeckt werden.
+\item Mindestens 10\% müssen über einen Transport von Lokation L3 gedeckt werden.
+\item Genau 20\% müssen von einer Produktion in L1 gedeckt werden.
+\end{itemize} 
+\item \textit{Ressource} - Ein lokations-gebundenes Asset mit begrenzter Kapazität, welches eine bestimmte Funktion in der Supply Chain erfüllt. Die Ressource gehört zu genau einer Lokation, aber ihre Kapazität kann auf mehrere Produkte aufgeteilt werden. Beispiele: Eine Maschine, eine Person, ein Lager oder ein Transportmittel \cite{.20220812b}.
+\end{itemize}
+
+\section{Ähnlichkeitsmaße zwischen Graphen in der Literatur} \label{sec:sim_lit}
+
+Im Folgenden wird eine Auswahl an Ähnlichkeitsmaßen zwischen Graphen aus der Literatur vorgestellt.
+
+\subsubsection{Azyklischer Graph Edit Distance} \label{sec:sim_edit_dist}
+
+Die \textit{Azyklischer Graph Edit Distance} beschreibt die minimale Anzahl an elementaren Veränderungen (Einfügen, Löschen, Umbenennen von Knoten), die durchgeführt werden müssen, um aus einem azyklischen (ungerichteten) Graph einen anderen zu machen \cite{Zhang.1989}. Hierbei wird allerdings rein die Ähnlichkeit der Struktur ermittelt.
+
+\subsubsection{Similarity Flooding} \label{sec:sim_flooding}
+
+Beim \textit{Similarity Flooding} wird die initiale Ähnlichkeit zweier Elemente aus zwei zu vergleichenden Graphen berechnet und diese Ähnlichkeit dann per Fixpunktiteration an benachbarte Knoten propagiert \cite{S.Melnik.2002}. Es läuft also unter der Annahme, dass aus dem Finden zweier ähnlicher Elemente eine Ähnlichkeit für die Nachbarelemente folgt. 
+
+\subsubsection{Similarity of Weighted Directed Acyclic Graphs} \label{sec:sim_dag}
+
+Sei $G = (V, E)$ ein \ac{DAG}. \textit{Similarity of Weighted Directed Acyclic Graphs} beschreibt einen Algorithmus zur effizienten Bestimmung der Ähnlichkeit von weighted \acp{DAG} \cite{Jin.2004}.
+ 
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{Bilder/GCC_timings_10M.jpg} 
+	\caption{Lookup-Performanceunterschiede zwischen Map (rot), Set (blau), Flat\_Map (gelb), Flat\_Set (hellblau), Hash-Map (violett), Hash-Set (grün). Abszisse: Container-Größe 0, 2 Mio., ..., 12 Mio. Ordinate: Time in Ticks.\\ Flat\_X ist herbei ein sortierter Vektor \cite{.20220811}.\\ (Abb. entnommen aus \cite{.20220819b}.)}
+	\label{fig:container_perf}
+\end{figure} 

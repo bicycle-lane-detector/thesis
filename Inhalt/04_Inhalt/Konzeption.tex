@@ -1,0 +1,76 @@
+\chapter{Konzeption} % Das würde eigentlich 'Konzeption' heißen aber Tichy wirkt stark in mir
+
+
+
+
+
+\section{Algorithmus zur Reduktion eines Materialflussgraphen} \label{sec:reduction}
+
+Beim Reduzieren der Submodellgraphen ist es wichtig die Wert-Information der reduzierten Knoten nicht zu verlieren. Hierzu werden zuerst die Werte der Knoten aus $R$ zu dem jeweils topologisch-sortiert nächsten Knoten $f \in F$ propagiert, der von einem $r \in R$ erreichbar ist. \\
+Folglich wird zunächst $G$ topologisch sortiert. Dann wird über diese Sortierung iteriert. Ist der derzeitige Knoten in $R$, so wird sein Wert auf den Wert des per Definition einen Nachfolgerknotens addiert. Ist der derzeitige Knoten in $F$, wird nichts unternommen. Die topologische Sortierung garantiert, dass alle Vorgängerknoten eines Knoten in $R$ ihren Wert propagiert haben, bevor er selbst seinen Wert propagiert. \autoref{lst:prop} stellt den eben beschriebenen Algorithmus dar.
+
+\begin{algorithm}
+	\caption{Algorithmus zum Propagieren und Akkumulieren von Knotenwerten.}\label{lst:prop}
+	\begin{algorithmic}[1]
+		\Procedure{Reduce}{$G = (V,E)$} \Comment{$\forall v \in V: value(v) = weight(type(v))$}
+			\State $sortedNodes \gets topoSort(G)$
+			\For{$v \in sortedNodes$}\Comment{iteration in topological order}
+				\If{$v \in R$} 
+					\State $succ \gets successor(v)$ \Comment{$d^+_G(v) = 1$}
+					\State $value(succ) \gets value(succ) + value(v)$
+				\EndIf
+			\EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Nun da alle Knoten die neuen kumulierten Werte haben, lassen sich die reduzierbaren Knoten $r \in R$ entfernen. 
+
+\mathchardef\mhyphen="2D
+
+\begin{algorithm}
+	\caption{Algorithmus zum Kopieren nötiger Kanten von reduzierten Knoten.}\label{lst:reduce}
+	\begin{algorithmic}[1]
+		\Procedure{Reduce}{$G = (V,E), C = (F, E_F)$} \Comment{$E_F = \emptyset$}
+			\State $sortedNodes \gets topoSort(G)$
+			\For{$v \in sortedNodes$}\Comment{iteration in topological order}
+				\If{$v \in F$} 
+					\For{$succ \in successors(v)$}\Comment{$d^+_G(v) \neq 1$}
+						\If{$succ \in F$}
+							\State $E_F \gets E_F \cup \{(v, succ)\}$ \Comment{copy $fork \rightarrow fork$}
+						\EndIf
+					\EndFor
+				\Else \Comment{$v \in R$}
+					\State $succ \gets successor(v)$ \Comment{$d^+_G(v) = 1$}
+					\For{$pred \in predecessors(v)$}
+						\If{$pred \in F \land succ \in R$}
+							\State $E \gets E \cup \{(pred, succ)\}$\Comment{connect $fork \rightarrow non \mhyphen fork$}
+						\ElsIf {$pred \in F \land succ \in F$}
+							\State $E_F \gets E_F \cup \{(pred, succ)\}$ \Comment{copy $fork \rightarrow fork$}
+						\EndIf
+					\EndFor
+				\EndIf
+			\EndFor\label{euclidendwhile}
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\pagebreak % manueller seitenumbruch
+
+\section{Gänzliche Einsparung gemeinsamer Teilgraphen} \label{sec:skip_entirely}
+
+\begin{wrapfigure}{l}{0.35\textwidth}
+	\centering
+	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.30\textwidth]{Bilder/problem_illustration.pdf}
+	\vspace{-10pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[Minimalbeispiel zur Teilgraph-Überspringungs-Problematik. Legende wie in \autoref{fig:trans_closures}.]{\unskip}
+	Minimalbeispiel zur Teilgraph-Überspringungsproblematik. Legende wie in Abb. \ref{fig:trans_closures}.
+	\label{fig:prob_illu}
+\end{wrapfigure}
+
+Leider lassen sich bei dem Vergleich zweier Submodelle gemeinsame Teilgraphen nicht gänzlich einsparen, indem der Similarity-Wert über Forks hinaus propagiert wird, um so jedem Knoten im Graph die Summe aller Knotenwerte unter ihm zuzuordnen, da ein gemeinsamer Teilgraph über mehrere Forks betreten werden kann (z.B. der Teilgraph der Schnittmenge von grün und lila in \autoref{fig:trans_closures} kann über Knoten 6 und 5 betreten werden) und nur der maximale Teilgraph gezählt werden darf - ansonsten würde es zu einer doppelten Wertung eines oder mehrerer Knoten kommen. Auch ist die Maximalität  des gemeinsamen Teilgraphen nur mit erheblichen Rechenaufwand, der dem Prinzip des Auslassens entgegensteht, zu überprüfen. Der Graph aus \autoref{fig:prob_illu} ist zur Veranschaulichung geeignet: Es ist schwierig Knoten 4 mit Wert 1 genau einmal zu zählen. Wird Knoten 3 betreten und der restliche Teilgraph (Knoten 4) übersprungen, so wird der Wert 3 zur Similarity addiert.

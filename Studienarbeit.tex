@@ -1,0 +1,123 @@
+% ------------------------------------------------------------
+% LaTeX Template für die DHBW zum Schnellstart!
+% Original: https://github.wdf.sap.corp/vtgermany/LaTeX-Template-DHBW
+% ------------------------------------------------------------
+% ---- Präambel mit Angaben zum Dokument
+\input{Inhalt/00_Latex/praeambel}
+
+% ---- Elektronische Version oder Gedruckte Version?
+% ---- Unterschied: Die elektronische Version enthält keinen Platzhalter für die Unterschrift
+\usepackage{ifthen}
+\newboolean{e-Abgabe}
+\setboolean{e-Abgabe}{false}    % false=gedruckte Fassung
+
+% ---- Persönlichen Daten:
+\newcommand{\titel}{Erkennung fahrradfreundlicher, städtischer Wege mithilfe von Computer Vision über Luftaufnahmen}
+\newcommand{\titelheader}{Studienarbeit}
+\newcommand{\arbeit}{Studienarbeit}
+\newcommand{\studiengang}{Informatik}
+\newcommand{\studienjahr}{2022}
+\newcommand{\autor}{Dominik Ochs und Franziska Ommer}
+\newcommand{\autorReverse}{Ochs, Dominik; Ommer, Franziska}
+\newcommand{\verfassungsort}{Karlsruhe}
+\newcommand{\matrikelnr}{2847475; 0000000}
+\newcommand{\kurs}{TINF20B2}
+\newcommand{\bearbeitungsmonat}{August 2022}
+\newcommand{\abgabe}{16. April 2023}
+\newcommand{\bearbeitungszeitraum}{01.10.2022 - 16.04.2023}
+\newcommand{\firmaName}{SAP SE}
+\newcommand{\firmaStrasse}{Dietmar-Hopp-Allee 16}
+\newcommand{\firmaPlz}{69190 Walldorf, Deutschland}
+\newcommand{\betreuerFirma}{Christoph Eckert}
+\newcommand{\betreuerDhbw}{Prof. Dr.-Ing. Markus Reischl}
+
+\input{Inhalt/00_Latex/kopfundFusszeile}
+
+% ---- Hilfreiches
+\newcommand{\zB}{z.\,B. }   % "z.B." mit kleinem Leeraum dazwischen (ohne wäre nicht korrekt)
+\newcommand{\dash}{d.\,h. }
+
+\newcommand{\code}[1]{\texttt{#1}} % Ist einfacher zu schreiben als ständig \texttt und erlaubt
+                                   % Änderungen im Nachhinein, wenn man z.B. Inline-Code anders stylen möchte.
+
+% ---- Silbentrennung (falls LaTeX defaults falsch / nicht gewünscht sind)
+\hyphenation{HANA}         % anstatt HA-NA
+\hyphenation{Graph-Script} % anstatt GraphS-cript
+\hyphenation{Performance-tests}
+
+% ---- Watermark/Wasserzeichen
+%\input{Inhalt/00_Latex/watermark} % Auskommentieren wenn nicht erwünscht
+%\watermark{gray}{\textbf{DRAFT}}     % Auskommentieren wenn nicht erwünscht. Nimmt optional die opacity/Deckraft z.B. \watermark[0.1]{green}{text} für 10% Deckkraft
+%\SetWatermarkSize{8} % Optional. Standard ist 5.8. 
+
+% ---- Beginn des Dokuments
+\begin{document}
+\setlength{\parindent}{0pt}              % Keine Paragraphen Einrückung.
+                                         % Dafür haben wir den Abstand zwischen den Paragraphen.
+\setcounter{secnumdepth}{2}              % Nummerierungstiefe fürs Inhaltsverzeichnis
+\setcounter{tocdepth}{1}                 % Tiefe des Inhaltsverzeichnisses. Ggf. so anpassen,
+                                         % dass das Verzeichnis auf eine Seite passt.
+%\sffamily                                % Serifenlose Schrift verwenden.
+
+% ---- Vorspann
+% ------ Titelseite
+\singlespacing
+\include{Inhalt/01_Standard/titelseite}  % Titelseite
+\newcounter{savepage}
+\pagenumbering{Roman}                    % Römische Seitenzahlen
+\onehalfspacing
+
+% ------ Erklärung, Sperrvermerk, Abstact
+%\include{Inhalt/01_Standard/sperrvermerk}
+\include{Inhalt/01_Standard/erklaerung}
+\include{Inhalt/02_Abstract/abstract-en}
+\include{Inhalt/02_Abstract/abstract-de}
+
+% ------ Inhaltsverzeichnis
+\singlespacing
+\tableofcontents
+
+% ------ Verzeichnisse
+\renewcommand*{\chapterpagestyle}{plain}
+\pagestyle{plain}
+\include{Inhalt/03_Verzeichnisse/abkuerzungen}
+\listoffigures                          % Erzeugen des Abbildungsverzeichnisses 
+\listoftables                           % Erzeugen des Tabellenverzeichnisses
+\renewcommand{\lstlistlistingname}{Quellcodeverzeichnis}
+\lstlistoflistings                      % Erzeugen des Listenverzeichnisses
+\setcounter{savepage}{\value{page}}
+
+
+% ---- Inhalt der Arbeit
+\cleardoublepage
+\pagenumbering{arabic}                  % Arabische Seitenzahlen für den Hauptteil
+\setlength{\parskip}{0.5\baselineskip}  % Abstand zwischen Absätzen
+\rmfamily
+\renewcommand*{\chapterpagestyle}{scrheadings}
+\pagestyle{scrheadings}
+\onehalfspacing
+
+\include{Inhalt/04_Inhalt/Motivation}
+\include{Inhalt/04_Inhalt/Stand_der_Technik}
+\include{Inhalt/04_Inhalt/Konzeption}
+\include{Inhalt/04_Inhalt/Implementierung}
+\include{Inhalt/04_Inhalt/Ergebnisse}
+\include{Inhalt/04_Inhalt/Diskussion}
+\include{Inhalt/04_Inhalt/Fazit}
+
+% ---- Literaturverzeichnis
+\cleardoublepage
+\renewcommand*{\chapterpagestyle}{plain}
+\pagestyle{plain}
+\pagenumbering{Roman}                   % Römische Seitenzahlen
+\setcounter{page}{\numexpr\value{savepage}+1}
+\printbibliography[title=Literaturverzeichnis]
+
+% ---- Anhang
+\appendix
+\include{Inhalt/04_Inhalt/Anhang}
+%\clearpage
+%\pagenumbering{Roman}  % römische Seitenzahlen für Anhang
+
+\newpage
+\end{document}

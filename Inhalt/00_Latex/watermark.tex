@@ -1,0 +1,25 @@
+% ---- Für Watermarks
+\usepackage{background}
+\usepackage{eso-pic}
+
+\makeatletter
+\let \AddEverypageHook \AddToShipoutPictureFG
+\renewcommand\AddThispageHook{\AddToShipoutPictureFG*}
+\ifbg@some
+  \AddThispageHook{}
+\else
+  \AddEverypageHook{\bg@material}
+\fi
+\makeatother
+
+\newcommand{\watermark}[3][0.07]{
+\backgroundsetup{
+  color=#2,
+  angle=45,
+  opacity=#1,
+  contents={\Large{#3}},
+}
+\SetBgScale{5.8}
+}
+
+\newcommand{\SetWatermarkSize}[1]{\SetBgScale{#1}}
