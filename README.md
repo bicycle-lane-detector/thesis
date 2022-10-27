@@ -1,0 +1,59 @@
+# Content
+
+- Motivation (2 Seiten of which 1 Problem/Motivation 0.5 Seiten Ziele/Arbeitspakete Arbeit, 0.5 Strukturierung)
+    - Definition Fahrradfreundlichkeit (Titel erklären)
+    - Schon für Menschen schwierig zu erkennen (auf Satellitenbildern)
+- Stand der Wissenschaft/Forschung/Technik (Methoden, Literaturrecherce)
+    - Image (instance segmentation) semantic segmentation vs image detection (bounding boxes) vs klassifizierung 
+    - (ELU, RELU, Sigmoid)
+    - (Potentielle Probleme (mit kleinem Datensatz): Overfitting, Underfitting, Vanishing Gradient ...)
+    - Metriken
+        - IoU
+        - Dice bzw. f1
+        - Quality (Correctness/Completeness)
+    - (andere Architekturen zur image semantic segmentation?? Will Markus das?)
+    - (ggf. VGG16, resnet34, inception ... je nachdem was wir noch in konzeption machen)
+    - U-NET
+        - Dropout Layers (remedies overfitting)
+        - Skip Connections (remedies vanishing gradient)
+        - Batch Normalization (it just works)
+        - Gut für kleiner Datensatz (was ist schon ein kleiner Datensatz?)
+    - Transfer Learning
+        - mit UNET
+    - Straßenerkennung 
+        - Datensätze
+            - Massachuchettes (viel weiß)
+            - Deep Globe (viel unterschiedliche szenerien)
+            - LandCover.ai (zu viel acker)
+            - ... (siehe Citavi)
+    - Herausarbeitung des Neuheitswertes (vgl gegen Straßen)
+- Konzeption
+    - Pretraining auf roads data set
+        - Mass angepasst 
+    - Image Semantic Segmentation (Warum?)
+    - Datensatz 
+        - gibt es keinen :(, aber wir haben einen selber gemacht :)
+        - manuell gelabeled vs automatisch gelabeled ? 
+        - zahlen daten fakten größe auflösung etc pp
+        - unterschiedliche Städte
+    - Architektur von unsere(m/n) Netz(en)
+    - Hyperparameter
+    - (Image Augmentation -> robuster)
+    - IoU + Quality ganz gut für spätere Bewertung weil Mix aus stringent und locker + menschliche Einschätzung
+- Implementierung
+    - KI bedienen
+    - Datensatz bauen 
+- Ergebnisse
+    - Ergebnisse von pre-training auf raods
+        - mit anpassung bessere ergebnisse als paper. Ohne Anpassung konnten Paper-Ergebnisse reproduziert werden.
+    - Dropout sehr wichtig (sonst haben wir heftiges Overfitting)
+- Diskussion
+    - Warum gerade bei unserem Datensatz Dropout wichtig?
+    - Metriken (IoU vs Quality gepaart mit empirischem empfinden)
+
+
+- Schluss
+    - Zusammenfassung
+    - Kritische Reflexion
+    - Ausblick
+        - Post-Processing
