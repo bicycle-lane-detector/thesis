@@ -5,28 +5,29 @@
     - Schon für Menschen schwierig zu erkennen (auf Satellitenbildern)
 - Stand der Wissenschaft/Forschung/Technik (Methoden, Literaturrecherce)
     - Image (instance segmentation) semantic segmentation vs image detection (bounding boxes) vs klassifizierung 
-    - (ELU, RELU, Sigmoid)
+    - (Aktivierungsfunktionen ELU, RELU, Sigmoid)
     - (Potentielle Probleme (mit kleinem Datensatz): Overfitting, Underfitting, Vanishing Gradient ...)
     - Metriken
         - IoU
         - Dice bzw. f1
         - Quality (Correctness/Completeness)
-    - (andere Architekturen zur image semantic segmentation?? Will Markus das?)
     - (ggf. VGG16, resnet34, inception ... je nachdem was wir noch in konzeption machen)
+    - (andere Architekturen zur image semantic segmentation?? Will Markus das?)
     - U-NET
-        - Dropout Layers (remedies overfitting)
-        - Skip Connections (remedies vanishing gradient)
-        - Batch Normalization (it just works)
+        - Dropout Layers (hilft gegen overfitting)
+        - Skip Connections (hilft gegen vanishing gradient)
+        - Batch Normalization (hilft aus gründen + Datensatz sonst nicht sonderlich normalized/standardized - für Inference werden durchschnittswerte verwendet)
         - Gut für kleiner Datensatz (was ist schon ein kleiner Datensatz?)
     - Transfer Learning
-        - mit UNET
+        - insb. mit UNET
     - Straßenerkennung 
         - Datensätze
             - Massachuchettes (viel weiß)
             - Deep Globe (viel unterschiedliche szenerien)
             - LandCover.ai (zu viel acker)
             - ... (siehe Citavi)
-    - Herausarbeitung des Neuheitswertes (vgl gegen Straßen)
+        - Benchmarks
+    - Herausarbeitung des Neuheitswertes (vgl gegen Straßenerkennung)
 - Konzeption
     - Pretraining auf roads data set
         - Mass angepasst 
