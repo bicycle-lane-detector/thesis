@@ -40,7 +40,7 @@
     - Architektur von unsere(m/n) Netz(en)
     - Hyperparameter
     - (Image Augmentation -> robuster)
-    - IoU + Quality ganz gut für spätere Bewertung weil Mix aus stringent und locker + menschliche Einschätzung
+    - IoU + Quality ganz gut für spätere Bewertung weil Mix aus stringent und locker + menschliche Einschätzung, Warum Dice und nicht Falpha oder BCE ? 
 - Implementierung
     - KI bedienen
     - Datensatz bauen 

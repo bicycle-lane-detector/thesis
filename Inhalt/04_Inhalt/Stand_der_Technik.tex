@@ -2,7 +2,43 @@
 
 \chapter{Stand der Technik}
 
-Im Folgenden werden die theoretischen Grundlagen dargelegt. Hierzu wird zunächst etwas Graphentheorie behandelt, um diese dann im Kapitel zu Submodellen anzuwenden. Hier wird auch die Grundlegende Struktur der Supply-Chain und des Problems untersucht, welche für das weitere Vorgehen essentiell ist. Dann werden Algorithmen zur Ähnlichkeitsbestimmung aus der Literatur vorgestellt und schließlich  verschiedene Datenstrukturen der C++ Standardbibliothek untersucht und verglichen, um im Implementationsteil damit hohe Performanz zu gewährleisten.
+
+\section{Genauigkeitsmaße}
+
+\subsection{Binary Cross Entropy}
+
+\subsection{Dice- und F-Maß}
+
+Das Dice-, oder auch Sorensen-Dice-Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites[S.~33]{Srenson.1948}[S.~297]{Dice.1945}. 
+\begin{align}
+	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
+	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|}
+\end{align} 
+
+Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gleich dem $F_1$-Maß der  ein Maß für die Qualität eines statistischen Tests darstellt. Dafür sei $X$ nun die Menge der positiven Elemente und $Y$ die Menge der als positiv eingestuften Elemente. Dann ist die Genauigkeit oder auch Precision gegeben durch
+\begin{align}
+	\label{eq:precision} precision = \frac{|X \cap Y|}{|Y|}
+\end{align}
+der Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die Trefferquote oder auch Recall gegeben durch
+\begin{align}
+	\label{eq:recall} recall = \frac{|X \cap Y|}{|X|}
+\end{align}
+der Anteil der richtig eingestuften Elemente an allen positiven Elementen. \\
+Das F-Maß, bzw. genauer das $F_1$-Maß, ist dann gegeben durch das harmonische Mittel aus Precision und Recall, wobei $tp$ die Anzahl von wahr-positiven, $fp$ die Anzahl von falsch-positiven und $fn$ die Anzahl von falsch-negativen Elementen ist \cite{YutakaSasaki.2007}:
+\begin{align}
+	\label{eq:f1} F_{1} = \frac{2\cdot precision \cdot recall}{precision + recall} = \frac{2\cdot tp}{2 \cdot tp + fp + fn}
+\end{align}
+Precision und Recall können mit einem Faktor $\alpha$ unterschiedlich zueinander gewichtet werden, um mit $F_{\alpha}$ unterschiedliche Aspekte zu fokussieren. 
+
+Das Dice-, bzw. $F_{\alpha}$-Maß kann leicht für eine differenzierbare Kostenfunktion genutzt werden mit Dice-Loss $D_{L}(X, Y) = 1 - D(X,Y)$, bzw. $F_{\alpha}$-Loss $F_{\alpha L}(X,Y) = 1 - F_{\alpha}(X,Y)$. 
+
+
+\subsection{\ac{IoU}}
+IoU bzw Jaccard, relation mit dice https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient#Difference_from_Jaccard 
+
+
+\subsection{Quality}
+
 
 \section{Graphentheorie}
 
