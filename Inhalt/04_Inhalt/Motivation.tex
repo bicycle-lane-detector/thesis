@@ -1,50 +1,107 @@
 \chapter{Motivation}
 
-Im Folgenden wird die Motivation für diese Arbeit, sowie die Relevanz dieser Arbeit in dem Kontext des \textit{\ac{SCP}} dargelegt. Dafür erfolgt zunächst eine kurze Einführung in \ac{SCP} bei SAP und in konkret eine Methode, die angewandt wird, um Rechenzeit zu reduzieren. Daraufhin wird ein Problem bei diesem Verfahren vorgestellt und schließlich die Ziele und das geplante Vorgehen für diese Arbeit diskutiert.
+Die Navigation über Apps wie beispielsweise Google Maps ist inzwischen aus dem Alltag nicht mehr wegzudenken.
+Auch für das Zurücklegen einer Strecke mit dem Fahrrad werden entsprechende Routen vorgeschlagen.
+Allerdings liegen diese häufig neben großen Straßen und berücksichtigen als vorrangiges Ziel die schnellste Strecke zum Zielpunkt.
+Touren müssen eigenständig über das Hinzufügen weiterer Wegpunkte angepasst werden, wenn man entspannter an sein Ziel gelangen möchte.
+Um dieses Umplanen zu erleichtern, sollen im Rahmen dieser Studienarbeit städtische Radwege über Luftaufnahmen ausfindig gemacht werden.
+Die Erkennung erfolgt mithilfe von Computer Vision.
+Gefundene Radwege sollen dann im Anschluss anhand ihres Umfeldes in verschiedene Kategorien eingruppiert werden, die Rückschlüsse auf die Fahrradfreundlichkeit zulassen.
+Die jeweiligen Zustände der einzelnen Radwege bleiben unberücksichtigt.
+Ebenso werden Fahrradstraßen und 30er-Zonen ausgenommen, obwohl diese angenehm für Radfahrende sind.
+Grund hierfür ist die erschwerte Unterscheidung von anderen Straßen aus Satellitenansicht.
 
-\section{SAP Supply Chain Optimizer} \label{sec:sap_scp}
+Für die Erkennung von Straßen aus Luftaufnahmen gibt es bereits entsprechende KIs.
+Herausforderungen stellen dort eine teilweise oder vollständige Verdeckungen durch Brücken, Bäume etc. dar.
+Zusätzlich sorgen Schatten für unterschiedliche Beleuchtungen, welche sich auf das Gesamterscheinungsbild auswirken.
+Dazu kommen noch fahrradspezifische Probleme: 
 
-Das \textit{\ac{SCP}} stellt für viele Unternehmen in einer globalisierten, digitalisierenden Welt mit sich immer schneller verändernden Märkten eine zunehmende Herausforderung dar.n Optimierungslauf wird von den Kunden zumeist  einmal täglich durchgeführt.
+% Aerial LaneNet: Lane Marking Semantic
+% Segmentation in Aerial Imagery using
+% Wavelet-Enhanced Cost-sensitive Symmetric Fully
+% Convolutional Neural Networks
 
-\section{Product Decomposition und Similarity} \label{sec:proddeco}
+\begin{itemize}
+	\item Fahrradwege können verschiedenste Untergründe von Asphalt bis Feldweg haben.
+			Das Erscheinungsbild ist dementsprechend vielfältig.
+	\item Sie existieren in mehreren Varianten: als von der Fahrbahn abgetrennte Fahrspur, geteilter Rad- und Fußweg oder ein eigener Radweg.
+			Gerade die Abgrenzung von Fußgängerwegen ist schwierig, da sich diese ebenfalls häufig in Straßennähe befinden und eine ähnliche Breite aufweisen.
+			Selbst für Menschen stellt es eine Herausforderung dar, Fahrradwege in den Satellitenaufnahmen zu identifizieren.
+	\item Durch ihre geringe Breite im Vergleich zu Straßen, muss die \textit{\ac{GSD}} klein genug gewählt werden, dass sich Fahrradwege überhaupt erkennen lassen.
+\end{itemize}
 
-Für besonders große Szenarien kann es wünschenswert oder sogar nötig werden die Komplexität des Szenarios zu reduzieren, um mit geringerem Ressourcenaufwand in Form von Laufzeit und Speicher eine optimierte Lösung   nach \autoref{sec:sap_scp} zu erhalten. Dies kann zum Beispiel mit der \textit{\ac{ProdDeco}} bewerkstelligt werden \cite{.20220812}. Hierfür wird die gesamte Supply Chain in jeweils kleinere \textit{Subprobleme} aufgeteilt. Diese stellen Gruppen aus Produkten dar, die möglichst wenig Berührungspunkte mit anderen Subproblemproduktgruppen haben. Die Subprobleme werden dann individuell und unabhängig voneinander optimiert~\cite[S.~31--33]{Sandner.01.09.1998}.   
+\section{Ziele der Arbeit} \label{mot:ziele}
+Das Ziel der Studienarbeit liegt in der Erkennung von Fahrradwegen mithilfe von Computer Vision.
+Hierfür werden Satellitenaufnahmen mit einer Bodenauflösung von $20 cm$ verwendet.
+Da es für die Erkennung von Fahrradwege keine vorliegenden Datensets gibt, muss dieses selbst erstellt werden.
+Die Umsetzung des neuronalen Netzes ist über ein U-Net realisiert.
+Im ersten Schritt erfolgt eine reine Klassifikation in Fahrradweg bzw. Nicht-Fahrradweg.
+Über das Verändern von Parametern wird versucht, das Netz zu optimieren.
+Die Überführung in verschiedene Kategorien soll erst erfolgen, wenn ausreichend zuverlässig Wege identifiziert werden können.
 
-In \autoref{fig:sim_alg} ist die Synthese der Subprobleme mithilfe der Similarity illustriert. Dieser Vorgang wiederholt sich bis alle Submodelle zu Subproblemen zugeordnet worden sind (6). \\ %macht zeilenumbruch
-Wenn $n$ die Anzahl an atomaren Submodellen ist, folgt direkt aus dem Algorithmus per Gaußscher Summenformel
-\begin{align}
-\label{eq:num_comp} \#S := \sum_{i=0}^{n} i = \frac{n(n+1)}{2} \in O(n^2)
-\end{align}
-für die Anzahl der paarweisen Vergleiche und damit die Anzahl der Similarity-Berechnungen $\#S$. \\
-Für die Zeitkomplexität der Subproblemsynthese $t_{sub}$ gilt also \autoref{eq:t_sim}, wobei $m$ die durchschnittliche Größe - also die durchschnittliche Anzahl der Elemente - der Submodelle beschreibt.
-\begin{align}
-	\label{eq:t_sim} t_{sub}(n, m) \in O(\#S \cdot t_{sim}(m)) = O(n^2 \cdot t_{sim}(m)) 
-\end{align}
+\section{Strukturierung} \label{mot:strukt}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.80\textwidth]{Bilder/similarity_algorithm.pdf} 
-	\caption{Abstrakter Synthesealgorithmus der Subprobleme unter Nutzung der Ähnlichkeit der Submodelle. \\ (In Anlehnung an \cite{Kniasew.21.02.2022}.)}
-	\label{fig:sim_alg}
-\end{figure} 
+Zu Beginn der Arbeit wird auf den aktuellen Stand der Technik eingegangen.
+Der Fokus liegt hierbei auf Sachverhalten, die Bestandteil der Studienarbeit oder wichtig für das Verständnis sind.
+So werden zunächst verschiedene Arten von Bilderkennung aufgegriffen.
+Im späteren Verlauf verwendete Metriken werden vorgestellt.
+Die Struktur und Architektur eines U-Nets wird beschrieben.
+Da es bereits Datensätze und Implementierungen zum Detektieren von Straßen gibt, folgt eine Erläuterung des Transfer-Learning-Ansatzes.
+Die Datensätze werden ebenfalls kurz vorgestellt und auf die Unterschiede zwischen ihnen eingegangen.
 
-\section{Problemszenario} \label{sec:problem}
+Bei der Konzeption wird ein Pretraining mithilfe der Straßen-Datensätze durchgeführt.
+Im Anschluss erfolgt die Erstellung eines eigenen Datensatzes für Fahrradwege.
+Die Architektur des zu implementierenden Netzes wird mit seinen Hyperparametern erläutert.
+Zu messende Werte zum Einschätzen der Güte werden festgelegt.
+Die Implementierung realisiert die in der Konzeption entworfenen Netze und generiert den Datensatz.
 
-Als Übergangslösung wurde der Algorithmus für das kritische Szenario so angepasst, dass eine Menge Informationen außer acht gelassen wurden, um auf Kosten der Lösungsqualität eine akzeptable Laufzeit von $14 min$ $47 s$\footnote{Zeit von lokalem Testsystem (s. \autoref{sec:perf})} zu erreichen. \\
-Die Supply Chain des Ausgangsszenarios hat hierbei insgesamt ca. 1.97 Mio. Elemente und die 18771 erstellten atomaren Submodelle im Mittel jeweils ca. 5100 Elemente \cite{Kniasew.21.02.2022}. 
+Die Ergebnisse werden anschließend vorgestellt und die einzelnen Varianten miteinander verglichen.
+Als Bewertungsbasis werden die definierten Metriken verwendet.
+Wichtige Erkenntnisse werden hervorgehoben. Zum Schluss folgt eine kritische Reflexion in Zusammenhang mit einer Zusammenfassung sowie ein Ausblick der Arbeit.
 
-Das bedeutet nach \autoref{eq:num_comp} bereits $\#S = \frac{18771 \cdot (18771 + 1)} {2} \approx 176'000'000$ Vergleiche die durchgeführt werden müssen. Für den Worst-Case ist  $t_{sim}$ mit $t_{sim}(m) \in O(m \log m)$\footnote{Auf die Unterscheidung zw. $m_{1}$ und $m_{2}$ wird hier aufgrund des $O$-Kalküls und der Verwendung von $m$ als Mittelwert der Elementzahlen verzichtet.} angegeben \cite{Kniasew.21.02.2022}. Für $m=5100$ ergeben sich die asymptotischen Ungleichungen 
-\begin{align}
-	t_{sim}(m) \preccurlyeq m \log m \approx 62800 \implies \nonumber \\
-	\label{eq:conrete_id_obj} t_{sub}(n, m) \preccurlyeq \#S \cdot m \log m \approx 176'000'000 \cdot 62800 \approx 11 \cdot 10^{12}
-\end{align}
+% \section{SAP Supply Chain Optimizer} \label{sec:sap_scp}
+
+% Das \textit{\ac{SCP}} stellt für viele Unternehmen in einer globalisierten, digitalisierenden Welt mit sich immer schneller verändernden Märkten eine zunehmende Herausforderung dar.n Optimierungslauf wird von den Kunden zumeist  einmal täglich durchgeführt.
+
+% \section{Product Decomposition und Similarity} \label{sec:proddeco}
+
+% Für besonders große Szenarien kann es wünschenswert oder sogar nötig werden die Komplexität des Szenarios zu reduzieren, um mit geringerem Ressourcenaufwand in Form von Laufzeit und Speicher eine optimierte Lösung   nach \autoref{sec:sap_scp} zu erhalten. Dies kann zum Beispiel mit der \textit{\ac{ProdDeco}} bewerkstelligt werden \cite{.20220812}. Hierfür wird die gesamte Supply Chain in jeweils kleinere \textit{Subprobleme} aufgeteilt. Diese stellen Gruppen aus Produkten dar, die möglichst wenig Berührungspunkte mit anderen Subproblemproduktgruppen haben. Die Subprobleme werden dann individuell und unabhängig voneinander optimiert~\cite[S.~31--33]{Sandner.01.09.1998}.   
+
+% In \autoref{fig:sim_alg} ist die Synthese der Subprobleme mithilfe der Similarity illustriert. Dieser Vorgang wiederholt sich bis alle Submodelle zu Subproblemen zugeordnet worden sind (6). \\ %macht zeilenumbruch
+% Wenn $n$ die Anzahl an atomaren Submodellen ist, folgt direkt aus dem Algorithmus per Gaußscher Summenformel
+% \begin{align}
+% \label{eq:num_comp} \#S := \sum_{i=0}^{n} i = \frac{n(n+1)}{2} \in O(n^2)
+% \end{align}
+% für die Anzahl der paarweisen Vergleiche und damit die Anzahl der Similarity-Berechnungen $\#S$. \\
+% Für die Zeitkomplexität der Subproblemsynthese $t_{sub}$ gilt also \autoref{eq:t_sim}, wobei $m$ die durchschnittliche Größe - also die durchschnittliche Anzahl der Elemente - der Submodelle beschreibt.
+% \begin{align}
+% 	\label{eq:t_sim} t_{sub}(n, m) \in O(\#S \cdot t_{sim}(m)) = O(n^2 \cdot t_{sim}(m)) 
+% \end{align}
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=0.80\textwidth]{Bilder/similarity_algorithm.pdf} 
+% 	\caption{Abstrakter Synthesealgorithmus der Subprobleme unter Nutzung der Ähnlichkeit der Submodelle. \\ (In Anlehnung an \cite{Kniasew.21.02.2022}.)}
+% 	\label{fig:sim_alg}
+% \end{figure} 
+
+% \section{Problemszenario} \label{sec:problem}
+
+% Als Übergangslösung wurde der Algorithmus für das kritische Szenario so angepasst, dass eine Menge Informationen außer acht gelassen wurden, um auf Kosten der Lösungsqualität eine akzeptable Laufzeit von $14 min$ $47 s$\footnote{Zeit von lokalem Testsystem (s. \autoref{sec:perf})} zu erreichen. \\
+% Die Supply Chain des Ausgangsszenarios hat hierbei insgesamt ca. 1.97 Mio. Elemente und die 18771 erstellten atomaren Submodelle im Mittel jeweils ca. 5100 Elemente \cite{Kniasew.21.02.2022}. 
+
+% Das bedeutet nach \autoref{eq:num_comp} bereits $\#S = \frac{18771 \cdot (18771 + 1)} {2} \approx 176'000'000$ Vergleiche die durchgeführt werden müssen. Für den Worst-Case ist  $t_{sim}$ mit $t_{sim}(m) \in O(m \log m)$\footnote{Auf die Unterscheidung zw. $m_{1}$ und $m_{2}$ wird hier aufgrund des $O$-Kalküls und der Verwendung von $m$ als Mittelwert der Elementzahlen verzichtet.} angegeben \cite{Kniasew.21.02.2022}. Für $m=5100$ ergeben sich die asymptotischen Ungleichungen 
+% \begin{align}
+% 	t_{sim}(m) \preccurlyeq m \log m \approx 62800 \implies \nonumber \\
+% 	\label{eq:conrete_id_obj} t_{sub}(n, m) \preccurlyeq \#S \cdot m \log m \approx 176'000'000 \cdot 62800 \approx 11 \cdot 10^{12}
+% \end{align}
 
 
-\section{Zielsetzung, Inhalt und Vorgehensweise}
+% \section{Zielsetzung, Inhalt und Vorgehensweise}
 
-Es ist ersichtlich, dass Anlass zur Verbesserung der Laufzeit gegeben ist, um 
-\begin{enumerate}
-\item das kritische Szenario ohne Weglassen von Informationen durchführbar zu machen und
-\item die durchschnittlichen Szenarien zu verbessern, um Rechenzeit und damit langfristig Energie zu sparen.  
-\end{enumerate}  
-Hierfür wird sich vor allem auf $t_{sim}$ und dessen Minimierung fokussiert. Ziel ist es, eine neue Art der Similarity-Berechnung zu finden, die schneller abläuft als die alte, aber dabei noch die genau gleichen Subprobleme erzeugt. 
+% Es ist ersichtlich, dass Anlass zur Verbesserung der Laufzeit gegeben ist, um 
+% \begin{enumerate}
+% \item das kritische Szenario ohne Weglassen von Informationen durchführbar zu machen und
+% \item die durchschnittlichen Szenarien zu verbessern, um Rechenzeit und damit langfristig Energie zu sparen.  
+% \end{enumerate}  
+% Hierfür wird sich vor allem auf $t_{sim}$ und dessen Minimierung fokussiert. Ziel ist es, eine neue Art der Similarity-Berechnung zu finden, die schneller abläuft als die alte, aber dabei noch die genau gleichen Subprobleme erzeugt. 
