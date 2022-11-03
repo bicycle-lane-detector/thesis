@@ -3,23 +3,54 @@
 \chapter{Stand der Technik}
 
 
-\section{Genauigkeitsmaße}
+\section{Ähnlichkeitsmaße}
 
-\subsection{Binary Cross Entropy}
+\subsection{\acf{BCE}}
+
+Die \textit{Cross-Entropy} (bzw. dt. \textit{Kreuzentropie}) ist ein Maß des Unterschieds zweier
+Wahrscheinlichkeitsdistributionen. Im Spezialfall einer binären Wahrscheinlichkeitsvariable 
+kann die Cross-Entropy zur \textit{\acf{BCE}} spezialisiert werden, um auf ein binäres 
+Klassifikationsproblem angewandt zu werden. 
+\autoref{eq:bce} zeigt die Kalkulation von \ac{BCE}, wobei $p \in [0;1]$ die Prediction 
+eines binären Klassifikators und $y \in {0,1}$ der Wert des Labels darstellen.
+\begin{align}
+	\label{eq:bce} BCE = -[p \cdot \log(y) + (1-p) \cdot \log(1-y) ]
+\end{align} 
+Um über $n$ Prediction-Label-Paare $(p_i; y_i)$ den \ac{BCE} zu berechnen, wird das arithmetische Mittel nach
+\autoref{eq:bce-mean} gebildet \cite[S.~82]{Cybenko.1999}[S.~57--59]{Murphy.2012}.
+\begin{align}
+	\label{eq:bce-mean} BCE = -\frac{1}{n}\sum_{i = 1}^{n}[p_i \cdot \log(y_i) + (1-p_i) \cdot \log(1-y_i) ]
+\end{align}
+
+Im Sinne einer differenzierbaren Kostenfunktion im Kontext von \ac{ML} sind \ac{BCE},
+\textit{negative Log-Likelihood} und \textit{Logistic-Regression} synonym \cite[S.~249]{Murphy.2012}. 
+
+Aus \autoref{eq:bce-mean} geht hervor, warum \ac{BCE} gut geeignet für Klassifikationsprobleme ist.
+Im Gegensatz zum mittleren absoluten Fehler, bei dem ein Fehler linear eingeht, und zum mittleren quadratischen Fehler,
+bei dem ein Fehler quadratisch eingeht, geht ein Fehler bei \ac{BCE} exponentiell ein. 
+Ein größerer Fehler wiegt also exponentiell stärker als ein kleinerer Fehler. 
+Hierdurch werden die Fehler pro Datenpunkt und Klasse sehr klein, 
+wodurch gute Performance und gute Generalisierung bei \ac{ML}-Modellen erreicht werden können. \\
+
+Bei stark ungleichmäßiger Klassenverteilung kann es jedoch dazu kommen, 
+dass die unterrepräsentierte Klasse kaum noch geschätzt wird, 
+da der Fehler einer falsch geschätzten überrepräsentierten Klasse zu stark bestraft wird.
+Dadurch lernt der Algorithmus, die unterrepräsentierte Klasse kaum zu schätzen.
+Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite[S.~4]{Ronneberger.18052015}.
 
 \subsection{Dice- und F-Maß}
 
-Das Dice-, oder auch Sorensen-Dice-Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites[S.~33]{Srenson.1948}[S.~297]{Dice.1945}. 
+Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites[S.~33]{Srenson.1948}[S.~297]{Dice.1945}. 
 \begin{align}
 	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
 	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|}
 \end{align} 
 
-Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gleich dem $F_1$-Maß der  ein Maß für die Qualität eines statistischen Tests darstellt. Dafür sei $X$ nun die Menge der positiven Elemente und $Y$ die Menge der als positiv eingestuften Elemente. Dann ist die Genauigkeit oder auch Precision gegeben durch
+Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gleich dem $F_1$-Maß, das ein Maß für die Qualität eines statistischen Tests darstellt. Dafür sei $X$ nun die Menge der positiven Elemente und $Y$ die Menge der als positiv eingestuften Elemente. Dann ist die \textit{Genauigkeit} oder auch \textit{Precision} gegeben durch
 \begin{align}
 	\label{eq:precision} precision = \frac{|X \cap Y|}{|Y|}
 \end{align}
-der Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die Trefferquote oder auch Recall gegeben durch
+der Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die \textit{Trefferquote} oder auch \textit{Recall} gegeben durch
 \begin{align}
 	\label{eq:recall} recall = \frac{|X \cap Y|}{|X|}
 \end{align}
@@ -33,11 +64,28 @@ Precision und Recall können mit einem Faktor $\alpha$ unterschiedlich zueinande
 Das Dice-, bzw. $F_{\alpha}$-Maß kann leicht für eine differenzierbare Kostenfunktion genutzt werden mit Dice-Loss $D_{L}(X, Y) = 1 - D(X,Y)$, bzw. $F_{\alpha}$-Loss $F_{\alpha L}(X,Y) = 1 - F_{\alpha}(X,Y)$. 
 
 
-\subsection{\ac{IoU}}
-IoU bzw Jaccard, relation mit dice https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient#Difference_from_Jaccard 
+\subsection{\acf{IoU}}
+
+Die \textit{\acf{IoU}-} bzw. \textit{Jaccard-Ähnlichkeitsmetrik} ist ein weit verbreitetes Maß zur Bestimmung der Ähnlichkeit zwei diskreter Mengen. Hierzu seien $X$ und $Y$ diskrete Mengen. Dann ist die $IoU$ gegeben durch 
+\begin{align}
+	\label{eq:iou} IoU = \frac{|X\cap Y|}{|X \cup Y|} = \frac{| X \cap Y |}{| X \cap Y | + |Y \setminus X| + |X \setminus Y|}~.
+\end{align} 
+Für ein binäres Klassifikationsproblem lässt sich die $IoU$ ausdrücken durch 
+\begin{align}
+	\label{eq:iou-binary} IoU = \frac{tp}{tp + fp + fn}~,
+\end{align}
+wobei $tp$, $fp$, $fn$ wie in \autoref{eq:f1} \cite{Fletcher.2018}. 
+
+Auffällig ist die Ähnlichkeit zum Dice- bzw. $F_{1}$-Maß. Es ist allerdings anzumerken, dass bei Dice/$F_1$ die $tp$, also die wahr-positiven, stärker gewichtet werden, als bei der \ac{IoU}. Die augenscheinliche Ähnlichkeit lässt sich durch die Beziehungen
+\begin{align}
+	\label{eq:dice-iou} IoU = \frac{D}{2 - D} \\
+	D = \frac{2 \cdot IoU}{1 + IoU}
+\end{align}
+beschreiben.
 
 
 \subsection{Quality}
+
 
 
 \section{Graphentheorie}
