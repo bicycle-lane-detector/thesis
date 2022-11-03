@@ -5,6 +5,11 @@
 
 \section{Ähnlichkeitsmaße}
 
+Im Folgenden sollen Ähnlichkeitsmaße zwischen Mengen, insbesondere 
+solche, die als Kostenfunktion bzw. Bewertungsmetrik für einen binären 
+Klassifikator verwendet werden können, untersucht werden. Hierzu wird zunächst Cross-Entropy betrachtet,
+gefolgt von dem Dice- bzw. F-Maß. Weiter werden \ac{IoU} und das darauf aufbauende Quality-Maß betrachtet.
+
 \subsection{\acf{BCE}}
 
 Die \textit{Cross-Entropy} (bzw. dt. \textit{Kreuzentropie}) ist ein Maß des Unterschieds zweier
@@ -82,10 +87,21 @@ Auffällig ist die Ähnlichkeit zum Dice- bzw. $F_{1}$-Maß. Es ist allerdings a
 	D = \frac{2 \cdot IoU}{1 + IoU}
 \end{align}
 beschreiben.
-
+Im Gegensatz zur \ac{IoU} wird beim Dice-Maß eine höhere Gewichtung auf die wahr-positiven Elemente 
+gelegt.
 
 \subsection{Quality}
 
+Bei der \textit{Quality} handelt es sich um eine gepufferte Form des \ac{IoU},
+die toleranter bezüglich der Lokalität der Elemente der verglichenen Mengen, oder konkreter,
+der Pixel einer semantischen Segmentierung, ist, 
+wobei für dieselbe Eingabe $Quality \geq IoU$; $Quality \in [0;1]$ gilt, abhängig von der Puffergröße. 
+Die Quality wird analog zur \ac{IoU} über eine gepufferte Precision - die \textit{Correctness} - 
+und über einen gepufferten Recall - die \textit{Completeness} - berechnet. \\
+Die Quality soll einige Probleme der \ac{IoU} beheben, um ein Ähnlichkeitsmaß darzustellen, 
+was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{ML}-Modells liegt.
+So soll relativiert werden, dass vor allem im Randbereich einer Segmentierung einzelne abweichende Pixel
+nicht als falsch anerkannt werden, sodass die Segmentierung im Großen und Ganzen als richtig anerkannt wird \cite{ChristianWiedemann.1998}. 
 
 
 \section{Graphentheorie}
