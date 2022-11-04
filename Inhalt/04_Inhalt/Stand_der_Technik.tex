@@ -131,7 +131,15 @@ Regularisierung \cites[S.~265]{Goodfellow.2016}.
 
 \subsection{Batch-Normalization}
 
-
+\textit{Batch-Normalization} normalisiert und standardisiert den Output von Neuronen auf Basis des Mittelwerts 
+und der Streuung einer Batch während des Trainings. Für die Inferenz werden Durchschnittswerte 
+des Mittelwerts und der Streuung der Batches des Trainingsdatensatzes herangezogen und angewandt. \\
+Batch-Normalization führt zu einer schnelleren Konvergenz im Training, 
+sodass die Anzahl an benötigten Epochen in manchen Fällen halbiert werden können. Des Weiteren führt 
+Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion zu einem gewissen Grad glättet 
+\cites[S.~317--320]{Goodfellow.2016}{Ioffe.11022015}.
+Besonders gut funktioniert Batch-Normalization für \acp{CNN} und Netzwerke mit Sigmoid-Aktivierungsfunktion
+\cites[S.~425]{Goodfellow.2016}.
 
 \subsection{U-Net}
 
