@@ -97,11 +97,36 @@ die toleranter bezüglich der Lokalität der Elemente der verglichenen Mengen, o
 der Pixel einer semantischen Segmentierung, ist, 
 wobei für dieselbe Eingabe $Quality \geq IoU$; $Quality \in [0;1]$ gilt, abhängig von der Puffergröße. 
 Die Quality wird analog zur \ac{IoU} über eine gepufferte Precision - die \textit{Correctness} - 
-und über einen gepufferten Recall - die \textit{Completeness} - berechnet. \\
+und über einen gepufferten Recall - die \textit{Completeness} - berechnet. Insbesondere werden einige Elemente, 
+die zuvor als $fp$ und $fn$ eingeordnet wurden, hiermit zu $tp$ konvertiert. \\
 Die Quality soll einige Probleme der \ac{IoU} beheben, um ein Ähnlichkeitsmaß darzustellen, 
-was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{ML}-Modells liegt.
+was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{ML}-Modells zur semantischen Segmentierung liegt.
 So soll relativiert werden, dass vor allem im Randbereich einer Segmentierung einzelne abweichende Pixel
 nicht als falsch anerkannt werden, sodass die Segmentierung im Großen und Ganzen als richtig anerkannt wird \cite{ChristianWiedemann.1998}. 
+
+
+\section{Architekturkomponente}
+
+Im Folgenden werden verschiedene Architekturkomponenten diskutiert, die im \ac{ML} allgemein 
+bzw. bei semantischer Segmentierung im Speziellen verwendet werden. Hierzu werden zunächst Dropout-Layer 
+und Batch-Normalization-Layer begutachtet und dann die U-Net-Architektur zur semantischen Segmentierung vorgestellt. 
+
+\subsection{Dropout}
+
+\subsection{Batch-Normalization}
+
+\subsection{U-Net}
+
+Die U-Net-Architektur beschreibt eine Fully-Convolutional-Network-Architektur, die erstmals in Freiburg 2015 vorgestellt wurde 
+und herausragende Ergebnisse für verschiedene Benchmarks, insbesondere zur semantischen Segmentierung kleiner Datensätze, liefert. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{Bilder/u-net-architecture.png} 
+	\caption{Ursprüngliche U-Net-Architektur \cite{Ronneberger.18052015}.}
+	\label{fig:u-net-architecture}
+\end{figure} 
+
 
 
 \section{Graphentheorie}
