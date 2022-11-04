@@ -113,12 +113,45 @@ und Batch-Normalization-Layer begutachtet und dann die U-Net-Architektur zur sem
 
 \subsection{Dropout}
 
+\textit{Dropout} ist eine ressourcenschonende Regularisierungstechnik für \ac{ML}-Modelle. 
+Hierbei werden einzelne Neuronen mit einer Wahrscheinlichkeit von \textit{Rate} $r$ während des Trainings 
+deaktiviert, also deren Output auf $0$ gesetzt.\\ 
+Da bei der Inferenz Dropout dazu führen kann, 
+dass wichtige Features ignoriert werden, ist Dropout während der Inferenz unerwünscht. Ohne Dropout während der 
+Inferenz sind allerdings alle Gewichte aktiv, was zu einer höheren Summe der Gewichte während der Inferenz, 
+als während des Trainings führt. Deswegen müssen die Gewichte für die Inferenz nach unten skaliert werden. 
+Alternativ können während des Trainings alle Gewichte nach oben skaliert werden, die nicht deaktiviert wurden. 
+Somit muss für die Inferenz keine Anpassung vorgenommen werden. Nach jedem Trainings-Batch werden die aktivierten 
+Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert werden \cites[S.~255--258]{Goodfellow.2016}{NitishSrivastava.2014}.
+
+Es hat sich gezeigt, dass Dropout eine effektivere Regularisierungstechnik zur Minderung von Overfitting ist, 
+als andere ressourcenschonende Techniken, wie \textit{Weight-Decay}, \textit{Filter-Norm-Constraints} oder 
+\textit{Sparse-Activity-Regularization}, wobei Dropout mit diesen kombiniert werden kann, für noch bessere 
+Regularisierung \cites[S.~265]{Goodfellow.2016}.
+
 \subsection{Batch-Normalization}
+
+
 
 \subsection{U-Net}
 
-Die U-Net-Architektur beschreibt eine Fully-Convolutional-Network-Architektur, die erstmals in Freiburg 2015 vorgestellt wurde 
-und herausragende Ergebnisse für verschiedene Benchmarks, insbesondere zur semantischen Segmentierung kleiner Datensätze, liefert. 
+Die \textit{U-Net-Architektur} beschreibt eine \textit{Fully-Convolutional-Network-Architektur}, die erstmals in Freiburg 2015 vorgestellt wurde 
+und herausragende Ergebnisse für verschiedene Benchmarks, insbesondere zur semantischen Segmentierung kleiner Datensätze, liefert. \\
+Aus \autoref{fig:u-net-architecture} geht die namensgebende Architektur der U-Net hervor. Die folgenden Besonderheiten 
+führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \cite{Ronneberger.18052015}:
+\begin{itemize}
+	\item Das Netz besteht aus einem kontrahierenden Encoder-Teil (linke Hälfte) und einem expandierenden und symmetrisch aufgebauten
+	Decoder-Teil (rechte Hälfte). Der Encoder erzeugt feinere \textit{Feature-Maps} mit zunehmender Netztiefe, 
+	während der Decoder diese wieder extrapoliert, was zu einer besseren Lokalisierung führt. 
+	\item Zwischen den jeweiligen symmetrischen Encoder- bzw. Decoder-Blöcken befinden sich \textit{Skip-Connections}\footnote{\textit{copy and crop} in der Abbildung.}.
+	Zusammen mit dem vorherigen Punkt erhöht dies weiter die Lokalisierung und Performanz, da der jeweilige Decoder-Block feinere Features von der \textit{Up-Convolution}\footnote{implementiert als \textit{Transposed Convolutions}.},
+	wie auch den größeren Kontext von früheren Blocks mittels Skip-Connection erhält. 
+	\item Zur Mitte des Netzes hin erhöht sich die Anzahl der Convolution-Filter und damit die Anzahl der \textit{Channel}, 
+	während sich die Dimensionen der einzelnen Feature-Maps durch das \textit{Downsampling} verringert. 
+	Hierbei ist anzumerken, dass bei der Implementation kein \textit{Padding} für die Convolutions verwendet wurde,
+	wodurch sich die Dimensionen der Feature-Maps nach jeder Convolution verringert. 
+	Hieraus folgt ein Zuschneiden für die Skip-Connections. 
+\end{itemize}
 
 \begin{figure}
 	\centering
