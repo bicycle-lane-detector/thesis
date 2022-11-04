@@ -14,12 +14,21 @@
     - (ggf. VGG16, resnet34, inception ... je nachdem was wir noch in konzeption machen)
     - (andere Architekturen zur image semantic segmentation?? Will Markus das?)
     - U-NET
-        - Dropout Layers (hilft gegen overfitting)
-        - Skip Connections (hilft gegen vanishing gradient)
-        - Batch Normalization (hilft aus gründen + Datensatz sonst nicht sonderlich normalized/standardized - für Inference werden durchschnittswerte verwendet)
+        - (Skip Connections (hilft gegen vanishing gradient und mit localization))
         - Gut für kleiner Datensatz (was ist schon ein kleiner Datensatz?)
+    - Weiß nicht was für ein übertitel das bekommen soll
+        - Dropout Layers (hilft gegen overfitting)
+        - Batch Normalization (hilft aus gründen + Datensatz sonst nicht sonderlich normalized/standardized - für Inference werden durchschnittswerte verwendet)
+    - Backbones (KURZE Vorstellung ausgewählter Netze)
+        - (vgg16)
+        - (inceptionv3)
+        - (resnet34)
+        - (densenet121)
     - Transfer Learning
         - insb. mit UNET
+            - backbone strategie
+            - verschiedene freeze-strategien
+            - einfach bisherigen research kurz abbreißen
     - Straßenerkennung 
         - Datensätze
             - Massachuchettes (viel weiß)
