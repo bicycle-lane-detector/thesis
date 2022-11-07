@@ -169,6 +169,38 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 \end{figure} 
 
 
+\section{Transfer-Learning mit U-Net}
+
+\textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
+bestenfalls ähnliches Problem. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
+Häufig wird dafür ein Teil des Modells eingefroren, sodass sich diese Gewichte nicht verändern können. Dies verhindert, 
+dass die bereits vortrainierten Gewichte durch die erste Trainings-Batch zerstört werden. Eine weitere Möglichkeit ist,
+mit einer geringen Lernrate das gesamte Modell zu trainieren. Oft werden beide Ansätze auch verbunden.
+
+Der Vorteil von Transfer-Learning liegt darin, dass das Training deutlich kürzer dauert, 
+weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Datensätze bessere Ergebnisse erzielt werden können
+ und auch insgesamt eine höhere Genauigkeit 
+am Ende des Trainings erreicht wird, als bei herkömmlichen Training. Diese Effekte sind verstärkt, 
+abhängig davon wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
+Insbesondere bei Computer-Vision ist Transfer-Learning effektiv, da bei Bildern high-level Features wie Clustering 
+ähnlichfarbener Pixel oder Kantenerkennung oftmals sehr ähnlich zwischen unterschiedlichen Datensätzen ausfallen 
+und damit schon vorhanden sind \cite{Ruder.3212017}. 
+
+Für Transfer-Learning mit U-Nets gibt es verschiedene Strategien: Backbone-Netze als Encoder, 
+partielles Einfrieren verschiedener Netzbereiche und direktes trainieren mit geringer Learning-Rate.
+Der Stand der Wissenschaft diesbezüglich wird im Folgenden vorgestellt. 
+
+\subsection{Training mit Backbones}
+
+Im Kontext von Transfer-Learning bei U-Nets bezeichnet ein \textit{Backbone} ein etabliertes vortrainiertes \ac{CNN}, 
+welches, leicht modifiziert, als Encoder für das U-Net verwendet wird. Hierbei wird der Decoder-Teil des U-Net 
+symmetrisch dem Encoder nachempfunden und an passenden Stellen Skip-Verbindungen zwischen En- und Decoder eingebaut. \\
+Hierdurch kann eine geeignete \ac{CNN}-Architektur für das spezifische Problem ausgewählt werden. Des Weiteren sind diese 
+Modelle auf sehr großen Datensätzen, wie \textit{ImageNet}, vortrainiert öffentlich zugänglich. 
+
+Bei der Segmentierung 
+
+
 
 \section{Graphentheorie}
 
