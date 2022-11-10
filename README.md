@@ -5,13 +5,13 @@
     - Schon für Menschen schwierig zu erkennen (auf Satellitenbildern)
 - Stand der Wissenschaft/Forschung/Technik (Methoden, Literaturrecherce)
     - Image (instance segmentation) semantic segmentation vs image detection (bounding boxes) vs klassifizierung 
-    - (Aktivierungsfunktionen ELU, RELU, Sigmoid)
+    - Aktivierungsfunktionen ELU, RELU, Sigmoid
     - (Potentielle Probleme (mit kleinem Datensatz): Overfitting, Underfitting, Vanishing Gradient ...)
     - Metriken
+        - Binary Cross Entropy
         - IoU
         - Dice bzw. f1
         - Quality (Correctness/Completeness)
-    - (ggf. VGG16, resnet34, inception ... je nachdem was wir noch in konzeption machen)
     - (andere Architekturen zur image semantic segmentation?? Will Markus das?)
     - Architekturkomponenten
         - Dropout Layers (hilft gegen overfitting)
