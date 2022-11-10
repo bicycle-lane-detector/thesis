@@ -20,10 +20,10 @@
             - (Skip Connections (hilft gegen vanishing gradient und mit localization))
             - Gut für kleiner Datensatz (was ist schon ein kleiner Datensatz?)
     - Backbones (KURZE Vorstellung ausgewählter Netze)
-        - (vgg16)
+        - vgg16
         - (inceptionv3)
         - (resnet34)
-        - (densenet121)
+        - densenet121
     - Transfer Learning
         - insb. mit UNET
             - backbone strategie
