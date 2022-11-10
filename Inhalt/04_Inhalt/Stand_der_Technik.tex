@@ -3,6 +3,66 @@
 \chapter{Stand der Technik}
 
 
+\section{Aktivierungsfunktionen}
+
+Im Folgenden wird der Stand der Technik für Aktivierungsfunktionen in \ac{ML}-Modellen dargelegt,
+hierzu werden einige Funktionen kurz vorgestellt und deren Vor- und Nachteile bewertet. 
+Die besprochenen Funktionen sind dargestellt in \autoref{fig:activation}.
+
+\subsection{Sigmoid}
+
+Die \textit{Sigmoid}-Funktion bildet die Eingabe auf einen Wert im Intervall $(0;1)$ ab und wird durch \autoref{eq:sigmoid} beschrieben.
+Der Vorteil hier ist, dass Aktivierungen nie groß werden können, wodurch einzelne Neuronen nicht den Gradienten dominieren können und 
+eine fortlaufende Normalisierung durchgeführt wird. Die Probleme hingegen sind, dass die Funktion eher aufwendig zu berechnen ist 
+und dass die Ableitung deutlich flacher verläuft. Hierdurch kann es zum \textit{Vanishing-Gradient-Problem} kommen, wobei 
+Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite[S.~191--192]{Goodfellow.2016}. 
+\begin{align}
+	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}
+\end{align} 
+
+\subsection{\acf{ReLU}}
+
+Die \textit{\acf{ReLU}} ist eine Aktivierungsfunktion, welche durch \autoref{eq:relu} ausgedrückt wird. 
+\ac{ReLU} ist inzwischen der de-facto Standard von Aktivierungsfunktionen in den verborgenen Schichten eines Deep-Learning-Modells.
+Dies liegt vor allem daran, dass das Vanishing-Gradient-Problem adressiert wird. Allerdings hat \ac{ReLU} das Problem, 
+dass Neuronen auf $0$ gesetzt werden, wodurch sie kein Gradienten-Update mehr erhalten und dauerhaft genullt bleiben 
+und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite[S.~189--191]{Goodfellow.2016}. 
+
+\begin{align}
+	\label{eq:relu} ReLU(z) = \begin{cases} 
+		z & z > 0 \\
+		0 & z \leq 0 
+	\end{cases}
+\end{align} 
+
+\ac{ReLU} erzielt eine höhere Inferenz- und Trainingsgeschwindigkeit bei gleicher oder besserer Performanz, 
+als Sigmoid. Dies liegt zum einen an der Verbesserung des Vanishing-Gradient-Problems und zum anderen an der 
+simpleren und damit leichter zu berechnenden Funktion \cite[S.~226]{Goodfellow.2016}.
+
+\subsection{\acf{ELU}}
+
+Die \textit{\acf{ELU}} ist eine Aktivierungsfunktion, die das Dying-\ac{ReLU}-Problem adressieren soll. 
+Ausgedrückt wird die Funktion durch \autoref{eq:elu}. Die negative Komponente lässt zu, dass Neuronen nicht 
+von einem Satz auf $0$ zurückkommen können, und weiterhin etwas zur Zielfunktion beitragen können. Außerdem ist die mittlere 
+Aktivierung näher an $0$ als bei \ac{ReLU}, was zur Folge hat, dass das Training schneller konvergiert \cite{Clevert.23112015}.
+
+\begin{align}
+	\label{eq:elu} ELU(z) = \begin{cases} 
+		z & z > 0 \\
+		\alpha \cdot (e^z - 1) & z \leq 0 
+	\end{cases}
+\end{align}
+
+Sowohl \ac{ReLU} als auch \ac{ELU} haben das Problem, dass Aktivierungen beliebig groß werden können, 
+wodurch einige wenige Neuronen den Gradienten dominieren können, was zu langsamen Training und suboptimaler Performanz führen kann - das \textit{Exploding-Gradient-Problem}. 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{Bilder/activation-geogebra-export.pdf} 
+	\caption{Verschiedene Aktivierungsfunktionen. Grün: Sigmoid. Rot: \ac{ReLU}. Blau: \ac{ELU} mit $\alpha = 1$.}
+	\label{fig:activation}
+\end{figure} 
+
+
 \section{Ähnlichkeitsmaße}
 
 Im Folgenden sollen Ähnlichkeitsmaße zwischen Mengen, insbesondere 
