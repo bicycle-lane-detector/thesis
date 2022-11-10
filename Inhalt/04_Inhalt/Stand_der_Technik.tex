@@ -2,6 +2,44 @@
 
 \chapter{Stand der Technik}
 
+\section{Aufgabenkategorien}
+
+Im Bereich der Computer Vision gibt es verschiedene Kategorien von Aufgaben.
+Dazu wird nachfolgend ein Überblick über \textit{Klassifizierung}, \textit{Object Detection} und \textit{Image Semantic Segmentation} gegeben.
+Eine Visualisierung ist in \autoref{fig:categories} gegeben.
+Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komplexität zu.
+Es folgt eine Übertragung auf das zu behandelnde Problem der Fahrradwegsegmentierung.
+
+\begin{itemize}
+	\item \textit{Klassifizierung:}
+	Eine reine Klassifizierung ist die einfachste Lösungskategorie. 
+	Es soll lediglich erkannt werden, welche Klasse in einem Bild enthalten ist.
+	Die Lokalität des erkannten Objektes wird vernachlässigt, wichtiger ist die Zuordnung zu einer Klasse.
+	Dies lässt sich auch entsprechend auf die Erkennung von mehreren Klassen erweitern.
+	
+	\item \textit{Object Detection:}
+	Eine Erweiterung der Klassifizierung um die Lokalität des erkannten Objektes wird \textit{Image Localization} genannt.
+	Für mehrere Objekte wird der Begriff Object Detection verwendet.
+	Die Darstellung erkannter Objekte wird über Bounding Boxes realisiert, welche die Objekte jeweils umschließen.
+
+	\item \textit{Image Semantic Segmentation:}
+	Die bei der Object Detection verwendeten Bounding Boxes geben keine Rückschlüsse auf die konkrete Form der Klasse.
+	Je nach Lage des Objektes kann nur ein Bruchteil der Bounding Box von der erkannten Klasse gefüllt sein.
+	Abhilfe schafft die Verwendung einer pixelweisen Maske anstelle einer Bounding Box, das Objekt kann von seiner Umgebung abgegrenzt werden.
+	Zusätzlich kann gefordert werden, dass einzelne Instanzen verschiedener Objekte unterschieden werden sollen.
+	Diese Forderung wird dann \textit{Instance Segmentation} genannt \cite{Sharma.21.08.2019}.
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{Bilder/categories.png} 
+	\caption{Verschiedene Aufgabenkategorien \cite{.10.11.2022}}
+	\label{fig:categories}
+\end{figure} 
+
+Für die Erkennung von Radwegen wird Image Semantic Segmentation verwendet, da für jeden einzelnen Pixel bestimmt werden soll, ob dieser Bestandteil eines Radweges ist.
+Eine einfache Klassifizierung oder Object Detection ist nicht ausreichend, eine Instantiierung verschiedener Radwege übersteigt die gewünschte Anforderung nach dem reinen Erkennen von Wegen.
+Aus den gewonnenen Kategorien der einzelnen Pixel lassen sich Masken zeichnen, denen dann die konkreten Verläufe entnommen werden können.
 
 \section{Aktivierungsfunktionen}
 
