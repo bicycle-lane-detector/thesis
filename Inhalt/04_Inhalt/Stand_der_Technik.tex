@@ -172,22 +172,22 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 \section{Transfer-Learning mit U-Net}
 
 \textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
-bestenfalls ähnliches Problem. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
-Häufig wird dafür ein Teil des Modells eingefroren, sodass sich diese Gewichte nicht verändern können. Dies verhindert, 
+bestenfalls ähnliches Problem und Modell. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
+Häufig wird dafür ein Teil des Modells eingefroren, sodass sich die eingefrorenen Gewichte nicht verändern können. Dies verhindert, 
 dass die bereits vortrainierten Gewichte durch die erste Trainings-Batch zerstört werden. Eine weitere Möglichkeit ist,
-mit einer geringen Lernrate das gesamte Modell zu trainieren. Oft werden beide Ansätze auch verbunden.
+mit einer sehr geringen Lernrate das gesamte Modell zu trainieren. Oft werden beide Ansätze auch verbunden.
 
 Der Vorteil von Transfer-Learning liegt darin, dass das Training deutlich kürzer dauert, 
 weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Datensätze bessere Ergebnisse erzielt werden können
  und auch insgesamt eine höhere Genauigkeit 
 am Ende des Trainings erreicht wird, als bei herkömmlichen Training. Diese Effekte sind verstärkt, 
-abhängig davon wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
+abhängig davon, wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
 Insbesondere bei Computer-Vision ist Transfer-Learning effektiv, da bei Bildern high-level Features wie Clustering 
 ähnlichfarbener Pixel oder Kantenerkennung oftmals sehr ähnlich zwischen unterschiedlichen Datensätzen ausfallen 
 und damit schon vorhanden sind \cite{Ruder.3212017}. 
 
 Für Transfer-Learning mit U-Nets gibt es verschiedene Strategien: Backbone-Netze als Encoder, 
-partielles Einfrieren verschiedener Netzbereiche und direktes trainieren mit geringer Learning-Rate.
+partielles Einfrieren verschiedener Netzbereiche und direktes Trainieren mit geringer Learning-Rate.
 Der Stand der Wissenschaft diesbezüglich wird im Folgenden vorgestellt. 
 
 \subsection{Training mit Backbones}
@@ -198,7 +198,36 @@ symmetrisch dem Encoder nachempfunden und an passenden Stellen Skip-Verbindungen
 Hierdurch kann eine geeignete \ac{CNN}-Architektur für das spezifische Problem ausgewählt werden. Des Weiteren sind diese 
 Modelle auf sehr großen Datensätzen, wie \textit{ImageNet}, vortrainiert öffentlich zugänglich. 
 
-Bei der Segmentierung 
+Bei der semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern, wurden die besten Ergebnisse von einem Dice-Maß-Standpunkt aus, 
+mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches zuerst auf dem \textit{Salien Object}
+Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse von dem Dice-Maß her, wobei allerdings das VGG16-U-Net kleine falsch-positive 
+Regionen erkannte, die weit Außerhalb der Ground-Truth lagen. Die falsch-positiven beim Vergleichsnetz, lagen direkt an der Ground-Truth, 
+dies lässt auf eine sensitivere Kantenerkennung beim VGG16-U-Net schließen, die manchmal aber auch übersensitiv war \cite{Cheng.05.10.2021}. 
+
+Für das Training des VGG16-U-Nets wurde der Encoder-Teil eingefroren und somit nur der Decoder trainiert. 
+
+\subsection{Partielles einfrieren und Training mit geringer Lernrate}
+
+Im oben beschriebenen Problem zur semantischen Segmentierung wurde das vortrainierte Vergleichsnetz auf zwei Weisen fein-trainiert:
+\begin{enumerate}
+	\item Ohne Einfrieren mit einer Lernrate von $10^{-5}$
+	\item und mit Einfrieren des mittleren Blocks, welcher ungefähr $14\cdot 10^6$ der insgesamt $31 \cdot 10^6$ Parameter enthielt. 
+\end{enumerate}
+Die 5-fache Kreuzvalidierung ergab sowohl für den besten Lauf, als auch für den durchschnittlichen Lauf, ein besseres Dice-Maß 
+für das Training aller Parameter. In keinem der Fälle gab es, anders als beim VGG16-U-Net, segmentierte Regionen ohne Zusammenhang mit der Ground-Truth \cite{Cheng.05.10.2021}. 
+
+In einem weiteren Paper wurde untersucht, welche Layer eines U-Net am besten eingefroren werden sollten, für das Fine-Tuning von medizinischen Bildern - 
+zum einen von Lungen-Ultraschall-Bildern und zum anderen von Brust-Röntgen-Aufnahmen. 
+Hier wurde wieder mit dem \textit{Salien Objetcs} Datensatz vortrainiert. Dann wurden für beide Anwendungsfälle folgende Tests durchgeführt: 
+\begin{enumerate}
+	\item Einfrieren der linken Hälfte (Encoder) des Netzes,
+	\item Einfrieren der rechten Hälfte (Decoder) des Netzes,
+	\item gesamtes Netz, bis auf den ersten Block eingefroren und dann nach jeweils fünf Epochen sukkzessive weitere Blöcke freigeben und
+	\item dasselbe allerdings von hinten nach vorne.
+\end{enumerate}
+Für die Röntgenaufnahmen gab es keine Unterschiede, wobei der Dice-Score hier allerdings auch bei $0.98$ lag. 
+Für die Ultraschallbilder lieferte Methode (1) die schlechtesten Ergebnisse (Dice: $0.72$), gefolgt von Methode (2) (Dice: $0.80$) 
+und gleichermaßen (3) und (4) (Dice: $0.82$), wobei (3) deutlich schneller konvergierte \cite{Amiri.19.02.2020}.
 
 
 
