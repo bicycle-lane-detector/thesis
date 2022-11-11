@@ -36,7 +36,7 @@
             - Deep Globe (viel unterschiedliche szenerien)
             - LandCover.ai (zu viel acker)
             - ... (siehe Citavi)
-        - Benchmarks
+        - Benchmarks (also welche ergebnisse konnten schon mit U-Nets erzielt werden (dafür siehe vor allem Citavi U-Net > Benchmakr > "Aerial Road Segmentation in the Presence of Topological Label Noise"))
     - Herausarbeitung des Neuheitswertes (vgl gegen Straßenerkennung)
 - Konzeption
     - Pretraining auf roads data set
