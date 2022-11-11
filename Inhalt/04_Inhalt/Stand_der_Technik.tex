@@ -267,11 +267,46 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 \end{figure} 
 
 
-\section{Vortrainierte \ac{CNN}-Modelle}
+\section{Vortrainierte \ac{CNN}-Modelle} \label{sec:pretrained-backbones}
 
-\subsection{VGG16}
+Im Folgenden wird eine Auswahl an \ac{CNN}-Modellen vorgestellt, von denen es öffentlich zugängliche,
+vortrainierte Instanzen zur freien Verwendung gibt. 
+Die Klassifikations-Modelle sind auf dem ImageNet-Datensatz, der über 14 Mio. Bilder 
+mit 1000 Klassen enthält, trainiert.    
 
-\subsection{DenseNet121}
+\subsection{VGG16} \label{sec:pretrained-backbones:vgg16}
+
+\textit{VGG16} ist ein \ac{CNN}, welches 2015 von der \textit{Visual Geometry Group} vorgestellt wurde 
+und zu der Zeit bahnbrechende Ergebnisse bei der Bilderklassifizierung lieferte \cite{Simonyan.04092014}. 
+Inzwischen ist es ein Standard-Netz, auf welchem viele weitere Architekturen aufbauen,
+um verschiedene Verbesserungen zu realisieren. 
+Dadurch ist es auch sehr beliebt für Transfer-Learning. 
+
+\autoref{fig:vgg16-architecture} zeigt die Architektur. VGG16 besteht aus fünf Blöcken mit $3x3$-Convolution-Schichten,
+gefolgt von drei Fully-Connected-Schichten. Die ersten beiden Convolution-Blöcke haben zwei Convolution-Schichten,
+die letzten drei Blöcke dagegen jeweils drei. 
+Jeder Convolution-Block wird gefolgt von einer Maxpool-Schicht und jeder bis auf den vorletzeten verdoppelt die Filteranzahl in den Convolution-Schichten,
+beginnend bei 64 Filtern im ersten Block bis hin zu 512 Filtern in den letzten beiden Blöcken \cite{Simonyan.04092014}. 
+
+Das gesamte Netz besitzt 138 Mio. Parameter. Werden die drei Fully-Conntected-Schichten am Ende ausgelassen, 
+sind es ungefähr 14,7 Mio. Parameter. 
+
+
+\subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
+
+\textit{DenseNet121} wurde 2018 erstmals vorgeschlagen und wurde designed, um das Vanishing-Gradient-Problem 
+zu verbessern, bessere Feature-Übertragung in tiefere Netzschichten zu ermöglichen und das Wiederverwenden von Features 
+zu unterstützen, um somit die Anzahl der benötigten Parameter deutlich zu reduzieren, bei gleichbleibender Performanz \cite{Huang.25082016}.
+
+\autoref{fig:densenet121-architecture} zeigt die Architektur. Was aus der Abbildung nicht ersichtlich ist, ist wie die 
+Dense-Blöcke aufgebaut sind: Jede angegebene Convolution-Schicht besteht aus einer Batch-Normalization-Schicht mit \ac{ReLU}-Aktivierung,
+gefolgt von der angegebenen Convoltuion-Schicht. Außerdem - und hier liegt die große Erweiterung des DenseNet - sind alle 
+Convolution-Schichten eines Dense-Blocks mit allen nachfolgenden Convolution-Schichten des Dense-Blocks konkateniert,
+anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall ist. 
+
+DenseNet121 enthält circa 7 Mio. Parameter. Ohne die letzte Fully-Connected-Schicht sind es noch circa 6,9 Mio. 
+Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse als VGG16 auf dem ImageNet-Datensatz 
+(93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
 
 
 \section{Transfer-Learning mit U-Net}
