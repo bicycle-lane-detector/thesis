@@ -36,21 +36,22 @@
             - Deep Globe (viel unterschiedliche szenerien)
             - LandCover.ai (zu viel acker)
             - ... (siehe Citavi)
-        - Benchmarks (also welche ergebnisse konnten schon mit U-Nets erzielt werden (dafür siehe vor allem Citavi U-Net > Benchmakr > "Aerial Road Segmentation in the Presence of Topological Label Noise"))
+        - Benchmarks (also welche ergebnisse konnten schon hierzu erzielt werden (dafür siehe vor allem Citavi U-Net > Benchmakr))
     - Herausarbeitung des Neuheitswertes (vgl gegen Straßenerkennung)
-- Konzeption
-    - Pretraining auf roads data set
-        - Mass angepasst 
-    - Image Semantic Segmentation (Warum?)
+- Konzeption (Zielvorstellung)
     - Datensatz 
         - gibt es keinen :(, aber wir haben einen selber gemacht :)
         - manuell gelabeled vs automatisch gelabeled ? 
         - zahlen daten fakten größe auflösung etc pp
         - unterschiedliche Städte
     - Architektur von unsere(m/n) Netz(en)
+    - Pretraining auf roads data set
+        - Mass angepasst 
+    - (Image Semantic Segmentation (Warum?)) 
     - Hyperparameter
     - (Image Augmentation -> robuster)
     - IoU + Quality ganz gut für spätere Bewertung weil Mix aus stringent und locker + menschliche Einschätzung, Warum Dice und nicht Falpha oder BCE ? 
+    - Welche Methoden, welche Tests ? 
 - Implementierung
     - KI bedienen
     - Datensatz bauen 
