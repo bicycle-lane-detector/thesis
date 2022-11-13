@@ -370,6 +370,68 @@ Für die Ultraschallbilder lieferte Methode (1) die schlechtesten Ergebnisse (Di
 und gleichermaßen (3) und (4) (Dice: $0.82$), wobei (3) deutlich schneller konvergierte \cite{Amiri.19.02.2020}.
 
 
+
+\section{Aktueller Stand und Benchmarks} % ...der straßen detection
+
+Die aktuellen State-Of-The-Art-Methoden zur Extraktion von Straßen aus Satelliten- und Luftbildern verwenden 
+alle Computer-Vision mittels \acp{CNN} und dabei ausschließlich Netze aus der U-Net-Familie - also angepasste, 
+erweiterte, abgeänderte U-Nets \cites{C.Henry.2021, Constantin.2018, Kamiya.2018, Yerram.2022}. \\
+Dies liegt vor allem daran, dass das U-Net, welches ursprünglich für biomedizinische Bilder entworfen wurde, 
+genau die Probleme adressiert, die auch beim Segmentieren von Straßen auf Luftbildern auftreten. 
+Wie auch in medizinischen Bildern leiden die Luftbilder-Datensätze häufig unter großer Klassen-Imbalance 
+und unter ähnlichen Annotationsfehlern. Außerdem haben viele medizinische Bilder und Luftbildaufnahmen von Straßen 
+ähnliche Topologien. Komplexere Architekturen zur semantischen Segmentierung, wie zum Beispiel solche 
+für Bodenaufnahmen-Datensätze (vgl. KITTI \cite{Geiger.2013}) erreichen nicht die Performance von U-Nets bei 
+Luftbild-Benchmarks \cite{C.Henry.2021}. \\
+Weiter wird die Extraktion von Straßen aus Satelliten- bzw. Luftbildern zumeist in zwei Phasen eingeteilt: 
+\begin{enumerate}
+	\item Das Erstellen einer binären Maske zu den Luftbildern mittels semantischer Segmentierung, 
+	welche die Straßen pixelweise induziert. 
+	\item Das Extrahieren eines topologischen Graphens, welcher die Straßen-Zentrumslinien beschreibt.   
+\end{enumerate}
+Schritt (1) wird dabei zumeist von U-Net-Derivaten behandelt, wobei es allerdings auch Vorschläge von Netzen gibt, 
+die direkt Schritt (2) ausführen \cite{C.Henry.2021}.
+Im Folgenden wird weiter Schritt (1) betrachtet.   
+
+Der Vergleich von unterschiedlichen Netzen, Papern und Ergebnissen zu der Sache ist häufig erschwert, 
+da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedliche gängige Kodierungen gibt:
+\begin{enumerate}
+	\item Das verwendete \ac{CNN} hat je Input-Neuron bzw. -Pixel $p$ genau ein Output-Neuron $o_p$, welches den jeweiligen Input-Pixel $p$
+	als Straße identifiziert, genau dann, wenn der Wert des Output-Neuron $o_p$ einen gewissen Grenzwert $l$ überschreitet ($o_p > l$), 
+	ansonsten ($o_p \leq l$) gilt der Pixel $p$ \textit{implizit} als Nicht-Straße, bzw. \textit{Hintergrund}. \\
+	In diesem Fall stellt ein korrekt als Hintergrund klassifizierter Pixel ein wahr-negatives Ergebnis dar. 
+	Wahr-Negative werden von Dice, bzw. \ac{IoU} allerdings nicht berücksichtigt (vgl. \autoref{eq:f1} und \ref{eq:iou-binary}).
+	Ein so klassifizierter Pixel ändert also nichts an dem Score. Es werden nur Straßen betrachtet, nicht aber der Hintergrund.    
+	\item Das verwendete \ac{CNN} hat je Input-Neuron bzw. -Pixel $p$ \textit{zwei} Output-Neuronen $\mathbf{o_p} = (o_{p_S}, o_{p_H})$, 
+	wobei dies eine One-Hot-Kodierung von Punkt (1) darstellt. 
+	Ein Hintergrund-Pixel wird nun \textit{explizit} als solcher klassifiziert. 
+	Dies ändert allerdings die Berechnungsgrundlage von Dice und \ac{IoU} erheblich, da diese nun (zumeist) als Mittelwert 
+	der Scores zu $o_p{_S}$ und $o_p{_H}$ berechnet werden. Hierdurch fließen die zuvor unberücksichtigten wahr-negativen 
+	Hintergrundpixel als wahr-postive in den Dice- bzw. \ac{IoU}-Score ein. Die Verzerrung wird noch verstärkt, 
+	da eine starke Imbalance zwischen Straßen- und Hintergrundpixel herrscht, wodurch der Dice-/\ac{IoU}-Score bei 
+	der One-Hot-Kodierung viel mehr eine Aussage darüber trifft, wie viele Hintergrundpixel, von denen es ja viel mehr gibt,
+	richtig klassifiziert wurden. Die so erzielten Dice-/IoU-Werte sind hier rein numerisch deutlich höher. 
+\end{enumerate}
+
+\autoref{tab:basline-benchmarks} zeigt 
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|l|l|l|l}
+		\multirow{2}{*}{Model} & \multicolumn{2}{c|}{Massachusetts} & \multicolumn{2}{c}{Deep Globe}  \\
+		& Dice & IoU & Dice & IoU \\
+		\midrule
+		DeepLabv3+* & 69,35 & 52,95 & 75,19 & 59,65 \\
+		D-LinkNet50 & 71,01 & 54,90 & 74,04 & 58,12 \\
+		U-Net* & 71,91 & 55,92 & 76,82 & 61,97 \\
+		Res-U-Net50 & 72,74 & 56,93 & 78,62 & 64,55  \\
+		Dense-U-Net-121 & 73,03 & 57,12 & 79,19 & 65,13  \\
+	\end{tabular}
+	\caption{Baseline-Resultate verschiedener Modelle auf dem Massachusetts- 
+	bzw. Deep-Globe-Datensatz, aufsteigend sortiert. * nicht vortrainiert. \cite{C.Henry.2021}.}
+	\label{tab:basline-benchmarks}
+\end{table}
+
 \subsection{Tiefensuche (DFS)}
 
 \autoref{code:dfs} zeigt eine Implementation der Funktion zur rekursiven Tiefensuche in C++ mit Adjazenzlisten als Graphrepräsentation. Hierbei ist \code{adj} ein Feld mit den (Adjazenz-)Listen und \code{visited} ein Array, welches jedem Knoten die Markierung ob er schon besucht wurde zuweist.
