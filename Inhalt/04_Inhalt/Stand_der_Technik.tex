@@ -309,6 +309,9 @@ Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse
 (93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
 
 
+\subsection{ResNet34} \label{subsec:resnet}
+
+
 \section{Transfer-Learning mit U-Net}
 
 \textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
@@ -413,9 +416,13 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 	richtig klassifiziert wurden. Die so erzielten Dice-/IoU-Werte sind hier rein numerisch deutlich höher. 
 \end{enumerate}
 
-\autoref{tab:basline-benchmarks} zeigt 
+\autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Basline}-Modellen.
+Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht extrem auf den jeweiligen Datensatz optimiert sind,
+was die Hyper-Parameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
+Mit den Baseline-Resultaten können diese Modelle zu Vergleichszwecken verwendet werden 
+und es bestehen Daten zu mehreren Benchmarks \cite{C.Henry.2021}.
 
-\begin{table}[ht]
+\begin{table}
 	\centering
 	\begin{tabular}{l|l|l|l|l}
 		\multirow{2}{*}{Model} & \multicolumn{2}{c|}{Massachusetts} & \multicolumn{2}{c}{Deep Globe}  \\
@@ -425,22 +432,34 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 		D-LinkNet50 & 71,01 & 54,90 & 74,04 & 58,12 \\
 		U-Net* & 71,91 & 55,92 & 76,82 & 61,97 \\
 		Res-U-Net50 & 72,74 & 56,93 & 78,62 & 64,55  \\
-		Dense-U-Net-121 & 73,03 & 57,12 & 79,19 & 65,13  \\
+		Dense-U-Net-121 & \textbf{73,03} & \textbf{57,12} & \textbf{79,19} & \textbf{65,13}  \\
 	\end{tabular}
 	\caption{Baseline-Resultate verschiedener Modelle auf dem Massachusetts- 
-	bzw. Deep-Globe-Datensatz, aufsteigend sortiert. * nicht vortrainiert. \cite{C.Henry.2021}.}
+	bzw. Deep-Globe-Datensatz in Prozent, aufsteigend sortiert. Nicht one-hot-kodiert. * nicht vortrainiert. \cite{C.Henry.2021}.}
 	\label{tab:basline-benchmarks}
 \end{table}
 
-\subsection{Tiefensuche (DFS)}
+\autoref{tab:optimized-benchmarks} zeigt hingegen die top-drei optimierten Modelle, die derzeit die Leaderboards 
+des jeweiligen Datensatzes anführen. Alle hiervon sind U-Net-Derivate.
+Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:basline-benchmarks} beispielsweise beim Massachusetts-Datensatz 
+bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall \cite{C.Henry.2021}. \\
+Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
+indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen Input der ersten und Output der zweiten Schicht besteht (s. \autoref{subsec:resnet}).} 
+ersetzt wurden und der Bottleneck-Block
+um Dilation erweitert wurde \cite{Gao.2019}. 
+Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}.
 
-\autoref{code:dfs} zeigt eine Implementation der Funktion zur rekursiven Tiefensuche in C++ mit Adjazenzlisten als Graphrepräsentation. Hierbei ist \code{adj} ein Feld mit den (Adjazenz-)Listen und \code{visited} ein Array, welches jedem Knoten die Markierung ob er schon besucht wurde zuweist.
+\newcommand*\rot{\rotatebox{60}}
 
-\lstinputlisting[
-	label=code:dfs,    % Label; genutzt für Referenzen auf dieses Code-Beispiel
-	caption=Rekursive Implementation der Tiefensuche mit Adjazenzlisten in C++. (In Anlehnung an \cite{GeeksforGeeks.2012}.),
-	captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
-	style=EigenerCppStyle,   % Eigener Style der vor dem Dokument festgelegt wurde
-	firstline=1,                % Zeilennummer im Dokument welche als erste angezeigt wird
-	lastline=8                 % Letzte Zeile welche ins LaTeX Dokument übernommen wird
-]{Quellcode/dfs.cpp}
+\begin{table}
+	\centering
+	\begin{tabular}{l|lll|lll}
+		& \multicolumn{3}{c|}{Massachusetts} & \multicolumn{3}{c}{Deep Globe}  \\
+		\rot{Model} & \rot{RDRCNN} & \rot{\begin{tabular}[x]{@{}c@{}}Dense-U-Net-\\121\end{tabular}} & \rot{WRAU-Net} & \rot{EOSResUNet} & \rot{D-LinkNet} & \rot{\begin{tabular}[x]{@{}c@{}}U-Net-like\\ResNet34\end{tabular}} \\
+		\midrule
+		IoU & \textbf{67,10} & 66,61 & 64,58 & \textbf{65,60} & 64,12 & 64,00 
+	\end{tabular}
+	\caption{Optimierte Resultate verschiedener Modelle auf dem Massachusetts- 
+	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert von links nach rechts. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
+	\label{tab:optimized-benchmarks}
+\end{table}
