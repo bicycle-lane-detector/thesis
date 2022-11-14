@@ -291,6 +291,25 @@ beginnend bei 64 Filtern im ersten Block bis hin zu 512 Filtern in den letzten b
 Das gesamte Netz besitzt 138 Mio. Parameter. Werden die drei Fully-Conntected-Schichten am Ende ausgelassen, 
 sind es ungefähr 14,7 Mio. Parameter. 
 
+\subsection{ResNet34} \label{sec:pretrained-backbones:resnet}
+
+Damit Modelle mehr und feinere Features lernen können, müssen sie in der Lage sein, sehr komplexe Funktionen darzustellen. 
+Das führt dazu, dass tiefere Netze auf dem ImageNet-Datensatz tendenziell bessere Ergebnisse erzeugen, als flachere. 
+Hierin lag auch der Erfolg von VGG16 bzw. VGG19. Jedoch führt das einfache Vertiefen von Netzen zu dem Degredation-Problem, wonach 
+flachere Netze besser performen, als tiefere, da die tieferen sehr schwer zu trainieren sind. \\
+Dieses Problem adressiert \textit{ResNet} erfolgreich, indem \textit{Residual-Blocks} eingeführt werden. 
+Hierdurch können mit \textit{ResNet} tiefere Netze erstellt werden als bisher, die trotzdem noch effizient trainiert werden können.
+Ein Residual-Block besteht dabei aus zwei Convolutional-Layer mit einer Skip-Connection zwischen Input der ersten Layer und Output 
+der zweiten Layer. Durch die Skip-Connections kann bei der Backpropagation der Gradient ungehindert rückwärts laufen, 
+um so auch die flachen Layer upzudaten. So kann z.B. \textit{ResNet34} 34 trainierbare Layer haben, 
+während zuvor mit VGG nur 16 bzw. 19 effektiv waren \cite{He.10122015}. 
+
+Die Architektur ist dabei sehr simpel. Sie ist zu sehen in \autoref{fig:resnet34-architecture} 
+und stellt - im Falle von ResNet34 - im Prinzip 33 Convolutional-Layer mit wiederholtem Downsampling 
+und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fully-Connected-Layer dar \cite{He.10122015}.
+
+ResNet34 hat 63,5 Mio. Parameter. 
+
 
 \subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
 
@@ -307,9 +326,6 @@ anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall 
 DenseNet121 enthält circa 7 Mio. Parameter. Ohne die letzte Fully-Connected-Schicht sind es noch circa 6,9 Mio. 
 Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse als VGG16 auf dem ImageNet-Datensatz 
 (93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
-
-
-\subsection{ResNet34} \label{subsec:resnet}
 
 
 \section{Transfer-Learning mit U-Net}
@@ -444,7 +460,7 @@ des jeweiligen Datensatzes anführen. Alle hiervon sind U-Net-Derivate.
 Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:basline-benchmarks} beispielsweise beim Massachusetts-Datensatz 
 bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall \cite{C.Henry.2021}. \\
 Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
-indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen Input der ersten und Output der zweiten Schicht besteht (s. \autoref{subsec:resnet}).} 
+indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen Input der ersten und Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
 ersetzt wurden und der Bottleneck-Block
 um Dilation erweitert wurde \cite{Gao.2019}. 
 Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}.
