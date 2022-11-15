@@ -5,20 +5,46 @@ um das beste zu finden
 
 \section{Architektur}
 
-Hier kurz beschreiben warum U-Net + Image Segmentation, 
-also einfach weil datensatz für roads, was ja sehr ähnlich ist und benchmakrs da bestehen.
-Dann kurz auf die vorzustellenden Architekturen aufzählen
+Im Folgenden werden die untersuchten Architekturen genauer beschrieben und ebenfalls begründet, 
+warum die jeweiligen architektonischen Entscheidungen getroffen wurden. \\
+In \autoref{sec:state-of-the-art-roads} wurde ausführlich der Stand der Technik und Wissenschaft 
+im Bereich der Straßenerkennung und -extraktion mittels Computer-Vision-Modellen beschrieben. 
+Aufgrund der Ähnlichkeit der Problemdomäne lässt sich vermuten, dass ähnliche Verfahren wie 
+zum Erkennen von Straßen auch für das Erkennen von Fahrradwegen nützlich sein könnten. 
+Die Problemdomänen sind ähnlich, da Fahrradwege auch Straßen sind und eben jene Eigenschaften, 
+wie große Klassenimbalance zwischen Fahrradweg und Hintergrund, Beschattung durch andere Objekte,
+Verdeckung durch z.B. Bäume und ähnliche Annotationsfehler   
+teilen. Schwierigkeit hier wird sein, Fahrradwege von Straßen zu unterscheiden. \\
+Die Radwege sollen, wie Straßen auch, mittels Image-Semantic-Segmentation von einem Computer-Vision-Modell 
+markiert werden. Andere Klassifizierungsarten, wie die in \autoref{sec:aufgabenkategorien} beschriebene 
+Objektdetektion würde zu grobe Bounding-Boxes um schräg verlaufende Radwege legen, sodass im Prinzip 
+eine Straße markiert werden würde, die zwar ein Radweg hat, aber nicht klar wäre, wo dieser verläuft, 
+bzw. ob ein Radweg in beide Richtungen existiert. Aus demselben Grund ergibt eine reine Klassifikation, 
+ob ein Bild ein Radweg enthält oder nicht ebenfalls keinen Sinn. 
+Auf der anderen Seite würde Instanz-Segmentierung keine weiteren relevanten Informationen hinzufügen, 
+wonach semantische Segmentierung völlig ausreicht, um das Problem zu lösen. \\
+Wie bereits in \autoref{sec:state-of-the-art-roads} dargelegt sind alle relevanten Modelle zur 
+Straßenerkennung basierend auf der U-Net-Archtiektur (vgl. \ref{sec:architekturkomponenten:unet}).
+Folglich sollen die hier betrachteten Modelle ebenfalls als angepasste U-Nets entworfen werden. 
+Insbesondere ermöglicht dies auch die Modelle zur Fahrradwegerkennung auf den verschiedenen 
+in \autoref{sec:roads-data} vorgestellten Datensätzen zur Straßenerkennung vorzutrainieren, 
+was zu allgemein besseren Ergebnissen führen kann (s. \autoref{sec:transfer-learning}). 
+Außerdem können so die erzielten Ergebnisse vom Pre-Training mit den öffentlichen Benchmarks verglichen werden,
+um deren Ergebnisse zu validieren und früh Fehler in den eigenen Entscheidungen und Implementationen zu entdecken.
 
-\subsection{Cycle-Net: Ein U-Net-Derivat}
+Zunächst soll so ein nur leicht modifiziertes U-Net, welches im Folgenden \textit{Bike-U-Net} 
+genannt wird, entworfen werden, welches als Baseline- und Vergleichs-Netz dienen soll.
+Dann soll eine zweite Klasse an U-Nets beschrieben werden, die verschiedene vortrainierte \acp{CNN} (s. \autoref{sec:pretrained-backbones}) 
+als Backbones für ein U-Net verwendet, da \autoref{sec:state-of-the-art-roads} gezeigt hat, 
+dass im Falle der Straßendetektion die Performanz eines Netzes stark verbessert werden konnte, 
+indem auf Techniken und Methoden von Modellen aus anderen Teilgebieten der Computer-Vision 
+zurückgegriffen wurde. Die einfachste Ausprägung hiervon ist das Dense-U-Net-121, 
+welches einfach ein DenseNet121 als Backbone verwendet und somit von dessen Pre-Training und Architektur
+profitieren konnte und damit 2-5\% bessere Resultate in der Basline-Bewertung und bis zu 19\% 
+bessere Ergebnisse in der optimierten Version erzielen konnte, als ein herkömmliches U-Net. 
+Gegebenenfalls ist das auch für die Radwegerkennung möglich. Dazu sollen mehrere Backbones untersucht werden. 
 
-
-
-
-\subsection{Backbone-U-Nets}
-
-
-WARUM ELU? 
-Kein vanishing gradient, recht schnell zu berechnen, kein dying neuron problem (insb. elevant bei CNN (u-net paper quoten)), blow up von aktivierung wird gedämpft durch batch norm. 
+\subsection{Bike-U-Net}
 
 \begin{figure}
 	\centering
@@ -27,12 +53,13 @@ Kein vanishing gradient, recht schnell zu berechnen, kein dying neuron problem (
 	\label{fig:own-unet-2mil}
 \end{figure} 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=1.\textwidth]{Bilder/own-unet-15mil.pdf} 
-	\caption{CAPTION 15,165 Mio Param.}
-	\label{fig:own-unet-15mil}
-\end{figure} 
+
+\subsection{Backbone-U-Nets}
+
+
+WARUM ELU? 
+Kein vanishing gradient, recht schnell zu berechnen, kein dying neuron problem (insb. elevant bei CNN (u-net paper quoten)), blow up von aktivierung wird gedämpft durch batch norm. 
+
 
 \section{Algorithmus zur Reduktion eines Materialflussgraphen} \label{sec:reduction}
 

@@ -2,7 +2,7 @@
 
 \chapter{Stand der Technik}
 
-\section{Aufgabenkategorien}
+\section{Aufgabenkategorien} \label{sec:aufgabenkategorien}
 
 Im Bereich der Computer Vision gibt es verschiedene Kategorien von Aufgaben.
 Dazu wird nachfolgend ein Überblick über \textit{Klassifizierung}, \textit{Object Detection} und \textit{Image Semantic Segmentation} gegeben.
@@ -239,7 +239,7 @@ Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion 
 Besonders gut funktioniert Batch-Normalization für \acp{CNN} und Netzwerke mit Sigmoid-Aktivierungsfunktion
 \cites[S.~425]{Goodfellow.2016}.
 
-\subsection{U-Net}
+\subsection{U-Net} \label{sec:architekturkomponenten:unet}
 
 Die \textit{U-Net-Architektur} beschreibt eine \textit{Fully-Convolutional-Network-Architektur}, die erstmals in Freiburg 2015 vorgestellt wurde 
 und herausragende Ergebnisse für verschiedene Benchmarks, insbesondere zur semantischen Segmentierung kleiner Datensätze, liefert. \\
@@ -328,7 +328,7 @@ Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse
 (93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
 
 
-\section{Transfer-Learning mit U-Net}
+\section{Transfer-Learning mit U-Net} \label{sec:transfer-learning}
 
 \textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
 bestenfalls ähnliches Problem und Modell. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
@@ -390,7 +390,7 @@ und gleichermaßen (3) und (4) (Dice: $0.82$), wobei (3) deutlich schneller konv
 
 
 
-\section{Aktueller Stand und Benchmarks} % ...der straßen detection
+\section{Aktueller Stand und Benchmarks} \label{sec:state-of-the-art-roads} % ...der straßen detection
 
 Die aktuellen State-Of-The-Art-Methoden zur Extraktion von Straßen aus Satelliten- und Luftbildern verwenden 
 alle Computer-Vision mittels \acp{CNN} und dabei ausschließlich Netze aus der U-Net-Familie - also angepasste, 
@@ -458,7 +458,8 @@ und es bestehen Daten zu mehreren Benchmarks \cite{C.Henry.2021}.
 \autoref{tab:optimized-benchmarks} zeigt hingegen die top-drei optimierten Modelle, die derzeit die Leaderboards 
 des jeweiligen Datensatzes anführen. Alle hiervon sind U-Net-Derivate.
 Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:basline-benchmarks} beispielsweise beim Massachusetts-Datensatz 
-bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall \cite{C.Henry.2021}. \\
+bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall. 
+Dense-U-Net-121 ist dabei ein U-Net mit einem vortrainierten DenseNet121 als Backbone \cite{C.Henry.2021}. \\
 Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
 indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen Input der ersten und Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
 ersetzt wurden und der Bottleneck-Block
@@ -489,7 +490,7 @@ Allerdings gibt es keinerlei Untersuchungen oder Datensätze zur Erkennung, gesc
 von Radwegen aus Luftbildern. Hierzu ist es nötig neben dem Erkennen eines befestigten Weges  
 diesen auch von Straßen oder Gehwegen abzugrenzen. Wie bereits in der Motivation beschrieben, ist das selbst für 
 Menschen oft ein schwieriges Unterfangen, aufgrund der für das Problem geringen \ac{GSD}, wobei selbst bei modernen 
-Aufnahmen ein Radweg nur wenige Pixel breit ist, oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
+Aufnahmen ein Radweg nur wenige Pixel breit ist (1 Pixel entspricht 0,20 bis 0,50 Meter), oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
 Diese Arbeit kann also darüber Aufschluss geben, inwiefern eine Abgrenzung zwischen unterschiedlichen Straßentypen oder -bestandteilen 
 grundsätzlich möglich ist und ob in diesem Anwendungsfall eine Maschine eventuell sogar übermenschliche Performanz 
 erreichen kann, um so zum Beispiel auch sehr dunkle, überschattete oder überwachsene Wege zu erkennen. 
