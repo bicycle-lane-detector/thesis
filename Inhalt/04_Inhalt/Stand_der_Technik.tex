@@ -479,3 +479,22 @@ Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken erset
 	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert von links nach rechts. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
 	\label{tab:optimized-benchmarks}
 \end{table}
+
+\section{Neuheitswert}
+
+Wie in den vorangegangenen Kapiteln beschrieben, ist die Extraktion von Straßen aus Luftaufnahmen 
+ein gut untersuchtes Teilgebiet der Computer-Vision, wozu es eine Vielzahl an wissenschaftlichen Publikationen gibt
+und wozu praxistaugliche Resultate erzielt werden konnten. \\
+Allerdings gibt es keinerlei Untersuchungen oder Datensätze zur Erkennung, geschweige denn Extraktion, 
+von Radwegen aus Luftbildern. Hierzu ist es nötig neben dem Erkennen eines befestigten Weges  
+diesen auch von Straßen oder Gehwegen abzugrenzen. Wie bereits in der Motivation beschrieben, ist das selbst für 
+Menschen oft ein schwieriges Unterfangen, aufgrund der für das Problem geringen \ac{GSD}, wobei selbst bei modernen 
+Aufnahmen ein Radweg nur wenige Pixel breit ist, oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
+Diese Arbeit kann also darüber Aufschluss geben, inwiefern eine Abgrenzung zwischen unterschiedlichen Straßentypen oder -bestandteilen 
+grundsätzlich möglich ist und ob in diesem Anwendungsfall eine Maschine eventuell sogar übermenschliche Performanz 
+erreichen kann, um so zum Beispiel auch sehr dunkle, überschattete oder überwachsene Wege zu erkennen. 
+Des Weiteren kann diese Arbeit als Anhaltspunkt für verwandte Probleme, wie zum Beispiel das Erkennen von Busspuren 
+oder Gehwegen genutzt werden. Auch wird eine Methode vorgeschlagen, wie für solche Fälle ein Datensatz erstellt werden 
+kann, mit dem ein Computer-Vision-Modell trainiert werden kann. 
+
+
