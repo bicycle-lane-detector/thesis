@@ -66,7 +66,7 @@ Die besprochenen Funktionen sind dargestellt in \autoref{fig:activation}.
 Die \textit{Sigmoid}-Funktion bildet die Eingabe auf einen Wert im Intervall $(0;1)$ ab und wird durch \autoref{eq:sigmoid} beschrieben.
 Der Vorteil hier ist, dass Aktivierungen nie groß werden können, wodurch einzelne Neuronen nicht den Gradienten dominieren können und 
 eine fortlaufende Normalisierung durchgeführt wird. Die Probleme hingegen sind, dass die Funktion eher aufwendig zu berechnen ist 
-und dass die Ableitung deutlich flacher verläuft. Hierdurch kann es zum \textit{Vanishing-Gradient-Problem} kommen, wobei 
+und dass die Ableitung für betragsmäßig größere Werte verschwindet. Hierdurch kann es zum \textit{Vanishing-Gradient-Problem} kommen, wobei 
 Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite[S.~191--192]{Goodfellow.2016}. 
 \begin{align}
 	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}
@@ -106,7 +106,7 @@ Aktivierung näher an $0$ als bei \ac{ReLU}, was zur Folge hat, dass das Trainin
 \end{align}
 
 Sowohl \ac{ReLU} als auch \ac{ELU} haben das Problem, dass Aktivierungen beliebig groß werden können, 
-wodurch einige wenige Neuronen den Gradienten dominieren können, was zu langsamen Training und suboptimaler Performanz führen kann - das \textit{Exploding-Gradient-Problem}. 
+wodurch einige wenige Neuronen den Gradienten dominieren können, was zu langsamen Training und suboptimaler Performanz führen kann. 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{Bilder/activation-geogebra-export.pdf} 
