@@ -44,13 +44,16 @@
         - manuell gelabeled vs automatisch gelabeled ? 
         - zahlen daten fakten größe auflösung etc pp
         - unterschiedliche Städte
-    - Architektur von unsere(m/n) Netz(en)
+    - Pre-Processing 
+        - (Image Augmentation -> robuster), Welche Augmentation und warum?
+        - Zerschneiden in 512x512 große schnipsel, warum?
+        - RGB wird von 0..255 auf 0..1 abegbildet (Teilung durch 255)
+    - Architektur
+    - Evaluationsmaße (Loss und Bewertung)
+        - IoU + Quality ganz gut für spätere Bewertung weil Mix aus stringent und locker + menschliche Einschätzung, Warum Dice und nicht Falpha oder BCE ? Hier auf die Bewertung achten: zählt background als richtig?
+    - Hyperparameter
     - Pretraining auf roads data set
         - Mass angepasst 
-    - (Image Semantic Segmentation (Warum?)) 
-    - Hyperparameter
-    - (Image Augmentation -> robuster)
-    - IoU + Quality ganz gut für spätere Bewertung weil Mix aus stringent und locker + menschliche Einschätzung, Warum Dice und nicht Falpha oder BCE ? Hier auf die Bewertung achten: zählt background als richtig?
     - Welche Methoden, welche Tests ? 
 - Implementierung
     - KI bedienen
