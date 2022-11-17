@@ -2,6 +2,20 @@
 
 \chapter{Stand der Technik}
 
+Dieses Kapitel wird sich mit dem Stand der Technik, der Einordnung dieser Arbeit in die Literatur 
+und die Grundlagen der Konzeption beschäftigen. Hierfür werden zunächst 
+die Aufgabenkategorien der Computer-Vision verglichen, um eine geeignete für das Problem finden zu können.
+Ebenso wird für verschiedene state-of-the-art Aktivierungsfunktionen und Ähnlichkeitsmaße verfahren, 
+sodass später geeignete ausgewählt und diskutiert werden können. Daraufhin werden 
+die Vorteile einiger relevanter Architekturkomponenten betrachtet und einige 
+state-of-the-art Klassifikationsmodelle des ImageNet-Datensatzes, welche ggf. 
+als vortrainierte Bestandteile der späteren Architektur verwendet werden können, 
+was genauer im Abschnitt \textit{Transfer-Learning mit U-Net} betrachtet wird. 
+Weiter wird der aktuelle Stand bei der verwandten Domäne der Straßenerkennung 
+aus Luftaufnahmen untersucht. Schließlich werden die Ergebnisse des Kapitels 
+zusammengefasst und der Neuheitswert dieser Arbeit ermittelt und eine abschließende 
+Einordnung in die Literatur und Wissenschaft vorgenommen.
+
 \section{Aufgabenkategorien} \label{sec:aufgabenkategorien}
 
 Im Bereich der Computer Vision gibt es verschiedene Kategorien von Aufgaben.
@@ -33,7 +47,7 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{Bilder/categories.png} 
-	\caption{Verschiedene Aufgabenkategorien \cite{.10.11.2022}}
+	\caption{Verschiedene Aufgabenkategorien \cite{.10.11.2022}.}
 	\label{fig:categories}
 \end{figure} 
 
@@ -220,7 +234,7 @@ Inferenz sind allerdings alle Gewichte aktiv, was zu einer höheren Summe der Ge
 als während des Trainings führt. Deswegen müssen die Gewichte für die Inferenz nach unten skaliert werden. 
 Alternativ können während des Trainings alle Gewichte nach oben skaliert werden, die nicht deaktiviert wurden. 
 Somit muss für die Inferenz keine Anpassung vorgenommen werden. Nach jedem Trainings-Batch werden die aktivierten 
-Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert werden \cites[S.~255--258]{Goodfellow.2016}{NitishSrivastava.2014}.
+Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert \cites[S.~255--258]{Goodfellow.2016}{NitishSrivastava.2014}.
 
 Es hat sich gezeigt, dass Dropout eine effektivere Regularisierungstechnik zur Minderung von Overfitting ist, 
 als andere ressourcenschonende Techniken, wie \textit{Weight-Decay}, \textit{Filter-Norm-Constraints} oder 
@@ -409,14 +423,14 @@ Der Zuschnitt der Bilder sorgt teilweise für einen hohen Anteil weißer Stellen
 
 Das \textit{Buffalo Roads Dataset} ist als zusätzliches Testset für das Massachusetts Roads Dataset zu sehen.
 Hintergrund ist die Überprüfung des Netzes mit Daten aus einem anderem Gebiet unter anderen Bedingungen.
-Es besteht lediglich aus 30 Orthophotos ($5:5:20$) mit einer Größe von $609x914$ und einer Auflösung von $1 \frac{px}{m^2}$.
+Es besteht lediglich aus 30 Orthophotos ($5:5:20$) mit einer Größe von $609\times 914$ und einer Auflösung von $1 \frac{px}{m^2}$.
 Die Generierung der gelabelten Daten erfolgt analog zum Massachusetts Road Set über OpenStreetMap.
 Größter Unterschied ist die Verdeckung von Straßen durch Bäume \cite[86-88]{.06.04.2014}.
 
 \textit{LandCover.ai} kann für die Erkennung von Gebäuden, Waldgebieten, Gewässern und Straßen verwendet werden.
 Die Aufnahmen stammen aus Polen und Zentraleuropa in einer Größe von $21627 km^2$.
-$33$ Orthophotos haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000\times 9500$ Pixeln, $8$ Bilder von $50 \frac{cm}{px}$ mit $4200x4700$ Pixeln \cite{.20.04.2022}.
-Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländlicher Gebieten.
+$33$ Orthophotos haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000\times 9500$ Pixeln, $8$ Bilder von $50 \frac{cm}{px}$ mit $4200 \times 4700$ Pixeln \cite{.20.04.2022}.
+Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländlichen Gebieten.
 
 Mithilfe des \textit{Deep Globe Road Extraction Datasets} können in Kathastrophgebieten Informationen über Karten und Zugänglichkeitsmöglichkeiten für die Krisenbewältigung gesammelt werden.
 Der Datensatz besteht aus $6226$ Satellitenbildern in RGB mit einer Größe von $1024\times 1024$.
@@ -427,13 +441,13 @@ Kleine Straßen innerhalb von Landwirtschaftsflächen sind bewusst unbeschriftet
 Die Bilder sind ursprünglich über Thailand, Indonesien und Indien mit je $19584\times 19584$ Pixeln aufgenommen worden.
 Insgesamt entspricht es einer Fläche von $2220 km^2$ \cite{Ashwath.10.11.2020}.
 
-Mit finanzieller Unterstützung des Chesapeak Bay Programms wurde ein Datensatz \textit{Land Cover}zur Landnutzung und Bodenbedeckung erstellt.
+Mit finanzieller Unterstützung des Chesapeak Bay Programms wurde ein Datensatz \textit{Land Cover} zur Landnutzung und Bodenbedeckung erstellt.
 Es lassen sich Einblicke in die Landschaft und die Verwaltung der Regionen gewinnen.
 Das Einzugsgebiet umfasst $250.000km^2$ mit einer Auflösung von $1m$. 
 Damit handelt es sich bei diesem Datensatz um den größten bei der Analyse von der Landnutzung im Vergleich zur Bodenbedeckung \cite{ChesapeakeConservancy.02.06.2022}.
 
 Bei den nachfolgenden drei Datensätzen handelt es sich um Testdatensätze.
-Das \textit{Toronto Dataset} umfasst $1.45km^2$ im Umkreis der Stadt Toronto in Canada. 
+Das \textit{Toronto Dataset} umfasst $1,45km^2$ im Umkreis der Stadt Toronto in Canada. 
 Darin enthalten sind ca. $1 km$ Straßen mit einer Bodenauflösung von $15cm$. 
 Zusätzlich werden Laserscanner mit $6 \frac{points}{m^2}$ bereitgestellt.
 Im Datensatz ist eine hohe Varianz bezüglich der Gebäudehöhe, Struktur der Dächer und verschiedener Straßen vorzufinden.
@@ -441,9 +455,9 @@ Der Testbestand kann für die Überprüfung von Objektextraktion und Gebäuderek
 Für Straßen können alle Testdaten verwendet werden.
 Die Labels sind manuell mithilfe von CloudCompare erstellt worden \cite{Englich.06.10.2022b,Tan.2020}.
 
-Der Testdatensatz \textit{Vaihingen/Enz} besteht aus einer Untermenge der Daten, welche für einen Test von digitalen Luftbildkameras verwendet werden.
+Der Testdatensatz \textit{Vaihingen/Enz} besteht aus einer Untermenge der Daten, welche für einen Test von digitalen Luftbildkameras verwendet wurden.
 Er ist in drei Testgebiete für verschiedene Objektklassen und in einen größeren Bereich für das Überprüfen von Straßenextrakion aufgeteilt, wobei die drei Gebiete hier mit inbegriffen sind.
-Die einzelnen Gebiete sind in verschiedene Kategorien unterteilt, Hochhäuser, Wohngebiete mit kleineren Einfamilienhäusern und Innenstadt mit dichter Bebauung.
+Die einzelnen Gebiete sind in verschiedene Kategorien unterteilt: Hochhäuser, Wohngebiete mit kleineren Einfamilienhäusern und Innenstadt mit dichter Bebauung.
 Die Bodenauflösung beträgt $8cm$ \cite{Englich.06.10.2022b}.
 
 Für die Stadt \textit{Potsdam} gibt es einen ähnlichen Datensatz. 
