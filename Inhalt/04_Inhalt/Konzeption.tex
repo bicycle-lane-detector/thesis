@@ -8,7 +8,30 @@ um das beste zu finden
 
 \section{Pre-Processing}
 
-zerschneiden, rauswerfen. 
+zerschneiden - warum 512x512 und nicht 256x256, rauswerfen. 
+
+train images: 7738
+val images: 672    <- 8\% der test bilder, 6,6\% aller
+sum:        8410
+test:       1771  <- 17,5\% aller Bilder 
+sum:        10181 <- nur 17,7\% aller möglichen bilder
+
+eigentlich $143 Bilder * round_up(10_000 / 512)^2 = 143 * 20^2 = 57200$
+
+Verhältnis weiß : schwarz < 1 : 100, dann wird bild übersprungen
+
+jede der folgenden augmentationen wird in jeweils ihrer Domäne random gleichzeitig applied.
+Zudem wird für jede Batch geshuffled, die Einteilung in train und test ist ebenfalls geshuffled 
+% augmentation = {
+% 	"rotation_range": 90,
+% 	"width_shift_range": 0.1,
+% 	"height_shift_range": 0.1,
+% 	"fill_mode": "constant",
+% 	"cval": 0,
+% 	"horizontal_flip": "True",
+% 	"vertical_flip": "True",
+% 	"validation_split": 0.08
+% }
 
 \subsection{Daten-Augmentation}
 
