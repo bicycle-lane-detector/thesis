@@ -41,7 +41,7 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 % Eine einfache Klassifizierung oder Object Detection ist nicht ausreichend, eine Instantiierung verschiedener Radwege übersteigt die gewünschte Anforderung nach dem reinen Erkennen von Wegen.
 % Aus den gewonnenen Kategorien der einzelnen Pixel lassen sich Masken zeichnen, denen dann die konkreten Verläufe entnommen werden können.
 
-\section{Aktivierungsfunktionen}
+\section{Aktivierungsfunktionen} \label{sec:activation}
 
 Im Folgenden wird der Stand der Technik für Aktivierungsfunktionen in \ac{ML}-Modellen dargelegt,
 hierzu werden einige Funktionen kurz vorgestellt und deren Vor- und Nachteile bewertet. 
@@ -209,7 +209,7 @@ Im Folgenden werden verschiedene Architekturkomponenten diskutiert, die im \ac{M
 bzw. bei semantischer Segmentierung im Speziellen verwendet werden. Hierzu werden zunächst Dropout-Layer 
 und Batch-Normalization-Layer begutachtet und dann die U-Net-Architektur zur semantischen Segmentierung vorgestellt. 
 
-\subsection{Dropout}
+\subsection{Dropout} \label{sec:architekturkomponenten:dropout}
 
 \textit{Dropout} ist eine ressourcenschonende Regularisierungstechnik für \ac{ML}-Modelle. 
 Hierbei werden einzelne Neuronen mit einer Wahrscheinlichkeit von \textit{Rate} $r$ während des Trainings 
@@ -227,13 +227,13 @@ als andere ressourcenschonende Techniken, wie \textit{Weight-Decay}, \textit{Fil
 \textit{Sparse-Activity-Regularization}, wobei Dropout mit diesen kombiniert werden kann, für noch bessere 
 Regularisierung \cites[S.~265]{Goodfellow.2016}.
 
-\subsection{Batch-Normalization}
+\subsection{Batch-Normalization} \label{sec:architekturkomponenten:batchnorm}
 
 \textit{Batch-Normalization} normalisiert und standardisiert den Output von Neuronen auf Basis des Mittelwerts 
 und der Streuung einer Batch während des Trainings. Für die Inferenz werden Durchschnittswerte 
 des Mittelwerts und der Streuung der Batches des Trainingsdatensatzes herangezogen und angewandt. \\
 Batch-Normalization führt zu einer schnelleren Konvergenz im Training, 
-sodass die Anzahl an benötigten Epochen in manchen Fällen halbiert werden können. Des Weiteren führt 
+sodass die Anzahl an benötigten Epochen in manchen Fällen bis zu halbiert werden können. Des Weiteren führt 
 Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion zu einem gewissen Grad glättet 
 \cites[S.~317--320]{Goodfellow.2016}{Ioffe.11022015}.
 Besonders gut funktioniert Batch-Normalization für \acp{CNN} und Netzwerke mit Sigmoid-Aktivierungsfunktion

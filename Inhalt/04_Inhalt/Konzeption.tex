@@ -27,7 +27,7 @@ Wie bereits in \autoref{sec:state-of-the-art-roads} dargelegt sind alle relevant
 Straßenerkennung basierend auf der U-Net-Archtiektur (vgl. \ref{sec:architekturkomponenten:unet}).
 Folglich sollen die hier betrachteten Modelle ebenfalls als angepasste U-Nets entworfen werden. 
 Insbesondere ermöglicht dies auch die Modelle zur Fahrradwegerkennung auf den verschiedenen 
-in \autoref{sec:roads-data} vorgestellten Datensätzen zur Straßenerkennung vorzutrainieren, 
+in \autoref{sec:road-detection:roads-data} vorgestellten Datensätzen zur Straßenerkennung vorzutrainieren, 
 was zu allgemein besseren Ergebnissen führen kann (s. \autoref{sec:transfer-learning}). 
 Außerdem können so die erzielten Ergebnisse vom Pre-Training mit den öffentlichen Benchmarks verglichen werden,
 um deren Ergebnisse zu validieren und früh Fehler in den eigenen Entscheidungen und Implementationen zu entdecken.
@@ -46,19 +46,75 @@ Gegebenenfalls ist das auch für die Radwegerkennung möglich. Dazu sollen mehre
 
 \subsection{Bike-U-Net}
 
+\autoref{fig:bike-unet-2} zeigt die von uns verwendete Architektur für das \textit{Bike-U-Net}, 
+bzw. genauer das \textit{Bike-U-Net-2}. Hierfür wurde das in \autoref{fig:u-net-architecture} 
+dargestellte originale U-Net auf den vorliegenden Anwendungsfall angepasst.
+Diese Anpassungen sind in der nachfolgenden Liste erklärt.
+
+\begin{itemize}
+	\item Zunächst werden Input-Bilder der Größe $width \times height \times 3$ verwendet. 
+	Wobei $width$ und $height$ variabel in der Architektur sind, mit der Einschränkung, 
+	dass diese Vielfache von 32 sein sollten, damit die mittlere Schicht nicht zu klein wird. 
+	In jedem Fall wird ein drei-kanal RGB-Bild verwendet. In der Abbildung ist exemplarisch $512 \times 512 \times 3$ gewählt. \\
+	Der Output verwendet zunächst keine explizite One-Hot-Kodierung für Fahrradweg und Hintergrund, 
+	sondern eine implizite, wie in \autoref{sec:state-of-the-art-roads} beschrieben, 
+	um eine intuitivere Bewertung zu erhalten. 
+	\item Im Gegensatz zum originalen U-Net, wird bei den Convolutional-Layern Padding eingesetzt,
+	um die Dimensionen der Feature-Maps nicht nach und nach zu verkleinern und so einen exakt symmetrischen Aufbau zu gewährleisten.
+	Ebenso wurde bei den Up-Convolutions Padding eingefügt, um auch hier eine Verkleinerung der Feature-Maps zu verhindern.
+	Diese Anpassung wurde eingesetzt, um kein Zuschneiden bei den Skip-Connections zu benötigen, was die Lokalisierung verbessern soll,
+	und so bei den in \autoref{sec:state-of-the-art-roads} beschriebenen Netzen gewöhnlich ist.
+	\item Im originalen U-Net beginnt der erste Convolutional-Block mit 64 Filtern, 
+	welche sich jeden weiteren Block mit zum Mittel-Block verdoppeln, der dann 1024 Filter besitzt.
+	Daraufhin halbieren sich die Filter mit jedem weiteren Decoder-Block wieder. \\
+	Im Bike-U-Net-2 beginnen die Filter bei 16 und verdoppeln sich bis 256, was zu ungefähr 2 Mio. 
+	trainierbaren Parametern führt. Die Zahl an Parametern ist somit weitaus geringer als im 
+	Original-U-Net mit ca. 24 Mio. Parameter \cite{Ronneberger.18052015}. 
+	Hiermit soll getestet werden, ob auch ein recheneffzienteres und kleineres U-Net gute Ergebnisse liefert, 
+	und somit auch weniger Regularisierung notwendig ist. \\
+	Da aber die in \autoref{sec:state-of-the-art-roads} beschriebenen Netze ebenfalls 15-25 Mio. Parameter haben, 
+	soll ein weiteres U-Net mit mehr Parametern getestet werden. Dieses \textit{Bike-U-Net-15} ist 
+	abgebildet in \autoref{fig:bike-unet-15} und hat 15 Mio. Parameter. Dies wurde erzielt, 
+	indem die Filter ab Block zwei dreimal mehr sind, als im Bike-U-Net-2. So haben wir hierbei 16 Filter in Block eins, 
+	dann 96 Filter in Block zwei, die sich verdoppeln bis hin zu 768 Filtern im mittleren Block und danach wieder halbieren bis zum vorletzten Block. 
+	Dabei hat der letzte Block wieder 16 Filter. 
+	Der erste und letzte Block haben dabei jeweils 16 Filter, da damit der Rechen- und Speicheraufwand erheblich reduziert werden kann.
+	Bis auf die Filteranzahl und die daraus resultierende Tiefe der Feature-Maps, sind Bike-U-Net-2 und Bike-U-Net-15 identisch.
+	\item Auf jede Convolution-Schicht folgt eine Batch-Normalization-Schicht. 
+	Dies hat mehrere Gründe: Zum einen übernimmt so das Netz selbst die Normalisierung und Standardisierung der Daten, 
+	wodurch sich das beim Vorverarbeiten gespart werden kann und zum anderen kann von den in \autoref{sec:architekturkomponenten:batchnorm} 
+	beschriebenen Vorteilen, wie schnellerem Training und leichter Regularisierung profitiert werden, 
+	ohne, dass dafür zusätzlicher Aufwand betrieben werden muss und keine Nachteile entstehen.
+	\item Zusätzlich zu den Batch-Normalization-Schichten wurden pro Block eine Dropout-Schicht 
+	nach der jeweils ersten Convolution-Schicht eingezogen. Diese sollen als 
+    Hyperparameter eingebaut werden, um einfach kontrollierbar Regularisierung anzuwenden, 
+	sollten die Modelle Probleme mit Overfitting durch zu hohe Komplexität bekommen. 
+	Aufgrund der eher wenigen Parameter wird dies aber gegebenenfalls nur beim Bike-U-Net-15, 
+	oder überhaupt nicht nötig.
+	\item Die Convolution-Schichten werden durch \ac{ELU} aktiviert, anstatt durch \ac{ReLU}, wie im Original-U-Net. 
+	Hierdurch können die meisten der in \autoref{sec:activation} herausgearbeiteten Vorteile von \ac{ReLU},
+	wie Robustheit gegen das Vanishing-Gradient-Problem, genutzt werden. Jedoch wurde bereits im ursprünglichen U-Net-Paper 
+	(\cite{Ronneberger.18052015}) auf ein Problem hingewiesen, worunter oftmals \acp{CNN} leiden: Häufig kommt es vor, 
+	dass Netzteile dauerhaft nicht oder nur kaum aktiviert werden und so kaum etwas beitragen. 
+	Dieses Problem ist insbesondere für \ac{ReLU} relevant, da diese Aktivierungsfunktion unter dem Dyning-Neuron-Problem leidet.
+	Deshalb wurde hier auf \ac{ELU} zurückgegriffen, da damit alle Netzteile zum Beitrag animiert werden sollen. 
+	Der einzige Nachteil ist hierbei, dass die Berechnung von \ac{ELU} etwas aufwendiger ist. 
+	Das Problem von unbeschränkt großen positiven Aktivierungen unter denen sowohl \ac{ELU} als auch \ac{ReLU} leiden,
+	wird in diesem Netz durch die wiederholte Batch-Normalisierung abgefedert.
+	\item Für das Ouptut-Layer, nach der $1\times 1$-Convolution, wird die Sigmoid-Funktion verwendet. 
+	Im Falle einer One-Hot-Kodierung würde hier Softmax herangezogen werden. 
+\end{itemize}
+
 \begin{figure}
 	\centering
 	\includegraphics[width=1.\textwidth]{Bilder/own-unet-2mil.pdf} 
-	\caption{CAPTION 1,946 Mio Param.}
-	\label{fig:own-unet-2mil}
+	\caption{Bike-U-Net-2 mit 1,946 Mio. Parametern.}
+	\label{fig:bike-unet-2}
 \end{figure} 
 
 
 \subsection{Backbone-U-Nets}
 
-
-WARUM ELU? 
-Kein vanishing gradient, recht schnell zu berechnen, kein dying neuron problem (insb. elevant bei CNN (u-net paper quoten)), blow up von aktivierung wird gedämpft durch batch norm. 
 
 
 \section{Algorithmus zur Reduktion eines Materialflussgraphen} \label{sec:reduction}
