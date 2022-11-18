@@ -319,9 +319,12 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 \section{Vortrainierte \ac{CNN}-Modelle} \label{sec:pretrained-backbones}
 
 Im Folgenden wird eine Auswahl an \ac{CNN}-Modellen vorgestellt, von denen es öffentlich zugängliche,
-vortrainierte Instanzen zur freien Verwendung gibt. 
-Die Klassifikations-Modelle sind auf dem ImageNet-Datensatz, der über 14 Mio. Bilder 
-mit 1000 Klassen enthält, trainiert.    
+vortrainierte Instanzen zur freien Verwendung gibt. Diese können zu Transfer-Learning-Zwecken 
+genutzt werden, indem sie zum Beispiel als Teilnetz in eine \ac{CNN}-Architektur eingebaut werden 
+(mehr dazu in \autoref{sec:transfer-learning}). \\ 
+Die Klassifikations-Modelle sind auf dem Bildklassifikationsdatensatz \textit{ImageNet}, der über 14 Mio. Bilder 
+mit 1000 Objektklassen enthält, trainiert. Der ImageNet-Datensatz ist der größte und bekannteste 
+Datensatz seiner Art und ist sehr beliebt für Benchmarks und Pre-Training.
 
 \subsection{VGG16} \label{sec:pretrained-backbones:vgg16}
 
@@ -331,11 +334,11 @@ Inzwischen ist es ein Standard-Netz, auf welchem viele weitere Architekturen auf
 um verschiedene Verbesserungen zu realisieren. 
 Dadurch ist es auch sehr beliebt für Transfer-Learning. 
 
-\autoref{fig:vgg16-architecture} zeigt die Architektur. VGG16 besteht aus fünf Blöcken mit $3x3$-Convolution-Schichten,
+VGG16 besteht aus fünf Blöcken mit $3x3$-Convolution-Schichten,
 gefolgt von drei Fully-Connected-Schichten. Die ersten beiden Convolution-Blöcke haben zwei Convolution-Schichten,
 die letzten drei Blöcke dagegen jeweils drei. 
 Jeder Convolution-Block wird gefolgt von einer Maxpool-Schicht und jeder bis auf den vorletzeten verdoppelt die Filteranzahl in den Convolution-Schichten,
-beginnend bei 64 Filtern im ersten Block bis hin zu 512 Filtern in den letzten beiden Blöcken \cite{Simonyan.04092014}. 
+beginnend bei 64 Filtern im ersten Block bis hin zu 512 Filtern in den letzten beiden Blöcken \cite{Simonyan.04092014}\footnote{\autoref{fig:vgg16-architecture} veranschaulicht VGG16.}. 
 
 Das gesamte Netz besitzt 138 Mio. Parameter. Werden die drei Fully-Conntected-Schichten am Ende ausgelassen, 
 sind es ungefähr 14,7 Mio. Parameter. 
@@ -353,9 +356,8 @@ der zweiten Layer. Durch die Skip-Connections kann bei der Backpropagation der G
 um so auch die flachen Layer upzudaten. So kann z.B. \textit{ResNet34} 34 trainierbare Layer haben, 
 während zuvor mit VGG nur 16 bzw. 19 effektiv waren \cite{He.10122015}. 
 
-Die Architektur ist dabei sehr simpel. Sie ist zu sehen in \autoref{fig:resnet34-architecture} 
-und stellt - im Falle von ResNet34 - im Prinzip 33 Convolutional-Layer mit wiederholtem Downsampling 
-und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fully-Connected-Layer dar \cite{He.10122015}.
+Die Architektur ist dabei sehr simpel. Sie stellt - im Falle von ResNet34 - im Prinzip 33 Convolutional-Layer mit wiederholtem Downsampling 
+und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fully-Connected-Layer dar \cite{He.10122015}\footnote{\autoref{fig:resnet34-architecture} veranschaulicht ResNet34.}.
 
 ResNet34 hat 63,5 Mio. Parameter. 
 
@@ -366,11 +368,11 @@ ResNet34 hat 63,5 Mio. Parameter.
 zu verbessern, bessere Feature-Übertragung in tiefere Netzschichten zu ermöglichen und das Wiederverwenden von Features 
 zu unterstützen, um somit die Anzahl der benötigten Parameter deutlich zu reduzieren, bei gleichbleibender Performanz \cite{Huang.25082016}.
 
-\autoref{fig:densenet121-architecture} zeigt die Architektur. Was aus der Abbildung nicht ersichtlich ist, ist wie die 
-Dense-Blöcke aufgebaut sind: Jede angegebene Convolution-Schicht besteht aus einer Batch-Normalization-Schicht mit \ac{ReLU}-Aktivierung,
+Das Netz besteht aus mehreren sogenannten Dense-Blöcke, die wie folgt aufgebaut sind: 
+Jede angegebene Convolution-Schicht besteht aus einer Batch-Normalization-Schicht mit \ac{ReLU}-Aktivierung,
 gefolgt von der angegebenen Convoltuion-Schicht. Außerdem - und hier liegt die große Erweiterung des DenseNet - sind alle 
 Convolution-Schichten eines Dense-Blocks mit allen nachfolgenden Convolution-Schichten des Dense-Blocks konkateniert,
-anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall ist. 
+anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall ist\footnote{\autoref{fig:densenet121-architecture} veranschaulicht DenseNet121.}. 
 
 DenseNet121 enthält circa 7,6 Mio. Parameter. Ohne die letzte Fully-Connected-Schicht sind es noch circa 6,9 Mio. 
 Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse als VGG16 auf dem ImageNet-Datensatz 
@@ -382,13 +384,13 @@ Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse
 \textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
 bestenfalls ähnliches Problem und Modell. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
 Häufig wird dafür ein Teil des Modells eingefroren, sodass sich die eingefrorenen Gewichte nicht verändern können. Dies verhindert, 
-dass die bereits vortrainierten Gewichte durch die erste Trainings-Batch zerstört werden. Eine weitere Möglichkeit ist,
+dass die bereits vortrainierten Gewichte durch die erste Trainings-Batch ruiniert und unbrauchbar werden. Eine weitere Möglichkeit ist,
 mit einer sehr geringen Lernrate das gesamte Modell zu trainieren. Oft werden beide Ansätze auch verbunden.
 
 Der Vorteil von Transfer-Learning liegt darin, dass das Training deutlich kürzer dauert, 
 weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Datensätze bessere Ergebnisse erzielt werden können
  und auch insgesamt eine höhere Genauigkeit 
-am Ende des Trainings erreicht wird, als bei herkömmlichen Training. Diese Effekte sind verstärkt, 
+am Ende des Trainings erreicht wird, als bei herkömmlichem Training. Diese Effekte sind verstärkt, 
 abhängig davon, wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
 Insbesondere bei Computer-Vision ist Transfer-Learning effektiv, da bei Bildern high-level Features wie Clustering 
 ähnlichfarbener Pixel oder Kantenerkennung oftmals sehr ähnlich zwischen unterschiedlichen Datensätzen ausfallen 
@@ -435,7 +437,11 @@ Hier wurde wieder mit dem \textit{Salien Objetcs} Datensatz vortrainiert. Dann w
 \end{enumerate}
 Für die Röntgenaufnahmen gab es keine Unterschiede, wobei der Dice-Score hier allerdings auch bei $0.98$ lag. 
 Für die Ultraschallbilder lieferte Methode (1) die schlechtesten Ergebnisse (Dice: $0.72$), gefolgt von Methode (2) (Dice: $0.80$) 
-und gleichermaßen (3) und (4) (Dice: $0.82$), wobei (3) deutlich schneller konvergierte \cite{Amiri.19.02.2020}.
+und gleichermaßen (3) und (4) (Dice: $0.82$), wobei (3) deutlich schneller konvergierte \cite{Amiri.19.02.2020}. \\ 
+Es ist ersichtlich, dass die Methodik beim Fine-Tuning, abhängig vom Datensatz, einen erheblichen Einfluss 
+auf die abschließende Performanz des Modells haben kann und stets berücksichtigt und gegen Alternativen abgewogen werden sollte,
+um beste Ergebnisse zu erzielen. Die vorgestellten Methodiken können später genutzt werden, 
+um eine Transfer-Learning-Methode für das Problem der Radwegerkennung zu konzipieren. 
 
 
 \section{Aktueller Stand bei der Straßendetektion}
@@ -445,6 +451,17 @@ Hierfür werden vorhandene Datensätze für Straßen vorgestellt.
 Im Anschluss werden auf den aktuellen Stand und Benchmark-Optionen eingegangen.
 
 \subsection{Datensätze} \label{sec:road-detection:roads-data}
+
+Im Folgenden sind alle relevanten Datensätze zur Straßenerkennung aus Luftbildern aufgeführt. 
+Eine Auswahl der später zum Pre-Training verwendeten Datensätze findet im \autoref{sec:pre-training-roads} statt.\\
+Ein Testdatensatz ist hierbei ein Datensatz, der ausschließlich zum Testen und Bewerten eines bereits 
+trainierten Modells verwendet werden soll. Im Rahmen der Straßenerkennung ist dies besonders relevant, 
+da sich unterschiedliche Städte in unterschiedlichen Ländern und Kulturen stark unterscheiden können, 
+während die Trainingsdaten meist nur von einer Stadt, die in sich ein eher homogenes Bild aufweist, bestehen.
+Der Testdatensatz soll also die Generalisierungsfähigkeit des Netzes testen, um zu sehen,
+ob das Modell, das bspw. auf einem Datensatz einer modernen amerikanischen Stadt trainiert wurde, 
+auch auf Bildern einer mitteleuropäischen Altstadt funktioniert. Deswegen ist es wichtig, 
+dass keine Bilder des Testdatensatzes im Training verwendet werden. 
 
 % Bei den letzten Datensets zu Toronto, Vaihingent und Potsdam handelt es sich um Testdatensätze. 
 Beim \textit{Massachusetts Roads Dataset} liegen $1171$ Luftaufnahmen aus dem Gebiet Massachusetts vor.
@@ -515,15 +532,15 @@ für Bodenaufnahmen-Datensätze (vgl. KITTI \cite{Geiger.2013}) erreichen nicht 
 Luftbild-Benchmarks \cite{C.Henry.2021}. \\
 Weiter wird die Extraktion von Straßen aus Satelliten- bzw. Luftbildern zumeist in zwei Phasen eingeteilt: 
 \begin{enumerate}
-	\item Das Erstellen einer binären Maske zu den Luftbildern mittels semantischer Segmentierung, 
-	welche die Straßen pixelweise induziert. 
-	\item Das Extrahieren eines topologischen Graphens, welcher die Straßen-Zentrumslinien beschreibt.   
+	\item das Erstellen einer binären Maske zu den Luftbildern mittels semantischer Segmentierung, 
+	welche die Straßen pixelweise induziert, 
+	\item das Extrahieren eines topologischen Graphens, welcher die Straßen-Zentrumslinien beschreibt.   
 \end{enumerate}
 Schritt (1) wird dabei zumeist von U-Net-Derivaten behandelt, wobei es allerdings auch Vorschläge von Netzen gibt, 
 die direkt Schritt (2) ausführen \cite{C.Henry.2021}.
 Im Folgenden wird weiter Schritt (1) betrachtet.   
 
-Der Vergleich von unterschiedlichen Netzen, Papern und Ergebnissen zu der Sache ist häufig erschwert, 
+Der Vergleich von unterschiedlichen Netzen, Papern und Ergebnissen zur Straßenerkennung ist häufig erschwert, 
 da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedliche gängige Kodierungen gibt:
 \begin{enumerate}
 	\item Das verwendete \ac{CNN} hat je Input-Neuron bzw. -Pixel $p$ genau ein Output-Neuron $o_p$, welches den jeweiligen Input-Pixel $p$
@@ -543,6 +560,14 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 	richtig klassifiziert wurden. Die so erzielten Dice-/IoU-Werte sind hier rein numerisch deutlich höher. 
 \end{enumerate}
 
+Im Weiteren werden aktuelle Ergebnisse zu den Massachusetts- und Deep-Globe-Datensätzen vorgestellt, 
+um zu Ermitteln, was für diese Datensätze gut funktioniert, sodass diese state-of-the-art Erkenntnisse beim 
+späteren Entwurf eines oder mehrerer Netze zum Erkennen von Fahrradwegen (s. \autoref{sec:architecture}) 
+genutzt werden können. Die beiden Datensätze sind für die Literaturrecherche ausgewählt, 
+da sie sehr häufig als Benchmark zum Erkennen von Straßen genutzt werden, es dazu sehr viel Literatur und 
+Forschung gibt und da beide Datensätze sich stark unterscheiden, soweit das im Rahmen der Straßenerkennung möglich ist. 
+Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensätze ähnliche gut funktionierende
+Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. \\   
 \autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Basline}-Modellen.
 Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht extrem auf den jeweiligen Datensatz optimiert sind,
 was die Hyper-Parameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
@@ -575,7 +600,10 @@ Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte
 indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen Input der ersten und Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
 ersetzt wurden und der Bottleneck-Block
 um Dilation erweitert wurde \cite{Gao.2019}. 
-Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}.
+Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}. \\
+Die besten Netze beider Datensätze haben die Gemeinsamkeit der U-Net-Struktur, wie auch die Residual-Blöcke (bzw.
+sogar Dense-Blöcke, was als eine Erweiterung der Residual-Blöcke aufgefasst werden kann). 
+Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verwendet werden.  
 
 \newcommand*\rot{\rotatebox{60}}
 

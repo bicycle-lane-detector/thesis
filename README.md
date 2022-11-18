@@ -4,6 +4,10 @@
     - Definition Fahrradfreundlichkeit (Titel erklären)
     - Schon für Menschen schwierig zu erkennen (auf Satellitenbildern)
 - Stand der Wissenschaft/Forschung/Technik (Methoden, Literaturrecherce)
+    - Neuronale Netze 
+        - Lernrate
+        - Ground-Truth / Label / Ziel-Maske
+        - Inferenz
     - Image (instance segmentation) semantic segmentation vs image detection (bounding boxes) vs klassifizierung 
     - Aktivierungsfunktionen ELU, RELU, Sigmoid
     - (Potentielle Probleme (mit kleinem Datensatz): Overfitting, Underfitting, Vanishing Gradient ...)
