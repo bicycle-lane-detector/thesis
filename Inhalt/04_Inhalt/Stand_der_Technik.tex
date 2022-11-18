@@ -2,19 +2,17 @@
 
 \chapter{Stand der Technik}
 
-Dieses Kapitel wird sich mit dem Stand der Technik, der Einordnung dieser Arbeit in die Literatur 
-und die Grundlagen der Konzeption beschäftigen. Hierfür werden zunächst 
-die Aufgabenkategorien der Computer-Vision verglichen, um eine geeignete für das Problem finden zu können.
+Dieses Kapitel beschäftigt sich mit dem Stand der Technik, der Einordnung dieser Arbeit in die Literatur 
+und den Grundlagen der Konzeption. Hierfür sind zunächst 
+die Aufgabenkategorien der Computer-Vision zu vergleichen, um eine geeignete für das gegebene Problem finden zu können.
 Ebenso wird für verschiedene state-of-the-art Aktivierungsfunktionen und Ähnlichkeitsmaße verfahren, 
-sodass später geeignete ausgewählt und diskutiert werden können. Daraufhin werden 
-die Vorteile einiger relevanter Architekturkomponenten betrachtet und einige 
+sodass später geeignete ausgewählt und diskutiert werden können. Daraufhin sind 
+die Vorteile einiger relevanter Architekturkomponenten zu betrachten und einige 
 state-of-the-art Klassifikationsmodelle des ImageNet-Datensatzes, welche ggf. 
 als vortrainierte Bestandteile der späteren Architektur verwendet werden können, 
-was genauer im Abschnitt \textit{Transfer-Learning mit U-Net} betrachtet wird. 
-Weiter wird der aktuelle Stand bei der verwandten Domäne der Straßenerkennung 
-aus Luftaufnahmen untersucht. Schließlich werden die Ergebnisse des Kapitels 
-zusammengefasst und der Neuheitswert dieser Arbeit ermittelt und eine abschließende 
-Einordnung in die Literatur und Wissenschaft vorgenommen.
+was genauer im Abschnitt \textit{Transfer-Learning mit U-Net} betrachtet ist. 
+Schließlich wird der aktuelle Stand bei der verwandten Domäne der Straßenerkennung 
+aus Luftaufnahmen untersucht.
 
 \section{Aufgabenkategorien} \label{sec:aufgabenkategorien}
 
@@ -67,9 +65,9 @@ Die \textit{Sigmoid}-Funktion bildet die Eingabe auf einen Wert im Intervall $(0
 Der Vorteil hier ist, dass Aktivierungen nie groß werden können, wodurch einzelne Neuronen nicht den Gradienten dominieren können und 
 eine fortlaufende Normalisierung durchgeführt wird. Die Probleme hingegen sind, dass die Funktion eher aufwendig zu berechnen ist 
 und dass die Ableitung für betragsmäßig größere Werte verschwindet. Hierdurch kann es zum \textit{Vanishing-Gradient-Problem} kommen, wobei 
-Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite[S.~191--192]{Goodfellow.2016}. 
+Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite[S.~191--192]{Goodfellow.2016} 
 \begin{align}
-	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}
+	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}~.
 \end{align} 
 
 \subsection{\acf{ReLU}}
@@ -78,13 +76,12 @@ Die \textit{\acf{ReLU}} ist eine Aktivierungsfunktion, welche durch \autoref{eq:
 \ac{ReLU} ist inzwischen der de-facto Standard von Aktivierungsfunktionen in den verborgenen Schichten eines Deep-Learning-Modells.
 Dies liegt vor allem daran, dass das Vanishing-Gradient-Problem adressiert wird. Allerdings hat \ac{ReLU} das Problem, 
 dass Neuronen auf $0$ gesetzt werden, wodurch sie kein Gradienten-Update mehr erhalten und dauerhaft genullt bleiben 
-und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite[S.~189--191]{Goodfellow.2016}. 
-
+und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite[S.~189--191]{Goodfellow.2016} 
 \begin{align}
 	\label{eq:relu} ReLU(z) = \begin{cases} 
 		z & z > 0 \\
 		0 & z \leq 0 
-	\end{cases}
+	\end{cases}~.
 \end{align} 
 
 \ac{ReLU} erzielt eine höhere Inferenz- und Trainingsgeschwindigkeit bei gleicher oder besserer Performanz, 
@@ -96,13 +93,12 @@ simpleren und damit leichter zu berechnenden Funktion \cite[S.~226]{Goodfellow.2
 Die \textit{\acf{ELU}} ist eine Aktivierungsfunktion, die das Dying-\ac{ReLU}-Problem adressieren soll. 
 Ausgedrückt wird die Funktion durch \autoref{eq:elu}. Die negative Komponente lässt zu, dass Neuronen nicht 
 von einem Satz auf $0$ zurückkommen können, und weiterhin etwas zur Zielfunktion beitragen können. Außerdem ist die mittlere 
-Aktivierung näher an $0$ als bei \ac{ReLU}, was zur Folge hat, dass das Training schneller konvergiert \cite{Clevert.23112015}.
-
+Aktivierung näher an $0$ als bei \ac{ReLU}, was zur Folge hat, dass das Training schneller konvergiert \cite{Clevert.23112015}
 \begin{align}
 	\label{eq:elu} ELU(z) = \begin{cases} 
 		z & z > 0 \\
 		\alpha \cdot (e^z - 1) & z \leq 0 
-	\end{cases}
+	\end{cases} ~.
 \end{align}
 
 Sowohl \ac{ReLU} als auch \ac{ELU} haben das Problem, dass Aktivierungen beliebig groß werden können, 
@@ -129,14 +125,14 @@ Wahrscheinlichkeitsdistributionen. Im Spezialfall einer binären Wahrscheinlichk
 kann die Cross-Entropy zur \textit{\acf{BCE}} spezialisiert werden, um auf ein binäres 
 Klassifikationsproblem angewandt zu werden. 
 \autoref{eq:bce} zeigt die Kalkulation von \ac{BCE}, wobei $p \in [0;1]$ die Prediction 
-eines binären Klassifikators und $y \in {0,1}$ der Wert des Labels darstellen.
+eines binären Klassifikators und $y \in {0,1}$ der Wert des Labels darstellen
 \begin{align}
-	\label{eq:bce} BCE = -[p \cdot \log(y) + (1-p) \cdot \log(1-y) ]
+	\label{eq:bce} BCE = -[p \cdot \log(y) + (1-p) \cdot \log(1-y) ]~.
 \end{align} 
 Um über $n$ Prediction-Label-Paare $(p_i; y_i)$ den \ac{BCE} zu berechnen, wird das arithmetische Mittel nach
-\autoref{eq:bce-mean} gebildet \cites[S.~82]{Cybenko.1999}[S.~57--59]{Murphy.2012}.
+\autoref{eq:bce-mean} gebildet \cites[S.~82]{Cybenko.1999}[S.~57--59]{Murphy.2012}
 \begin{align}
-	\label{eq:bce-mean} BCE = -\frac{1}{n}\sum_{i = 1}^{n}[p_i \cdot \log(y_i) + (1-p_i) \cdot \log(1-y_i) ]
+	\label{eq:bce-mean} BCE = -\frac{1}{n}\sum_{i = 1}^{n}[p_i \cdot \log(y_i) + (1-p_i) \cdot \log(1-y_i) ]~.
 \end{align}
 
 Im Sinne einer differenzierbaren Kostenfunktion im Kontext von \ac{ML} sind \ac{BCE},
@@ -157,24 +153,24 @@ Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite
 
 \subsection{Dice- und F-Maß}
 
-Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites[S.~33]{Srenson.1948}[S.~297]{Dice.1945}. 
+Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites[S.~33]{Srenson.1948}[S.~297]{Dice.1945} 
 \begin{align}
 	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
-	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|}
+	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|} ~.
 \end{align} 
 
 Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gleich dem $F_1$-Maß, das ein Maß für die Qualität eines statistischen Tests darstellt. Dafür sei $X$ nun die Menge der positiven Elemente und $Y$ die Menge der als positiv eingestuften Elemente. Dann ist die \textit{Genauigkeit} oder auch \textit{Precision} gegeben durch
 \begin{align}
-	\label{eq:precision} precision = \frac{|X \cap Y|}{|Y|}
+	\label{eq:precision} precision = \frac{|X \cap Y|}{|Y|}~,
 \end{align}
 der Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die \textit{Trefferquote} oder auch \textit{Recall} gegeben durch
 \begin{align}
-	\label{eq:recall} recall = \frac{|X \cap Y|}{|X|}
+	\label{eq:recall} recall = \frac{|X \cap Y|}{|X|}~,
 \end{align}
 der Anteil der richtig eingestuften Elemente an allen positiven Elementen. \\
 Das F-Maß, bzw. genauer das $F_1$-Maß, ist dann gegeben durch das harmonische Mittel aus Precision und Recall, wobei $tp$ die Anzahl von wahr-positiven, $fp$ die Anzahl von falsch-positiven und $fn$ die Anzahl von falsch-negativen Elementen ist \cite{YutakaSasaki.2007}:
 \begin{align}
-	\label{eq:f1} F_{1} = \frac{2\cdot precision \cdot recall}{precision + recall} = \frac{2\cdot tp}{2 \cdot tp + fp + fn}
+	\label{eq:f1} F_{1} = \frac{2\cdot precision \cdot recall}{precision + recall} = \frac{2\cdot tp}{2 \cdot tp + fp + fn}~.
 \end{align}
 Precision und Recall können mit einem Faktor $\alpha$ unterschiedlich zueinander gewichtet werden, um mit $F_{\alpha}$ unterschiedliche Aspekte zu fokussieren. 
 
@@ -196,7 +192,7 @@ wobei $tp$, $fp$, $fn$ wie in \autoref{eq:f1} \cite{Fletcher.2018}.
 Auffällig ist die Ähnlichkeit zum Dice- bzw. $F_{1}$-Maß. Es ist allerdings anzumerken, dass bei Dice/$F_1$ die $tp$, also die wahr-positiven, stärker gewichtet werden, als bei der \ac{IoU}. Die augenscheinliche Ähnlichkeit lässt sich durch die Beziehungen
 \begin{align}
 	\label{eq:dice-iou} IoU = \frac{D}{2 - D} \\
-	D = \frac{2 \cdot IoU}{1 + IoU}
+	D = \frac{2 \cdot IoU}{1 + IoU} ~,
 \end{align}
 beschreiben.
 Im Gegensatz zur \ac{IoU} wird beim Dice-Maß eine höhere Gewichtung auf die wahr-positiven Elemente 
@@ -216,6 +212,45 @@ was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{M
 So soll relativiert werden, dass vor allem im Randbereich einer Segmentierung einzelne abweichende Pixel
 nicht als falsch anerkannt werden, sodass die Segmentierung im Großen und Ganzen als richtig anerkannt wird \cite{ChristianWiedemann.1998}. 
 
+In dieser Arbeit für den Spezialfall von semantischer Segmentierung wird die Quality wie folgt berechnet: 
+Sei $P$ die Prediction der Segmentierungsmaske für ein Eingabebild, $Y$ die tatsächliche Segmentierungsmaske (Ground-Truth / Label)
+und $P, Y \in \{0, 1\}^{w \times h}$, wobei $w$ und $h$ die Breite und Höhe des Eingabebildes darstellen.
+Die Einträge mit Wert eins von $P$ und $Y$ sind positiv, die Einträge mit Wert null negativ. Einträge repräsentieren Pixel.
+$B$ sei die Puffergröße in Pixeln. \\
+Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w \times h} \mapsto \{0,1\}^{w \times h}$ definiert als 
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\begin{align}
+	\label{eq:dilate} dilate_B(A) = \left( \begin{cases} 
+		1 & \exists a_{kl} \in A: a_{kl} = 1 \land \norm{
+			\begin{pmatrix} k \\ l \end{pmatrix} - \begin{pmatrix} i \\ j \end{pmatrix} }_2 \leq B \\
+		0 & else 
+	\end{cases} \right)_{ij}~.
+\end{align}
+Die Funktion $dilate_B$ bildet eine Matrix auf eine weitere derselben Ordnung ab, 
+sodass alle Einträge gleich eins sind, die in der Eingabematrix eins sind. Zusätzlich sind alle Einträge eins, 
+die im Umkreis von $B$ Pixel um eine Eins in der Eingabematrix liegen. Somit werden die positiven 
+Pixel der Eingabematrix um die Bufferzone erweitert.  \\
+Damit lassen sich die gepufferten, fehlertoleranteren wahr-positiv $tp_B$, falsch-positiv $fp_B$ und 
+falsch-negativ $fn_B$ Werte berechnen: 
+\begin{align}
+	\label{eq:buffering} {tp}_B = \norm{dilate_{B}(Y) \odot P}_{1,1} , \\
+	fn_B = \norm{Y - (Y \odot dilate_{B}(P))}_{1,1} , \\
+	{fp}_B = \norm{P}_{1,1} - {tp}_B .
+\end{align}
+Beispielhaft und intuitiv dargestellt für $tp_B$: Es sollen auch alle Eins-Pixel als wahr-positiv aufgefasst werden,
+die leicht von der Ground-Truth abweichen, also sich noch in der Pufferzone befinden. 
+Hierfür wird die Pufferzone um die Ground-Truth $Y$ gelegt und das Hadamard-Produkt mit der Predicition $P$ gebildet.
+Da alle Matritzen als Einträge nur 0 oder 1 enthalten, findet durch das Hadamard-Produkt eine Art Verundung statt, 
+sodass im Produkt nur Einträge eins sind, die in beiden Matritzen eins sind. Der Rest ist null. 
+Durch die zuvor durchgeführte Pufferung mit $dilate_B$ sind allerdings auch Einträge gleich eins, die in $Y$ 
+zuvor null waren. Hierdurch besitzt das Hadamard-Produkt mehr Einträge mit eins, als bei der Berechnung der \ac{IoU}.
+Diese Zahl ist genau um die Anzahl an positiven Pixeln aus $P$ größer, die in der Pufferzone liegen. 
+Schließlich wird mit der $1,1$-Höldernorm für Matritzen die Anzahl an Einsen gezählt, was dann $tp_B$ ergibt. \\
+Die Formel für die Quality ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten Variablen:
+\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}
+\begin{align}
+	\label{eq:quality} quality = \frac{tp_B}{tp_B + fp_B + fn_B} ~.
+\end{align}
 
 \section{Architekturkomponenten}
 
