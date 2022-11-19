@@ -4,7 +4,11 @@
     - Definition Fahrradfreundlichkeit (Titel erklären)
     - Schon für Menschen schwierig zu erkennen (auf Satellitenbildern)
 - Stand der Wissenschaft/Forschung/Technik (Methoden, Literaturrecherce)
-    - Neuronale Netze 
+    - Neuronale Netze (2 seiten)
+        - gewichte = "parameter" 
+        - Klassen-Imbalance
+        - Datensplits
+        - convolutional layer
         - Lernrate
         - Ground-Truth / Label / Ziel-Maske
         - Inferenz
