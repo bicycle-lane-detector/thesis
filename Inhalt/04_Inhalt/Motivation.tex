@@ -3,27 +3,25 @@
 Die Navigation über Apps wie beispielsweise Google Maps ist inzwischen aus dem Alltag nicht mehr wegzudenken.
 Auch für das Zurücklegen einer Strecke mit dem Fahrrad werden entsprechende Routen vorgeschlagen.
 Allerdings liegen diese häufig neben großen Straßen und berücksichtigen als vorrangiges Ziel die schnellste Strecke zum Zielpunkt.
-Touren müssen eigenständig über das Hinzufügen weiterer Wegpunkte angepasst werden, wenn man entspannter an sein Ziel gelangen möchte.
+Touren müssen eigenständig über das Hinzufügen weiterer Wegpunkte angepasst werden, wenn entspannter ans Ziel gelangt werden möchte.
 Um dieses Umplanen zu erleichtern, sollen im Rahmen dieser Studienarbeit städtische Radwege über Luftaufnahmen ausfindig gemacht werden.
-Die Erkennung erfolgt mithilfe von Computer Vision.
 Gefundene Radwege sollen dann im Anschluss anhand ihres Umfeldes in verschiedene Kategorien eingruppiert werden, die Rückschlüsse auf die Fahrradfreundlichkeit zulassen.
-Die jeweiligen Zustände der einzelnen Radwege bleiben unberücksichtigt.
-Ebenso werden Fahrradstraßen und 30er-Zonen ausgenommen, obwohl diese angenehm für Radfahrende sind.
-Grund hierfür ist die erschwerte Unterscheidung von anderen Straßen aus Satellitenansicht.
 
-Für die Erkennung von Straßen aus Luftaufnahmen gibt es bereits entsprechende KIs.
-Herausforderungen stellen dort eine teilweise oder vollständige Verdeckungen durch Brücken, Bäume etc. dar.
-Zusätzlich sorgen Schatten für unterschiedliche Beleuchtungen, welche sich auf das Gesamterscheinungsbild auswirken \cite{Azimi.2018}.
-Dazu kommen noch fahrradspezifische Probleme:
+Die Extraktion von Straßen aus Luftaufnahmen ist bereits
+ein gut untersuchtes Teilgebiet der Computer-Vision, wozu es eine Vielzahl an wissenschaftlichen Publikationen gibt
+und praxistaugliche Resultate erzielt werden konnten. \\
+Allerdings gibt es keinerlei Untersuchungen oder Datensätze zur Erkennung, geschweige denn Extraktion, 
+von Radwegen aus Luftbildern. Hierzu ist es nötig neben dem Erkennen eines befestigten Weges  
+diesen auch von Straßen oder Gehwegen abzugrenzen. Selbst für 
+Menschen stellt es oft ein schwieriges Unterfangen dar, aufgrund der für das Problem geringen \ac{GSD}, wobei selbst bei modernen 
+Aufnahmen ein Radweg nur wenige Pixel breit ist (1 Pixel entspricht 0,20 bis 0,50 Meter), oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
+Diese Arbeit kann also darüber Aufschluss geben, inwiefern eine Abgrenzung zwischen unterschiedlichen Straßentypen oder -bestandteilen mithilfe von Computer Vision
+grundsätzlich möglich ist und ob in diesem Anwendungsfall eine Maschine eventuell sogar übermenschliche Performanz 
+erreichen kann, um so zum Beispiel auch sehr dunkle, überschattete oder überwachsene Wege zu erkennen. 
+Des Weiteren kann diese Arbeit als Anhaltspunkt für verwandte Probleme, wie zum Beispiel das Erkennen von Busspuren 
+oder Gehwegen genutzt werden. Auch wird eine Methode vorgeschlagen, wie für solche Fälle ein Datensatz erstellt werden 
+kann, mit dem ein Computer-Vision-Modell trainiert werden kann. 
 
-\begin{itemize}
-	\item Fahrradwege können verschiedenste Untergründe von Asphalt bis Feldweg haben.
-			Das Erscheinungsbild ist dementsprechend vielfältig.
-	\item Sie existieren in mehreren Varianten: als von der Fahrbahn abgetrennte Fahrspur, geteilter Rad- und Fußweg oder ein eigener Radweg.
-			Gerade die Abgrenzung von Fußgängerwegen ist schwierig, da sich diese ebenfalls häufig in Straßennähe befinden und eine ähnliche Breite aufweisen.
-			Selbst für Menschen stellt es eine Herausforderung dar, Fahrradwege in den Satellitenaufnahmen zu identifizieren.
-	\item Durch ihre geringe Breite im Vergleich zu Straßen, muss die \textit{\ac{GSD}} klein genug gewählt werden, dass sich Fahrradwege überhaupt erkennen lassen.
-\end{itemize}
 
 \section{Ziele der Arbeit} \label{mot:ziele}
 Das Ziel der Studienarbeit liegt in der Erkennung von Fahrradwegen mithilfe von Computer Vision.

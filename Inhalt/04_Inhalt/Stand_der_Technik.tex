@@ -15,12 +15,11 @@ Schließlich wird der aktuelle Stand bei der verwandten Domäne der Straßenerke
 aus Luftaufnahmen untersucht.
 
 \section{Aufgabenkategorien} \label{sec:aufgabenkategorien}
-
-Im Bereich der Computer Vision gibt es verschiedene Kategorien von Aufgaben.
-Dazu wird nachfolgend ein Überblick über \textit{Klassifizierung}, \textit{Object Detection} und \textit{Image Semantic Segmentation} gegeben.
+Im Bereich der Computer Vision gibt es verschiedene Problemstellungen, die unterschiedlich gelöst werden können.
+Die einzelnen Lösungsansätze werden jeweils einer Aufgabenkategorie zugeordnet.
+Nachfolgend wird ein Überblick über die Kategorien \textit{Klassifizierung}, \textit{Object Detection} und \textit{Image Semantic Segmentation} gegeben.
 Eine Visualisierung ist in \autoref{fig:categories} gegeben.
 Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komplexität zu.
-% Es folgt eine Übertragung auf das zu behandelnde Problem der Fahrradwegsegmentierung.
 
 \begin{itemize}
 	\item \textit{Klassifizierung:}
@@ -48,10 +47,6 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 	\caption{Verschiedene Aufgabenkategorien \cite{.10.11.2022}.}
 	\label{fig:categories}
 \end{figure} 
-
-% Für die Erkennung von Radwegen wird Image Semantic Segmentation verwendet, da für jeden einzelnen Pixel bestimmt werden soll, ob dieser Bestandteil eines Radweges ist.
-% Eine einfache Klassifizierung oder Object Detection ist nicht ausreichend, eine Instantiierung verschiedener Radwege übersteigt die gewünschte Anforderung nach dem reinen Erkennen von Wegen.
-% Aus den gewonnenen Kategorien der einzelnen Pixel lassen sich Masken zeichnen, denen dann die konkreten Verläufe entnommen werden können.
 
 \section{Aktivierungsfunktionen} \label{sec:activation}
 
@@ -467,7 +462,8 @@ dass keine Bilder des Testdatensatzes im Training verwendet werden.
 Beim \textit{Massachusetts Roads Dataset} liegen $1171$ Luftaufnahmen aus dem Gebiet Massachusetts vor.
 Jedes der Bilder besteht aus $1500\times 1500$ Pixeln, was einer Fläche von $2.25 km^2$ entspricht.
 Die gesamte Abdeckung sind $2600 km^2$ bestehend aus städtischer und ländlicher Gegend.
-Der Split erfolgt im Verhältnis $95:1:4$.
+Der Split erfolgt im Verhältnis $95:1:4$. 
+Über den Split wird sichergestellt, dass keine Durchmischung der Test- und Validierungsdaten mit den Trainingsdaten erfolgt und die Bewertung des Netzes verfälscht wird.
 Es gibt also $1108$ Trainings-, $14$ Validierungs- und $49$ Testbilder.
 Die Zielbilder sind über eine Rasterung der Straßenmittellinien aus dem OpenStreetMap-Projekt generiert worden.
 Die Liniendicke der gelabelten Straßen beträgt $7 px$ und ist ungeglättet, da hiermit bessere Ergebnisse erzielt worden sind \cite[S.~85f]{.06.04.2014}.
@@ -619,22 +615,3 @@ Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verw
 	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert von links nach rechts. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
 	\label{tab:optimized-benchmarks}
 \end{table}
-
-\section{Neuheitswert}
-
-Wie in den vorangegangenen Kapiteln beschrieben, ist die Extraktion von Straßen aus Luftaufnahmen 
-ein gut untersuchtes Teilgebiet der Computer-Vision, wozu es eine Vielzahl an wissenschaftlichen Publikationen gibt
-und wozu praxistaugliche Resultate erzielt werden konnten. \\
-Allerdings gibt es keinerlei Untersuchungen oder Datensätze zur Erkennung, geschweige denn Extraktion, 
-von Radwegen aus Luftbildern. Hierzu ist es nötig neben dem Erkennen eines befestigten Weges  
-diesen auch von Straßen oder Gehwegen abzugrenzen. Wie bereits in der Motivation beschrieben, ist das selbst für 
-Menschen oft ein schwieriges Unterfangen, aufgrund der für das Problem geringen \ac{GSD}, wobei selbst bei modernen 
-Aufnahmen ein Radweg nur wenige Pixel breit ist (1 Pixel entspricht 0,20 bis 0,50 Meter), oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
-Diese Arbeit kann also darüber Aufschluss geben, inwiefern eine Abgrenzung zwischen unterschiedlichen Straßentypen oder -bestandteilen 
-grundsätzlich möglich ist und ob in diesem Anwendungsfall eine Maschine eventuell sogar übermenschliche Performanz 
-erreichen kann, um so zum Beispiel auch sehr dunkle, überschattete oder überwachsene Wege zu erkennen. 
-Des Weiteren kann diese Arbeit als Anhaltspunkt für verwandte Probleme, wie zum Beispiel das Erkennen von Busspuren 
-oder Gehwegen genutzt werden. Auch wird eine Methode vorgeschlagen, wie für solche Fälle ein Datensatz erstellt werden 
-kann, mit dem ein Computer-Vision-Modell trainiert werden kann. 
-
-
