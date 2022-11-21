@@ -52,6 +52,7 @@
         - manuell gelabeled vs automatisch gelabeled ? 
         - zahlen daten fakten größe auflösung etc pp
         - unterschiedliche Städte
+        - TESTDATENSATZ KARLSRUHE -> hiermit wird dann die generalisierungfähigkeit für andere Städte mit andersartigen Bildern getestet
     - Pre-Processing 
         - (Image Augmentation -> robuster), Welche Augmentation und warum?
         - Zerschneiden in 512x512 große schnipsel, warum?

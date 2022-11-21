@@ -117,16 +117,61 @@ Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.
 
 \subsection{Augmentation}
 
-augmentationsart (real time während training und random)
-jede der folgenden augmentationen wird in jeweils ihrer Domäne random gleichzeitig applied.
-Zudem wird für jede Batch geshuffled
-Der Trainingsdatensatz wird nach jeder Epoche gemischt. 
+Die Bild-Augmentation wird nicht vor dem Training angewandt, um den Datensatz künstlich zu vergrößern, 
+sondern während dem Training pseudo-zufällig mit festem Seed, um die Ergebnisse reproduzieren zu können.
+Somit wird jedes Bild während des Trainings, bevor es in das Netz eingegeben wird zufällig augmentiert 
+und dann eingegeben. Somit erhält ein und dasselbe Bild über die verschiedenen Epochen jedes Mal unterschiedliche 
+Anpassungen auf Basis des Zufallsgenerators. Dies erhöht deutlich die Generalisierungsfähigkeit bzw. 
+verringert die Gefahr von Overfitting drastisch. Das Netz sieht tendenziell viel mehr Varianten der Bilder. 
+Der einzige Nachteil ist, dass das Training tendenziell länger dauert, da jedes Bild vor Eingabe bearbeitet wird. 
+Dieser Nachteil ist vor allem evident, wenn mehrere Netze auf demselben Datensatz trainiert werden, da jedes mal 
+dieselben Augmentationen (da gleicher Seed) erneut vorgenommen werden müssen. Dieses Problem könnte allerdings
+durch eine Vorausberechnung der aufeinanderfolgenden Augmentationen behoben werden. 
+Die Verlängerung pro Epoche lag allerdings lediglich bei zwei Minuten beim Bike-Datensatz und fünf Minuten beim Pre-Training auf der 
+Straßenerkennung, daher wurde auf den zusätzlichen Aufwand einer solchen Implementation verzichtet 
+(vgl. eine Epoche benötigt im Schnitt 10-17 min bzw. 40-50 min). 
 
-\autoref{fig:augmentation} zeigt eine Augmentierung des Bildes und der dazugehörigen Maske aus \autoref{fig:cut-example},
+Jede der folgenden Augmentationen wird in ihrem Wertebereich pseudo-zufällig angewandt. Sollte es die Veränderung 
+erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
+schwarzen Rändern im Datensatz gibt, weswegen das hierbei mit nichts Neuem konfrontiert ist. 
+\begin{enumerate}
+	\item Rotation im Intervall von $[-90^\circ ; 90^\circ ]$. Eine Gradzahl wird für jedes Bild zufällig ausgewählt und angewandt. 
+	Die dabei entstehenden leeren Bildbereiche werden mit Schwarz ($RGB = (0,0,0)$) gefüllt. 
+	Diese Augmentation ist realistisch und nützlich, da Straßen in beliebiger Ausrichtung vorkommen und 
+	eine natürliche Orientierung bei Bildern aus der Vogelperspektive nicht besteht.
+	\item Horizontale Spiegelung. Es wird zufällig entschieden, ob ein Bild an der vertikalen Spiegelachse gespiegelt wird. 
+	Diese Augmentation ist ebenfalls realistisch und hat gegenüber der Rotation den Vorteil keine schwarzen Flächen 
+	einzuführen aber den Nachteil nicht so viele neue Bilder erzeugen zu können. 
+	\item Vertikale Spiegelung. Wie horizontale Spiegelung, allerdings wird an der horizontalen Achse gespiegelt. 
+	Beide Spiegelungen können simultan auftreten, es gibt also vier Spiegelungs-Permutationen, 
+	die mit gleicher Wahrscheinlichkeit auftreten.
+	\item Horizontale Verschiebung im Intervall von $[-0,1 \cdot w; 0,1 \cdot w]$ Pixel entlang der horizontalen Achse,
+	wobei $w$ die Breite des Bildes ist. Es wird eine zufällige Länge aus dem Intervall ausgewählt und verschoben; die 
+	entstehenden Ränder werden mit Schwarz gefüllt. Auch diese Augmentation ist realistisch und erhöht lediglich 
+	die Möglichkeit der Veränderung der Bilder. 
+	\item Vertikale Verschiebung im Intervall von $[-0,1 \cdot h; 0,1 \cdot h]$ Pixel entlang der vertikalen Achse,
+	wobei $h$ die Höhe des Bildes ist. Rest wie bei der horizontalen Verschiebung.    
+\end{enumerate} 
+
+\autoref{fig:augmentation} zeigt eine beispielhafte Augmentierung des Bildes und der dazugehörigen Maske aus \autoref{fig:cut-example},
 wobei eine horizontale Spiegelung\footnote{Die Spiegelachse ist hierbei \textit{vertikal}.},
 eine Rotation um 13° und eine Verschiebung um 8\%, also $\lceil 0,08 \cdot 512 \rceil = 41$ Pixel, 
 nach links dargestellt ist. Es ist keine vertikale Spieglung oder vertikale Verschiebung vorhanden.
 Die Randbereiche, wofür aufgrund der Verschiebung und Rotation keine Daten vorhanden sind, sind mit Schwarz gefüllt. 
+
+Die angewandten Augmentationen sind eher konservativ gewählt. An den Bildern wird kaum etwas verändert, 
+außer die Pixel leicht umzusetzen. Dadurch würde ein augmentiertes Bild im Original-Datensatz nicht auffallen. 
+Auf weitergehende Veränderungen wie Gamma-Korrektur, Helligkeitsanpassung, Zoom und Scherung wird hingegen verzichtet. 
+Diese Veränderungen werden nicht vorgenommen, um mit dem Testdatensatz besser Abschätzen zu können, 
+wie gut die Erkennung der Radwege allgemein - unter optimalen Bedingungen - funktioniert, ohne zunächst auf 
+maximale Generalsierungsfähigkeit zu untersuchen. Diese Abschätzung wird dann mithilfe des Testdatensatzes von 
+Karlsruhe, welcher im Erscheinungsbild stark vom Bike-Testdatensatz abweicht, vorgenommen, 
+indem die Ergebnisse für den Bike-Testdatensatz und den Karlsruhe-Datensatz verglichen werden. \\
+An dieser Stelle sei jedoch gesagt, dass insbesondere die Zoom-Augmentation sehr nützlich sein könnte, 
+sollte das Modell für Orhtofotos mit unterschiedlicher \ac{GSD} generalisiert werden. 
+
+Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
+Batches entstehen. 
 
 \begin{figure}
 	\centering
