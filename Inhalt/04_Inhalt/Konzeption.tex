@@ -10,7 +10,10 @@ um das beste zu finden
 
 Dieser Abschnitt befasst sich mit dem Pre-Processing, welches auf den in \autoref{sec:bike-data} 
 beschriebenen Datensatz angewandt wird. Insbesondere ist die Klassenimbalance, Eingabegröße, 
-Training-Validation-Test-Split und die Daten-Augmentation zu diskutieren.
+Training-Validation-Test-Split und die Daten-Augmentation zu diskutieren. \\
+Für die Verwendung im Modell werden die Pixelwerte aller Bilder von $[0; 255] \subset \mathbb{N}$
+auf $[0;1] \subset \mathbb{R}$ abgebildet, indem alle Kanäle - bei RBG drei, bei den Graustufen-Masken einer - durch 255 geteilt werden.
+Dies vermindert die betragsmäßige Größe der Eingaben und aufgrund der Masken auch Ausgaben. 
 
 \subsection{Eingabegröße und Klassenimbalanceausgleich}
 
@@ -51,7 +54,7 @@ Max-Pool-Schichten möglich ist, die die Bildkantenlänge stets halbieren.
 	% im Abbildungsverzeichnis. Der Text darunter wird
 	% tatsächlich angezeigt.
 	\caption[Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz.]{\unskip}
-	Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz.
+	Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz mit roter Maske.
 	\label{fig:cut-example}
 \end{wrapfigure}
 
@@ -61,7 +64,8 @@ Die 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Be
 Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte. \\
 Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
 Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
-wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte. 
+wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
+dieser Anteil entspricht ca. 17,7\%. 
  
 \autoref{fig:cut-example} zeigt beispielhaft ein auf $512\times 512$ Pixel zugeschnittenes Bild aus dem Bike-Datensatz 
 mit der dazugehörigen Maske, die mit 50\% Transparenz in rot überlagert ist. Es ist zu erkennen, 
@@ -71,19 +75,76 @@ bei der gewählten Ausschnittgröße weiterhin gut zu erkennen ist.
 
 \subsection{Training-Validation-Test-Split}
 
-gut gemischelt vorher, daten aus unterschiedlichen städten - unterschiedliche stadtbilder. 
-Wir verwenden validation ! Warum? 
+Zunächst werden die zerschnittenen Bilder aller Städte gemischt. Dann werden diese Ausschnitte disjunkt in 
+Training-, Validation- und Test-Daten aufgeteilt. 
+Damit sollten die unterschiedlichen Städte gleichermaßen in allen Teil-Datensätzen auftauchen, 
+sodass der Test- und Validationdatensatz gut die Generalisierungsfähigkeit des Netzes überprüft. 
+Durch die bereits höhere Zahl an Bildausschnitten (10.181 Stück) ist es eher unwahrscheinlich, 
+dass eine ungleiche Verteilung der Städte vorkommt. Außerdem ist das Mischen wichtig, 
+damit die Randausschnitte, die große schwarze Flächen beinhalten, anteilig gleich in 
+jedem Teildatensatz repräsentiert sind, damit dies das Ergebnis nicht verfälscht, sollten diese 
+zum Beispiel nur in dem Validation- oder Testdatensatz vorkommen. 
 
-train images: 7738
-val images: 672    <- 8\% der test bilder, 6,6\% aller
-sum:        8410
-test:       1771  <- 17,5\% aller Bilder 
-sum:        10181 <- nur 17,7\% aller möglichen bilder
+\autoref{tab:bike-split} zeigt den im Folgenden verwendeten Trainings-Validation-Test-Split. 
+Hierbei sind zwei Dinge zu bemerken, die nicht aus der Tabelle hervorgehen: 
+Zunächst wurde der Testdatensatz abgespaltet. Hierzu wurden 15\% vom Hannover-Teil und 
+20\% von den jeweiligen restlichen Städten abgespaltet und vereinigt. Da der Hannover-Teil so groß ist, wie die restlichen 
+Städte zusammen, läuft dies auf einen eher unkonventionellen Split von 17,5\% heraus. Diese Verteilung wurde so getroffen, 
+um den Hannover-Teil etwas weniger zu gewichten, um im Test die Generalisierungsfähigkeit besser zu testen 
+und den Einfluss der kleineren Städte zu erhöhen. Der Validation-Datensatz wurde danach aus 8\%, 
+bzw. der Trainingsdatensatz aus 92\% vom Rest gebildet. \\
+Der Trainingsdatensatz ist mit ca. 75\% der gesamten Daten eher groß gewählt. Diese Entscheidung wurde getroffen,
+um möglichst viele und unterschiedliche Bilder zu verwenden, da der Datensatz mit automatischer Synthese 
+generiert wurde und daher qualitativ eher unvorteilhaft ist, wodurch eine höhere Anzahl an Trainingsdaten nötig wird.
+
+\begin{table}
+	\centering
+	\begin{tabular}{l|l|l|l|l}
+		& Training & Val. & Test & Summe \\
+		\midrule
+		Absolut & 7738 & 672 & 1771 & 10181 \\
+		Anteil & 75,9 & 6,6 & 17,5 & 100 \\ 
+	\end{tabular}
+	\caption{Training-Validation-Test-Split des Bike-Datensatzes in gefilterten $512 \times 512$-Ausschnitten.}
+	\label{tab:bike-split}
+\end{table}
+
+Der Validationdatensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
+Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
+Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 
+Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  
+
 
 \subsection{Augmentation}
 
+augmentationsart (real time während training und random)
 jede der folgenden augmentationen wird in jeweils ihrer Domäne random gleichzeitig applied.
-Zudem wird für jede Batch geshuffled, die Einteilung in train und test ist ebenfalls geshuffled 
+Zudem wird für jede Batch geshuffled
+Der Trainingsdatensatz wird nach jeder Epoche gemischt. 
+
+\autoref{fig:augmentation} zeigt eine Augmentierung des Bildes und der dazugehörigen Maske aus \autoref{fig:cut-example},
+wobei eine horizontale Spiegelung\footnote{Die Spiegelachse ist hierbei \textit{vertikal}.},
+eine Rotation um 13° und eine Verschiebung um 8\%, also $\lceil 0,08 \cdot 512 \rceil = 41$ Pixel, 
+nach links dargestellt ist. Es ist keine vertikale Spieglung oder vertikale Verschiebung vorhanden.
+Die Randbereiche, wofür aufgrund der Verschiebung und Rotation keine Daten vorhanden sind, sind mit Schwarz gefüllt. 
+
+\begin{figure}
+	\centering
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/cut-example.jpg} 
+	\end{minipage}
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/augmentation-example.png} 
+	\end{minipage}
+
+	\caption{Beispielhafte Datenaugmentation mit Originalbild und Maske in Rot links 
+	und augmentiertes (horizontale Spiegelung, Rotation, Verschiebung nach links) Bild 
+	mit Maske in Rot rechts.  }
+	\label{fig:augmentation}
+\end{figure} 
+
 % augmentation = {
 % 	"rotation_range": 90,
 % 	"width_shift_range": 0.1,
@@ -93,9 +154,6 @@ Zudem wird für jede Batch geshuffled, die Einteilung in train und test ist eben
 % 	"horizontal_flip": "True",
 % 	"vertical_flip": "True",
 % 	"validation_split": 0.08
-% }
-
-\subsection{Daten-Augmentation}
 
 \section{Architektur} \label{sec:architecture}
 
