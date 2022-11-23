@@ -354,7 +354,7 @@ während zuvor mit VGG nur 16 bzw. 19 effektiv waren \cite{He.10122015}.
 Die Architektur ist dabei sehr simpel. Sie stellt - im Falle von ResNet34 - im Prinzip 33 Convolutional-Layer mit wiederholtem Downsampling 
 und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fully-Connected-Layer dar \cite{He.10122015}\footnote{\autoref{fig:resnet34-architecture} veranschaulicht ResNet34.}.
 
-ResNet34 hat 63,5 Mio. Parameter. 
+ResNet34 hat 63,5 Mio. Parameter. Wird auf die letzte Fully-Connected-Layer verzichtet, sind es 21,2 Mio. Parameter.
 
 
 \subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
@@ -395,7 +395,7 @@ Für Transfer-Learning mit U-Nets gibt es verschiedene Strategien: Backbone-Netz
 partielles Einfrieren verschiedener Netzbereiche und direktes Trainieren mit geringer Learning-Rate.
 Der Stand der Wissenschaft diesbezüglich wird im Folgenden vorgestellt. 
 
-\subsection{Training mit Backbones}
+\subsection{Training mit Backbones} \label{sec:transfer-learning:backbones}
 
 Im Kontext von Transfer-Learning bei U-Nets bezeichnet ein \textit{Backbone} ein etabliertes vortrainiertes \ac{CNN}, 
 welches, leicht modifiziert, als Encoder für das U-Net verwendet wird. Hierbei wird der Decoder-Teil des U-Net 

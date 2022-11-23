@@ -6,7 +6,7 @@ um das beste zu finden
 \section{Datensatz für Fahrradwege}
 
 
-\section{Pre-Processing}
+\section{Pre-Processing} \label{sec:pre-processing}
 
 Dieser Abschnitt befasst sich mit dem Pre-Processing, welches auf den in \autoref{sec:bike-data} 
 beschriebenen Datensatz angewandt wird. Insbesondere ist die Klassenimbalance, Eingabegröße, 
@@ -241,10 +241,10 @@ profitieren konnte und damit 2-5\% bessere Resultate in der Basline-Bewertung un
 bessere Ergebnisse in der optimierten Version erzielen konnte, als ein herkömmliches U-Net. 
 Gegebenenfalls ist das auch für die Radwegerkennung möglich. Dazu sollen mehrere Backbones untersucht werden. 
 
-\subsection{Bike-U-Net}
+\subsection{Bike-U-Net} \label{sec:architecture:bike-u-net}
 
-\autoref{fig:bike-unet-2} zeigt die von uns verwendete Architektur für das \textit{Bike-U-Net}, 
-bzw. genauer das \textit{Bike-U-Net-2}. Hierfür wurde das in \autoref{fig:u-net-architecture} 
+\autoref{fig:bike-unet-2} zeigt die von uns verwendete Architektur für das \textit{\ac{BUNet}}, 
+bzw. genauer das \textit{\ac{BUNet2}}. Hierfür wurde das in \autoref{fig:u-net-architecture} 
 dargestellte originale U-Net auf den vorliegenden Anwendungsfall angepasst.
 Diese Anpassungen sind in der nachfolgenden Liste erklärt.
 
@@ -270,7 +270,7 @@ Diese Anpassungen sind in der nachfolgenden Liste erklärt.
 	Hiermit soll getestet werden, ob auch ein recheneffzienteres und kleineres U-Net gute Ergebnisse liefert, 
 	und somit auch weniger Regularisierung notwendig ist. \\
 	Da aber die in \autoref{sec:state-of-the-art-roads} beschriebenen Netze ebenfalls 15-25 Mio. Parameter haben, 
-	soll ein weiteres U-Net mit mehr Parametern getestet werden. Dieses \textit{Bike-U-Net-15} ist 
+	soll ein weiteres U-Net mit mehr Parametern getestet werden. Dieses \textit{\ac{BUNet15}} ist 
 	abgebildet in \autoref{fig:bike-unet-15} und hat 15 Mio. Parameter. Dies wurde erzielt, 
 	indem die Filter ab Block zwei dreimal mehr sind, als im Bike-U-Net-2. So haben wir hierbei 16 Filter in Block eins, 
 	dann 96 Filter in Block zwei, die sich verdoppeln bis hin zu 768 Filtern im mittleren Block und danach wieder halbieren bis zum vorletzten Block. 
@@ -312,6 +312,81 @@ Diese Anpassungen sind in der nachfolgenden Liste erklärt.
 % HE INITIALIZATION
 
 \subsection{Backbone-U-Nets}
+
+Dieser Abschnitt beschreibt kurz die als U-Net mit vortrainiertem Backbone entworfenen Architekturen. \\
+Prinzipiell dienen die Convolution-Schichten aller in \autoref{sec:pretrained-backbones} der Feature-Erkennung 
+und -Extraktion. Lediglich die letzten Schichten, die bei den beschriebenen Klassifikationsmodellen allesamt 
+Fully-Connected-Schichten waren, sind für die schlussendliche Zuordnung der Features zu den Objektklassen 
+im ImageNet-Datensatz notwendig. Werden diese Schichten mit einem Decoder-Teil, der den Encoder - hier 
+also das vortrainierte Klassifikationsnetz - spiegelt, entsteht ein Modell zur semantischen Segmentierung. 
+Weiter müssen lediglich an geeigneter Stelle Skip-Connections zwischen Encoder und Decoder eingefügt werden,
+um die U-Net-Form nachzubilden. Im Folgenden werden die auf diese Weise konstruierten Netze beschrieben. 
+
+\subsubsection{VGG16-Bike-U-Net}
+
+\textit{\ac{VBUNet}} nutzt das in \autoref{sec:pretrained-backbones:vgg16} beschriebene Netz VGG16 
+mit auf ImageNet vortrainierten Gewichten als Backbone. \\
+Hierzu werden die drei Fully-Connected-Layer 
+(und Soft-Max-Aktivierung) am Ende entfernt und mit drei neuen \textit{conv3-512}-Schichten ersetzt. 
+Diese bilden den mittleren (\enquote{untersten}) Block im U-Net. Darauf folgt eine direkte Spieglung 
+von VGG16 als Decoder mit abschließender $1\times 1$-Convolution. Im Gegensatz zum Bike-U-Net (s. \autoref{sec:architecture:bike-u-net}) 
+und ursprünglichen U-Net (s. \autoref{sec:architekturkomponenten:unet}) wurden allerdings keine 
+\textit{up-conv3}-Layer mit trainierbaren Gewichten zum Upsampling genutzt, sondern 2D-Upsampling-Layer, 
+ohne trainierbaren Parameter. Diese Entscheidung wurde getroffen, um VGG16 besser nachzuempfinden, 
+da hier Maxpool-Schichten zum Downsampling verwendet werden, die ebenfalls keine trainierbaren Parameter enthalten.
+Weiter sind nach jeder nicht-vortrainierten Convolution-Schicht, also nach jeder, die nicht zu VGG16 gehören, 
+Batch-Normalization-Layer eingezogen, aus den in \autoref{sec:architecture:bike-u-net} und \autoref{sec:architekturkomponenten:batchnorm}
+genannten Gründen wie schnellerem Training, leichter Glättung und fehlender sonstiger Standardisierung und Normalisierung.
+Die für U-Net charakteristischen Skip-Connections werden vor jeder Maxpool-Schicht außer der ersten eingesetzt 
+und mit dem korrespondierenden Decoder-Block verbunden. Dies resultiert in genau vier Skip-Connections, 
+wie im Bike-U-Net und originellen U-Net. Abgeschlossen wird durch eine Sigmoid-Aktivierung, so wie im Bike-U-Net. \\
+VGG16-Bike-U-Net enthält 23,7 Mio. Parameter. Grob die Hälfte davon (14,7 Mio.) sind von VGG16. 
+
+VGG16 wird als Backbone ausgewählt und getestet, da es als eine Art Basis- bzw. Standardversion der nachfolgenden 
+Backbone-Netze aufgefasst werden kann, da diese auf VGG16 aufbauen und dieses - zumindest 
+für den ImageNet-Datensatz - verbessern und nachvollzogen werden soll, ob diese Anpassungen dienlich sind 
+für den konkreten Anwendungsfall der Radwegerkennung. Zudem ist VGG16 sehr beliebt als vortrainiertes 
+Netz, weswegen es viele Vergleichsmöglichkeiten gibt. 
+Des Weiteren wird VGG16 als Backbone in Research zum Pre-Training mit U-Nets eingesetzt (s. \autoref{sec:transfer-learning:backbones}), 
+auf dessen Ergebnisse diese Arbeit aufbaut. 
+Demnach ist es wiederum für Vergleichszwecke sinnvoll VGG16 als Backbone für die Radwegerkennung zu verwenden.   
+
+\subsubsection{ResNet34-Bike-U-Net}
+
+\textit{\ac{RBUNet}} nutzt das in \autoref{sec:pretrained-backbones:resnet} beschriebene Netz ResNet34 
+mit auf ImageNet vortrainierten Gewichten als Backbone. \\
+Hierzu wird die eine Fully-Connected-Layer am Schluss des Netzes entfernt und um einen Decoder ersetzt. 
+Anders als bei \ac{VBUNet} ist der mittlere Block der U-Net-Struktur von ResNet34 
+und nicht zusätzlich neu ergänzt. Die Begründung hierfür liegt in der höheren Anzahl an Parametern 
+von ResNet34, welche ohne die Fully-Connected-Schicht bereits bei 24,4 Mio. liegt, im Gegensatz zu VGG16. 
+Da der mittlere Block die meisten Parameter beinhaltet wird keine weitere Vertiefung des Netzes vorgenommen,
+um die Anzahl der Parameter nicht drastisch zu erhöhen. An Stelle dessen wird nach Ende der Convolution-Schichten von 
+ResNet34 direkt mit dem Upsampling begonnen, welches wie bei \ac{VBUNet} mit Upsampling-Schichten 
+bewerkstelligt wird. Auch wird im Widerspruch zu \ac{VBUNet} der Encoder - also ResNet34 - nicht gespiegelt, 
+um eine Verdoppelung der Parameteranzahl zu vermeiden. Stattdessen wird ein einfacher, U-Net-ähnlicher Decoder
+aus fünf Blöcken á Upsampling-Schicht und zwei Convolution-Schichten verwendet, wobei in jedem Block 
+die Filter-Anzahl von 512 an bis schließlich 16 halbiert wird. Abgeschlossen wird wie bei \ac{VBUNet} und
+\ac{BUNet} mit $1\times 1$-Convolution und Sigmoid-Aktivierung. Aus den gleichen Gründen wie bei \ac{VBUNet}
+sind nach jeder Convoltuion-Schicht Batch-Normalization-Schichten eingezogen. 
+Es erfolgt wiederum das Einsetzen von vier Skip-Connection nach U-Net-Vorbild ergänzend zu den 
+Skip-Connections der Residuen-Blöcke an folgenden Stellen: 
+nach der $7\times 7$-Convolution zu Beginn von ResNet34, 
+am Ende der Blöcke mit 64 Filtern, am Ende der Blöcke mit 128 Filtern 
+und am Ende der Blöcke mit 256 Filtern. Im Decoder werden diese jeweils 
+zu Beginn der ersten vier Decoder-Blöcke konkateniert. \\ 
+ResNet34-Bike-U-Net enthält 24,4 Mio. Parameter. Davon sind 21,2 Mio. von ResNet34 und lediglich 3,2 Mio. 
+vom Decoder, welcher somit eher unterrepräsentiert ist im Netz.  
+
+ResNet34 wird als Backbone ausgewählt und getestet, aufgrund der hohen Präsenz von 
+Residual-Blöcken in den leistungsstärksten Modellen 
+zur Straßenerkennung aus \autoref{sec:state-of-the-art-roads} und insbesondere \autoref{tab:optimized-benchmarks}.
+Es wird sich ebenfalls eine bessere Performanz dieses Modells bei der Radwegerkennung erhofft. 
+
+\subsubsection{DenseNet121-Bike-U-Net}
+
+\textit{\ac{DBUNet}} nutzt das in \autoref{sec:pretrained-backbones:densenet121} beschriebene Netz DenseNet121 
+mit auf ImageNet vortrainierten Gewichten als Backbone. \\
+Hierzu wird
 
 
 \section{Evaluationsmaße}
