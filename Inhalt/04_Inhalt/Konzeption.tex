@@ -386,8 +386,29 @@ Es wird sich ebenfalls eine bessere Performanz dieses Modells bei der Radwegerke
 
 \textit{\ac{DBUNet}} nutzt das in \autoref{sec:pretrained-backbones:densenet121} beschriebene Netz DenseNet121 
 mit auf ImageNet vortrainierten Gewichten als Backbone. \\
-Hierzu wird
+Hierzu wird die Classification-Layer bestehend aus einer $7\times 7$-Average-Pool-Schicht 
+und einer Fully-Connected-Layer entfernt und durch einen Decoder ersetzt. 
+Wie schon bei \ac{RBUNet} erstreckt sich das DenseNet bis in den mittleren U-Net-Block. Beim \ac{DBUNet} 
+liegt der Grund dafür allerdings nicht in der hohen Parameterzahl, sondern in der hohen sonstigen Komplexität 
+des Netzes. So benötigt DenseNet121 trotz deutlich geringerer Parameterzahl für die Inferenz und das Training länger 
+als sowohl \ac{RBUNet}, als auch \ac{VBUNet}. Vermutlich ist hierfür die große Tiefe von 64 Schichten, wovon 
+60 Convolution-Schichten sind, verantwortlich. Um die Inferenz- und Trainingszeit also nicht weiter zu belasten, 
+ist der Decoder eher schmal gehalten. Für den Decoder wird die gleiche Architektur wie im \ac{RBUNet} verwendet.
+Auch hier sind die Batch-Normalization-Schichten eingezogen. Der einzige Unterschied besteht darin, 
+dass die erste Convolution-Schicht anders als bei \ac{RBUNet} nicht von 512 Kanälen auf 256 abbildet, 
+sondern von 1536 auf 256. Dies liegt an der Konkatenierung der DenseNet-Architektur. Wieder wird das 
+Netz abgeschlossen durch eine $1\times 1$-Convolution gefolgt von einer Sigmoid-Aktivierung. 
+Auch hier werden wieder vier Skip-Connections eingebaut, um die U-Net-Architektur nachzuahmen. 
+Diese Skip-Connections sind im Falle von \ac{DBUNet} im Encoderteil nach der ersten $7 \times 7$-Convolution 
+und dann jeweils nach jeder weiteren $1\times 1$-Convolution der DenseNet-Transition-Zonen eingesetzt. 
+Im Decoder-Teil sind diese wie bei \ac{RBUNet} zu Beginn jedes Decoder-Blocks bis auf den letzten eingebaut. \\
+DenseNet121-Bike-U-Net enthält 12,1 Mio. Parameter, wovon 6,9 Mio. zum DenseNet121 und 5,1 Mio. neu hinzugefügt 
+wurden. Trotz doppelter bzw. sogar vierfacher Tiefe besteht \ac{DBUNet} nur aus ungefähr halb so vielen 
+Parametern wie \ac{RBUNet} und \ac{VBUNet}. 
 
+DenseNet121 wird als Backbone ausgewählt, wegen der guten Ergebnisse von Dense-U-Net-121 aus \autoref{sec:state-of-the-art-roads}. 
+Darüber hinaus werden zusammen mit VGG16 und ResNet34 Netze mit verhältnismäßig flacher, mitteltiefer und tiefer 
+Architektur getestet, was eine Vielfalt an Architekturen abbildet.
 
 \section{Evaluationsmaße}
 
