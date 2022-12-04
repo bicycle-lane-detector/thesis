@@ -3,8 +3,101 @@
 hier kurz beschreiben, was so grob abgeht, also was wir so machen wollen und was für netze wir vergleichen wollen,
 um das beste zu finden
 
-\section{Datensatz für Fahrradwege}
+\section{Datensatz für Fahrradwege} \label{sec:bike-data}
 
+Da sich die im \autoref{sec:road-detection:roads-data} vorgestellten Datensätze zur Erkennung von Straßen nicht auf die Fahrradwege übertragen lassen, war es erforderlich einen eigenen Datensatz zu erstellen.
+Prinzipiell gibt es die Möglichkeiten, die Datensätze manuell zu labeln oder automatisch generieren zu lassen.
+Manuelles Labeln führt zu einer hohen Genauigkeit.
+Allerdings ist diese Art der Datensatzerstellung entsprechend zeitintensiv und mit hohen Kosten verbunden.
+Gerade lange Labelsessions sorgen für Ungenauigkeiten beim Einzeichnen der Ground Truth. 
+In jedem Bild müssen Fahrradwege händisch erkannt werden, wobei die Wege nicht immer eindeutig als solche identifiziert werden können.\\
+Für die Generierung der Labels müssen entsprechende Koordinaten bekannt sein, an denen sich Fahrradwege befinden.
+Mithilfe dieser Punkte können dann Polygone in eine Maske eingezeichnet werden und erhält das zu einer Satellitenaufnahme zugehörige Bild.
+Diese Art der Datensatzgenerierung ist deutlich weniger aufwändig als das manuelle Labeln. 
+Ebenso können unter der Beschränkung der gegebenen Koordinaten und Satellitenbilder große Datensets erzeugt werden.
+Abweichende Koordinaten wirken sich jedoch nachteilig auf die Qualität des Datensatzes aus, da keine menschliche Überprüfung im Anschluss erfolgt.
+Aufgrund der Vielfältigkeit der Radwege, der damit verbundenen Größe des benötigten Datensatzes und dem geringeren Arbeitsaufwand, ist eine Entscheidung zugunsten der automatischen Datengenerierung gefallen.
+Eine schlechtere Datenqualität des Labels wird hingenommen.
+
+Die Erstellung ist in mehreren Schritten vorgenommen worden.
+Zunächst mussten Satellitenbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
+In dem durch die Luftbilder abgedeckten Gebiet sind anschließend offizielle Fahrradwege aus einer API ausgelesen worden.
+Mit den vorhandenen Informationen konnten dann die zugehörigen Masken gezeichnet werden.
+In den nachfolgenden Unterkapiteln werden auf die Einzelschritte detaillierter eingegangen.
+
+\subsection{Satellitenbilder}
+
+Für die zu Satellitenbilder ist eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
+Aufgrund der aufwändigen Gewinnung und Aufbereitung der Orthofotos, sind diese meist nur kostenpflichtig zu erlangen.
+Das Landesamt für Geoinformation und Landesvermessung Niedersachsen jedoch stellt Orthofotos in der benötigten Qualität kostenfrei zum Download zur Verfügung.
+Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von 3 Jahren.
+Für die Datenset-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
+Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2\times2 km^2$-Kacheln ($10.000\times 10.000\times 3$) inklusive ihrer Metadaten \cite{.26.10.2022}.
+Für eine bessere Generalisierung des neuronalen Netzes, sind mehrere Städte verwendet worden.
+Die jeweilige Anzahl der Aufnahmen pro Stadt lässt sich \autoref{tab:city-distribution} entnehmen.
+Die Gesamtsumme beträgt 143 Satellitenbilder.
+Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3.05 GB$.
+
+\begin{table}
+	\centering
+	\begin{tabular}{l|l}
+		Stadt & Anzahl\\
+		\midrule
+		Hannover &72 \\
+		Oldenburg & 21 \\ 
+		Osnabrück & 20 \\
+		Braunschweig & 30 \\
+		\midrule
+		\multicolumn{2}{c}{Gesamtsumme: 143}\\
+	\end{tabular}
+	\caption{Aufteilung der Satellitenaufnahmen auf die einzelnen Städte.}
+	\label{tab:city-distribution}
+\end{table}
+
+Auch bei der Stadt Karlsruhe können Luftaufnahmen von Karlsruhe in benötigter Qualität für Lehre und Forschung kostenfrei beantragt werden.
+Der Richtwert für die zu beantragende Größe beträgt $1km^2$.
+Da in diesem kleinen Ausschnitt nicht genügend Fahrradwege enthalten sind, um ein neuronales Netz trainieren zu können, dienen diese Daten als Testdatensatz.
+Die Generalisierungsfähigkeit für andere Städte mit andersartigen Bildaufnahmen soll getestet werden.
+Eine Aktualisierung der Luftbilder erfolgt alle 2 Jahre.
+Die Abgabe der farbigen Orthofotos, hier mit Stand März 2020, erfolgt im tif-Format \cite{.04.12.2022}.
+
+\subsection{Auslesen der Fahrradwege} \label{subsec:overpass-api}
+
+Offizielle Radwege können über die Overpass API von \ac{OSM} ausgelesen werden \cite{.05.10.2021}.
+Innerhalb der Anfrage kann zwischen einer Vielzahl von Attributen unterschieden werden.
+Alle Radwege und Fahrradstreifen innerhalb der angegebenen Zone sollen zurückgeliefert werden.
+Auch einseitige Radwege werden ausgegeben. 
+Die jeweiligen Attribute geben Aufschluss darüber, ob es sich um einen links- oder rechtsseitigen Weg handelt.
+Der mitgegebene Bereich entspricht genau der Abdeckung durch die Satellitenbilder.
+Die ausgelesenen Daten können als GeoJSON exportiert werden.
+Bei Straßen werden Radwege zentriert statt seitlich an der korrekten Position zurückgegeben.
+Dies muss nachher bei der Maskenerstellung entsprechend zurückgegeben, die Anzahl der vorhandenen Fahrstreifen lässt sich ebenfalls den gelieferten Daten entnehmen.
+Außerdem werden die Koordinaten für die Fahrradwege beispielsweise bei Kreuzungen oder Brücken durchgehend zurückgegeben. 
+Hier lassen sich aus Satellitensicht keine Wege erkennen, was später zu einer Bestrafung des Netzes führt, obwohl sich keine Radwege erkennen lassen.
+Über manuelles Labeln hätten diese Bereiche ausgespart werden können, was zu einer besseren Ground Truth geführt hätte bzw. dem, was sich vom neuronalen Netz erwarten lässt.
+
+\subsection{Maskenerstellung}
+
+Mit den vorhandenen Orthofotos und den Koordinaten der Radwege können nun die Masken generiert werden.
+Dafür werden zunächst die einzelnen Wege in zwei Klassen aufgeteilt, Fahrradwege und Fahrradstreifen.
+Die zugehörigen Koordinaten werden als Liste mit Breiten- und Längengraden übergeben.
+Für die in \autoref{subsec:overpass-api} erwähnte Verschiebung werden zusätzlich die Anzahl der Fahrspuren sowie die Existenz eines links- oder rechtsseitigen Weges berücksichtigt.
+Die Berechnung wird heuristisch über die Anzahl an Autospuren durchgeführt.
+Je mehr Spuren vorhanden sind, desto weiter muss der Fahrradweg verschoben werden.
+Dabei wird eine durchschnittliche Breite einer Fahrbahn von $17.625px$ angenommen.\\
+Für jedes Satellitenbild wird zunächst eine leere Maske erstellt.
+Mithilfe der Koordinaten, die bei den einzelnen Klassen gespeichert sind, können die Linien eingezeichnet werden.
+Dafür werden die Koordinaten auf die korrespondierenden Pixelkoordinaten transformiert.
+Die Breite der einzuzeichnenden Linien orientiert sich an dem Durchschnitt verschiedener Radwege, welcher sich auf $11,8125px$ beläuft.
+Der Dateiname der erstellten Labels orientiert sich an der ursprünglichen tif-Datei.
+
+Die Heuristik beim Einzeichnen der Maske führt dazu, dass manchmal Radweg in Grünstreifen oder auf Straßen eingezeichnet werden, da sie falsch verschoben worden sind.
+In der Straßenmitte befindliche Schienen für Straßenbahnen werden ebenfalls nicht berücksichtigt.
+Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschweren, durchgängige Linien einzuzeichnen.
+Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, gerade auch wegen der geringeren Varianz.
+
+% dafür kannst du natürlich viele Bilder in das Kapitel ballern
+% der datensatz-code hat jetzt auch die möglichkeit den ganzen karren mit rotem overlay von radwegen zu generieren
 
 \section{Pre-Processing} \label{sec:pre-processing}
 
@@ -133,7 +226,7 @@ Straßenerkennung, daher wurde auf den zusätzlichen Aufwand einer solchen Imple
 
 Jede der folgenden Augmentationen wird in ihrem Wertebereich pseudo-zufällig angewandt. Sollte es die Veränderung 
 erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
-schwarzen Rändern im Datensatz gibt, weswegen das hierbei mit nichts Neuem konfrontiert ist. 
+schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei mit nichts Neuem konfrontiert ist. 
 \begin{enumerate}
 	\item Rotation im Intervall von $[-90^\circ ; 90^\circ ]$. Eine Gradzahl wird für jedes Bild zufällig ausgewählt und angewandt. 
 	Die dabei entstehenden leeren Bildbereiche werden mit Schwarz ($RGB = (0,0,0)$) gefüllt. 
@@ -367,7 +460,7 @@ um eine Verdoppelung der Parameteranzahl zu vermeiden. Stattdessen wird ein einf
 aus fünf Blöcken á Upsampling-Schicht und zwei Convolution-Schichten verwendet, wobei in jedem Block 
 die Filter-Anzahl von 512 an bis schließlich 16 halbiert wird. Abgeschlossen wird wie bei \ac{VBUNet} und
 \ac{BUNet} mit $1\times 1$-Convolution und Sigmoid-Aktivierung. Aus den gleichen Gründen wie bei \ac{VBUNet}
-sind nach jeder Convoltuion-Schicht Batch-Normalization-Schichten eingezogen. 
+sind nach jeder Convolution-Schicht Batch-Normalization-Schichten eingezogen. 
 Es erfolgt wiederum das Einsetzen von vier Skip-Connection nach U-Net-Vorbild ergänzend zu den 
 Skip-Connections der Residuen-Blöcke an folgenden Stellen: 
 nach der $7\times 7$-Convolution zu Beginn von ResNet34, 
@@ -435,54 +528,31 @@ die Spuranzahl ermittelt wird. \\
 Aufgrund der genannten Einschränkungen ist die \ac{IoU} ungeeignet als Verlustfunktion, kann jedoch als eine Dimension 
 in der Bewertung mit einfließen. 
 
-Das Quality-Maß adressiert das Verschiebungs-Problem der \ac{IoU} mit einem Buffer zur relaxierten Ermittlung der 
+Das Quality-Maß adressiert das Verschiebungs-Problem der \ac{IoU} mit einem Buffer zur relaxierteren Ermittlung der 
 $tp$, $fp$ und $fn$. Hierbei ist allerdings die Buffergröße in Pixel eine wichtige Stellschraube. Wird diese zu groß 
 gewählt, werden gegebenenfalls positive Pixel, die weit abseits liegen und keinen Radweg andeuten, fälschlicherweise 
 als $tp$ erkannt. Wird die Buffergröße hingegen zu klein gewählt, wird lediglich eine Toleranz gegenüber ungeraden 
 Kanten in der Prediction aufgebaut, nicht aber die Verschiebung des gesamten Radwegs akzeptiert. 
 Da ein Radweg im Mittel ca. 11,8 Pixel und eine Straßenfahrbahn ca. 17,6 Pixel breit ist (s. \autoref{sec:bike-data}), 
 wird der Buffer als ganze Zahl auf das arithmetische Mittel $\frac{11,8 + 17,6}{2} = 14,7 \approx 15$ festgelegt. 
-Dies erlaubt eine Verschiebung des Radwegs um eine volle Breite zzgl. einer Toleranz für die leicht variierende Radwegbreite, 
+Dies erlaubt eine Verschiebung des Radwegs um eine volle Breite zzgl. einer Toleranz für die leicht varierende Radwegbreite, 
 nicht aber um die Breite einer Straßenfahrbahn. Hiermit soll ein realistisches Bild der Performanz des Netzes 
-bezüglich der qualitativen Erkennung der Radwege gezeichnet werden und wird ergänzend zur \ac{IoU}-Metrik 
+bezgülich der qualitativen Erkennung der Radwege gezeichnet werden und wird ergänzend zur \ac{IoU}-Metrik 
 als Bewertungsfunktion eingesetzt. \\
 Als Verlustfunktion ist die Quality allerdings ungeeignet, da wie bei der \ac{IoU} die wahr-positiven $tp$ nicht 
-stärker gewichtet werden, sodass das Netz nicht besonders die wahr-positiven lernt. Des Weiteren ist die Quality aufgrund der 
+stärker gewichtet werden, sodass das Netz nicht besonders diese lernt. Des Weiteren ist die Quality aufgrund der 
 in \autoref{eq:dilate} beschriebenen Dilate-Funktion nicht trivial differenzierbar, was für die Verlustfunktion nötig wäre. 
 Gegebenenfalls kann eine Ableitung für die Quality gefunden werden, 
 die Untersuchung dessen geht allerdings über den Umfang dieser Arbeit hinaus. 
 Zuletzt würde das Verwenden der Quality als Loss-Funktion - unter der Prämisse, dass dies möglich wäre - einen weiteren 
 Hyperparameter - die Buffergröße - einführen, was weiter die Komplexität des Modells erhöht.  
 
-\ac{BCE} ist eine beliebte Verlustfunktion für Klassifikationsprobleme, allerdings in der Grundform wie in 
-\autoref{eq:bce} oftmals eher ungeeignet für semantische Segmentierung, die generell häufiger unter Klassenimbalance 
-leidet, aufgrund der Annotation jeden Pixels als eine Klasse. Durch Gewichtung kann dem zwar entgegengewirkt werden, 
-dabei entsteht allerdings zusätzlicher Aufwand für die Gewichtsbestimmung und zusätzliche Hyperparameter, 
-die die Optimierung des Modells komplexer machen. Im speziellen Fall der Erkennung von Fahrradwegen ist 
-eine größere Klassenimbalance als selbst bei der Straßenerkennung zu erwarten, da Radwege im Sinne dieser Arbeit seltener
-sind als Straßen und dazu noch schmaler, wodurch nur ein sehr kleiner Teil aller Pixel auf einem Bild einem Radweg 
-zugehörig ist. Deswegen ist eine Gewichtung der \ac{BCE} hierbei unvermeidlich, was allerdings Zusatzaufwand in der 
-Konzeption und Optimierung des Modells bedeutet. 
-Darüber hinaus wird bereits bei der Straßenerkennung eher auf \ac{BCE} verzichtet bzw. mit anderen 
-Verlustfunktionen kombiniert verwendet, wie bei \cite{C.Henry.2021}. Dort erzielt es allerdings schlechtere Ergebnisse 
-als Dice. Daher wird \ac{BCE} nicht weiter als Verlustfunktion in Betracht gezogen. 
-Auch als reine Bewertungsfunktion ist \ac{BCE} aufgrund des geringen Interpretationsmehrwerts eher uninteressant.     
+Dice: löst ungleichgewichtsproblem aber keine toleranz zu verschiebung der radwege. 
+Optimal für Hand-annotierter Datensatz
 
-Der Dice-Koeffizient ist eine weitere Möglichkeit für eine Verlustfunktion. Insbesondere ist Dice als Verlustfunktion 
-sehr beliebt in der semantischen Segmentierung und ist auch stark vertreten in seiner Reinform oder gemischt mit anderen Maßen 
-in den Modellen zur Straßensegmentierung aus \autoref{sec:state-of-the-art-roads}. 
-Außerdem setzt Dice eine höhere Gewichtung auf die wahr-positiven $tp$ als \ac{IoU}, wodurch Dice besser zum Erlernen 
-der $tp$ geeignet ist. \\ 
-Im Gegensatz zur Quality und genauso wie die \ac{IoU} hat Dice jedoch keine Toleranz ggü. geringfügig verschobenen Radwegen.  
-Damit wäre Dice optimal geeignet für von Hand annotierte Radwege, da hier keine heuristischen Fehler in Form von 
-Radwegen, die um ca. eine Fahrradwegbreite versetzt auf zum Beispiel einem Grünstreifen verlaufen. 
-Trotz dieser Unzulänglichkeit bei Verwendung auf dem Bike-Datensatz stellt Dice die beste Alternative für eine 
-Verlustfunktion dar und wird folglich hier angewandt. 
+BCE klassenimbalance problem und weniger backing in roads stuff
 
-Zuletzt sei noch erwähnt, dass eine kombinierte Verlustfunktion aus zum Beispiel \ac{BCE} und Dice ggf. 
-zu besserer Performanz führen kann, wie auch die Forschung zur Straßenerkennung (z.B. \cite{C.Henry.2021}) zeigt. 
-Für diese Arbeit wird sich jedoch zunächst auf ein alleinstehendes Maß bezogen. Eine Mischform kann Gegenstand 
-weiterer Forschung sein.
+kombinierte Maße (BCE + Dice ? ) manchmal gut wie research zeigt
 
 \section{Hyperparameter}
 Batch size: kompromiss aus klein wie in u-net paper und batch normalization und trainingspeed/genauigkeit
