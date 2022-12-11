@@ -1,36 +1,36 @@
 \chapter{Implementierung} 
 
-Zunächst wird eine Basisimplementation gegeben, die den Algorithmus zur Subproblemerzeugung und Similarity-Berechnung aus \autoref{sec:alg_comp} umsetzt und diesen dann auf Geschwindigkeit optimiert.
+% Zunächst wird eine Basisimplementation gegeben, die den Algorithmus zur Subproblemerzeugung und Similarity-Berechnung aus \autoref{sec:alg_comp} umsetzt und diesen dann auf Geschwindigkeit optimiert.
 
-\section{Basisimplementation}
+% \section{Basisimplementation}
 
-\begin{algorithm}
-	\caption{Vereinfachter Algorithmus zum Erstellen der Subprobleme aus den Submodellen}\label{lst:create_sub}
-	\begin{algorithmic}[1]
-		\Procedure{Create Subproblems}{$F$} 
-			\For{$S \in atomicSubmodels$}
-				\State $S.graph \gets calculateGraph(S)$
-				\State $S.graph \gets reduceGraph(S.graph, F)$
-			\EndFor \Comment{$n := |atomicSubmodels|$}
-			\While{$|atomicSubmodels| \neq 0$} \Comment{$O(\frac{n(n+1)}{2}) \cdot O(t_{sim}) = O(n^2 \cdot t_{sim})$}
-				\State $M \gets selectOne(atomicSubmodels)$
-				\State $M.set \gets \emptyset$
-				\While{$complexity(M) < minSubproblemComplexity$}
-					\State $highestSim \gets -1$					
-					\For{$S \in atomicSubmodels$}
-						\State $sim \gets computeSim(M, S)$
-						\If{$sim > highestSim$}
-							\State $mostSimilar \gets S$
-							\State $highestSim \gets sim$
-						\EndIf
-					\EndFor
-					\State $M \gets M \cup mostSimilar$
-					\State $M.set \gets M.set \cup mostSimilar.set$
-					\State $atomicSubmodels \gets atomicSubmodels \setminus mostSimilar$
-				\EndWhile
-				\State $subproblems \gets subproblems \cup \{M\}$
-			\EndWhile		
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}
+% 	\caption{Vereinfachter Algorithmus zum Erstellen der Subprobleme aus den Submodellen}\label{lst:create_sub}
+% 	\begin{algorithmic}[1]
+% 		\Procedure{Create Subproblems}{$F$} 
+% 			\For{$S \in atomicSubmodels$}
+% 				\State $S.graph \gets calculateGraph(S)$
+% 				\State $S.graph \gets reduceGraph(S.graph, F)$
+% 			\EndFor \Comment{$n := |atomicSubmodels|$}
+% 			\While{$|atomicSubmodels| \neq 0$} \Comment{$O(\frac{n(n+1)}{2}) \cdot O(t_{sim}) = O(n^2 \cdot t_{sim})$}
+% 				\State $M \gets selectOne(atomicSubmodels)$
+% 				\State $M.set \gets \emptyset$
+% 				\While{$complexity(M) < minSubproblemComplexity$}
+% 					\State $highestSim \gets -1$					
+% 					\For{$S \in atomicSubmodels$}
+% 						\State $sim \gets computeSim(M, S)$
+% 						\If{$sim > highestSim$}
+% 							\State $mostSimilar \gets S$
+% 							\State $highestSim \gets sim$
+% 						\EndIf
+% 					\EndFor
+% 					\State $M \gets M \cup mostSimilar$
+% 					\State $M.set \gets M.set \cup mostSimilar.set$
+% 					\State $atomicSubmodels \gets atomicSubmodels \setminus mostSimilar$
+% 				\EndWhile
+% 				\State $subproblems \gets subproblems \cup \{M\}$
+% 			\EndWhile		
+% 		\EndProcedure
+% 	\end{algorithmic}
+% \end{algorithm}
 
