@@ -64,7 +64,7 @@ Die \textit{Sigmoid}-Funktion bildet die Eingabe auf einen Wert im Intervall $(0
 Der Vorteil hier ist, dass Aktivierungen nie groß werden können, wodurch einzelne Neuronen nicht den Gradienten dominieren können und 
 eine fortlaufende Normalisierung durchgeführt wird. Die Probleme hingegen sind, dass die Funktion eher aufwendig zu berechnen ist 
 und dass die Ableitung für betragsmäßig größere Werte verschwindet. Hierdurch kann es zum \textit{Vanishing-Gradient-Problem} kommen, wobei 
-Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite[S.~191--192]{Goodfellow.2016} 
+Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite{Goodfellow.2016} 
 \begin{align}
 	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}~.
 \end{align} 
@@ -75,7 +75,7 @@ Die \textit{\acf{ReLU}} ist eine Aktivierungsfunktion, welche durch \autoref{eq:
 \ac{ReLU} ist inzwischen der de-facto Standard von Aktivierungsfunktionen in den verborgenen Schichten eines Deep-Learning-Modells.
 Dies liegt vor allem daran, dass das Vanishing-Gradient-Problem adressiert wird. Allerdings hat \ac{ReLU} das Problem, 
 dass Neuronen auf $0$ gesetzt werden, wodurch sie kein Gradienten-Update mehr erhalten und dauerhaft genullt bleiben 
-und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite[S.~189--191]{Goodfellow.2016} 
+und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite{Goodfellow.2016} 
 \begin{align}
 	\label{eq:relu} ReLU(z) = \begin{cases} 
 		z & z > 0 \\
@@ -85,7 +85,7 @@ und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem
 
 \ac{ReLU} erzielt eine höhere Inferenz- und Trainingsgeschwindigkeit bei gleicher oder besserer Performanz, 
 als Sigmoid. Dies liegt zum einen an der Verbesserung des Vanishing-Gradient-Problems und zum anderen an der 
-simpleren und damit leichter zu berechnenden Funktion \cite[S.~226]{Goodfellow.2016}.
+simpleren und damit leichter zu berechnenden Funktion \cite{Goodfellow.2016}.
 
 \subsection{\acf{ELU}}
 
@@ -102,12 +102,6 @@ Aktivierung näher an $0$ als bei \ac{ReLU}, was zur Folge hat, dass das Trainin
 
 Sowohl \ac{ReLU} als auch \ac{ELU} haben das Problem, dass Aktivierungen beliebig groß werden können, 
 wodurch einige wenige Neuronen den Gradienten dominieren können, was zu langsamen Training und suboptimaler Performanz führen kann. 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\textwidth]{Bilder/activation-geogebra-export.pdf} 
-	\caption{Verschiedene Aktivierungsfunktionen. Grün: Sigmoid. Rot: \ac{ReLU}. Blau: \ac{ELU} mit $\alpha = 1$.}
-	\label{fig:activation}
-\end{figure} 
 
 
 \section{Ähnlichkeitsmaße} \label{sec:evaluation-metrics}
@@ -129,13 +123,13 @@ eines binären Klassifikators und $y \in \{0,1\}$ der Wert des Labels darstellen
 	\label{eq:bce} BCE = -[p \cdot \log(y) + (1-p) \cdot \log(1-y) ]~.
 \end{align} 
 Um über $n$ Prediction-Label-Paare $(p_i; y_i)$ den \ac{BCE} zu berechnen, wird das arithmetische Mittel nach
-\autoref{eq:bce-mean} gebildet \cites[S.~82]{Cybenko.1999}[S.~57--59]{Murphy.2012}
+\autoref{eq:bce-mean} gebildet \cites{Cybenko.1999}{Murphy.2012}
 \begin{align}
 	\label{eq:bce-mean} BCE = -\frac{1}{n}\sum_{i = 1}^{n}[p_i \cdot \log(y_i) + (1-p_i) \cdot \log(1-y_i) ]~.
 \end{align}
 
 Im Sinne einer differenzierbaren Kostenfunktion im Kontext von \ac{ML} sind \ac{BCE},
-\textit{negative Log-Likelihood} und \textit{Logistic-Regression} synonym \cite[S.~249]{Murphy.2012}. 
+\textit{negative Log-Likelihood} und \textit{Logistic-Regression} synonym \cite{Murphy.2012}. 
 
 Aus \autoref{eq:bce-mean} geht hervor, warum \ac{BCE} gut geeignet für Klassifikationsprobleme ist.
 Im Gegensatz zum mittleren absoluten Fehler, bei dem ein Fehler linear eingeht, und zum mittleren quadratischen Fehler,
@@ -148,11 +142,11 @@ Bei stark ungleichmäßiger Klassenverteilung kann es jedoch dazu kommen,
 dass die unterrepräsentierte Klasse kaum noch geschätzt wird, 
 da der Fehler einer falsch geschätzten überrepräsentierten Klasse zu stark bestraft wird.
 Dadurch lernt der Algorithmus, die unterrepräsentierte Klasse kaum zu schätzen.
-Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite[S.~4]{Ronneberger.18052015}.
+Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite{Ronneberger.18052015}.
 
 \subsection{Dice- und F-Maß}
 
-Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites[S.~33]{Srenson.1948}[S.~297]{Dice.1945} 
+Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites{Srenson.1948}{Dice.1945} 
 \begin{align}
 	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
 	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|} ~.
@@ -268,12 +262,12 @@ Inferenz sind allerdings alle Gewichte aktiv, was zu einer höheren Summe der Ge
 als während des Trainings führt. Deswegen müssen die Gewichte für die Inferenz nach unten skaliert werden. 
 Alternativ können während des Trainings alle Gewichte nach oben skaliert werden, die nicht deaktiviert wurden. 
 Somit muss für die Inferenz keine Anpassung vorgenommen werden. Nach jedem Trainings-Batch werden die aktivierten 
-Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert \cites[S.~255--258]{Goodfellow.2016}{NitishSrivastava.2014}.
+Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert \cites{Goodfellow.2016}{NitishSrivastava.2014}.
 
 Es hat sich gezeigt, dass Dropout eine effektivere Regularisierungstechnik zur Minderung von Overfitting ist, 
 als andere ressourcenschonende Techniken, wie \textit{Weight-Decay}, \textit{Filter-Norm-Constraints} oder 
 \textit{Sparse-Activity-Regularization}, wobei Dropout mit diesen kombiniert werden kann, für noch bessere 
-Regularisierung \cites[S.~265]{Goodfellow.2016}.
+Regularisierung \cites{Goodfellow.2016}.
 
 \subsection{Batch-Normalization} \label{sec:architekturkomponenten:batchnorm}
 
@@ -283,9 +277,9 @@ des Mittelwerts und der Streuung der Batches des Trainingsdatensatzes herangezog
 Batch-Normalization führt zu einer schnelleren Konvergenz im Training, 
 sodass die Anzahl an benötigten Epochen in manchen Fällen bis zu halbiert werden können. Des Weiteren führt 
 Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion zu einem gewissen Grad glättet 
-\cites[S.~317--320]{Goodfellow.2016}{Ioffe.11022015}.
+\cites{Goodfellow.2016}{Ioffe.11022015}.
 Besonders gut funktioniert Batch-Normalization für \acp{CNN} und Netzwerke mit Sigmoid-Aktivierungsfunktion
-\cites[S.~425]{Goodfellow.2016}.
+\cites{Goodfellow.2016}.
 
 \subsection{U-Net} \label{sec:architekturkomponenten:unet}
 
@@ -470,7 +464,7 @@ Der Split erfolgt im Verhältnis $95:1:4$.
 Über den Split wird sichergestellt, dass keine Durchmischung der Test- und Validierungsdaten mit den Trainingsdaten erfolgt und die Bewertung des Netzes verfälscht wird.
 Es gibt also $1108$ Trainings-, $14$ Validierungs- und $49$ Testbilder.
 Die Zielbilder sind über eine Rasterung der Straßenmittellinien aus dem \ac{OSM}-Projekt generiert worden.
-Die Liniendicke der gelabelten Straßen beträgt $7 px$ und ist ungeglättet, da hiermit bessere Ergebnisse erzielt worden sind \cite[S.~85f]{.06.04.2014}.
+Die Liniendicke der gelabelten Straßen beträgt $7 px$ und ist ungeglättet, da hiermit bessere Ergebnisse erzielt worden sind \cite{.06.04.2014}.
 Der Zuschnitt der Bilder sorgt teilweise für einen hohen Anteil weißer Stellen in den Bildern.
 
 Das \textit{Buffalo Roads Dataset} ist als zusätzliches Testset für das Massachusetts Roads Dataset zu sehen.
