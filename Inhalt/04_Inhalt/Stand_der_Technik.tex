@@ -194,7 +194,7 @@ beschreiben.
 Im Gegensatz zur \ac{IoU} wird beim Dice-Maß eine höhere Gewichtung auf die wahr-positiven Elemente 
 gelegt.
 
-\subsection{Quality}
+\subsection{Quality} \label{sec:evaluation-metrics:quality}
 
 Die \textit{Quality} soll einige Probleme der \ac{IoU} beheben, um ein Ähnlichkeitsmaß darzustellen, 
 was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{ML}-Modells zur semantischen Segmentierung liegt.
@@ -211,50 +211,15 @@ Die Quality wird analog zur \ac{IoU} über eine gepufferte Precision - die \text
 und über einen gepufferten Recall - die \textit{Completeness} - berechnet. Insbesondere werden einige Elemente, 
 die zuvor als $fp$ und $fn$ eingeordnet wurden, hiermit zu $tp$ konvertiert.
 
-Bezüglich der Quality ist die Puffergröße ein wichtiger Parameter.
+Bezüglich der \textit{Quality} ist die Puffergröße ein wichtiger Parameter.
 Wird diese zu groß gewählt, werden gegebenenfalls positive Pixel, die weit abseits liegen und keinen Radweg andeuten, fälschlicherweise 
 als $tp$ erkannt. Wird die Puffergröße zu klein gewählt, wird lediglich eine Toleranz gegenüber ungeraden 
 Kanten in der Prediction aufgebaut, nicht aber die Verschiebung des gesamten Radwegs akzeptiert.
 
-In dieser Arbeit für den Spezialfall von semantischer Segmentierung wird die Quality wie folgt berechnet: 
-Sei $P$ die Prediction der Segmentierungsmaske für ein Eingabebild, $Y$ die tatsächliche Segmentierungsmaske (Ground-Truth / Label)
-und $P, Y \in \{0, 1\}^{w \times h}$, wobei $w$ und $h$ die Breite und Höhe des Eingabebildes darstellen.
-Die Einträge mit Wert eins von $P$ und $Y$ sind positiv, die Einträge mit Wert null negativ. Einträge repräsentieren Pixel.
-$B$ sei die Puffergröße in Pixeln. \\
-Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w \times h} \mapsto \{0,1\}^{w \times h}$ definiert als 
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\begin{align}
-	\label{eq:dilate} dilate_B(A) = \left( \begin{cases} 
-		1 & \exists a_{kl} \in A: a_{kl} = 1 \land \norm{
-			\begin{pmatrix} k \\ l \end{pmatrix} - \begin{pmatrix} i \\ j \end{pmatrix} }_2 \leq B \\
-		0 & else 
-	\end{cases} \right)_{ij}~.
-\end{align}
-Die Funktion $dilate_B$ bildet eine Matrix auf eine weitere derselben Ordnung ab, 
-sodass alle Einträge gleich eins sind, die in der Eingabematrix eins sind. Zusätzlich sind alle Einträge eins, 
-die im Umkreis von $B$ Pixel um eine Eins in der Eingabematrix liegen. Somit werden die positiven 
-Pixel der Eingabematrix um die Bufferzone erweitert.  \\
-Damit lassen sich die gepufferten, fehlertoleranteren wahr-positiv $tp_B$, falsch-positiv $fp_B$ und 
-falsch-negativ $fn_B$ Werte berechnen: 
-\begin{align}
-	\label{eq:buffering} {tp}_B = \norm{dilate_{B}(Y) \odot P}_{1,1} , \\
-	fn_B = \norm{Y - (Y \odot dilate_{B}(P))}_{1,1} , \\
-	{fp}_B = \norm{P}_{1,1} - {tp}_B .
-\end{align}
-Beispielhaft und intuitiv dargestellt für $tp_B$: Es sollen auch alle Eins-Pixel als wahr-positiv aufgefasst werden,
-die leicht von der Ground-Truth abweichen, also sich noch in der Pufferzone befinden. 
-Hierfür wird die Pufferzone um die Ground-Truth $Y$ gelegt und das Hadamard-Produkt mit der Predicition $P$ gebildet.
-Da alle Matritzen als Einträge nur 0 oder 1 enthalten, findet durch das Hadamard-Produkt eine Art Verundung statt, 
-sodass im Produkt nur Einträge eins sind, die in beiden Matritzen eins sind. Der Rest ist null. 
-Durch die zuvor durchgeführte Pufferung mit $dilate_B$ sind allerdings auch Einträge gleich eins, die in $Y$ 
-zuvor null waren. Hierdurch besitzt das Hadamard-Produkt mehr Einträge mit eins, als bei der Berechnung der \ac{IoU}.
-Diese Zahl ist genau um die Anzahl an positiven Pixeln aus $P$ größer, die in der Pufferzone liegen. 
-Schließlich wird mit der $1,1$-Höldernorm für Matritzen die Anzahl an Einsen gezählt, was dann $tp_B$ ergibt. \\
-Die Formel für die Quality ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten Variablen:
-\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}
-\begin{align}
-	\label{eq:quality} quality = \frac{tp_B}{tp_B + fp_B + fn_B} ~.
-\end{align}
+In der ursprünglichen Beschreibung der \textit{Quality} wird das Maß auf kontinuierlichen Vektoren anstelle von diskreten Rastern angewandt, wodurch nur die 
+Idee, nicht aber die Berechnung auf das konkrete Problem der semantischen Segmentierung angewendet werden kann. Dementsprechend ist es nötig, 
+die hier vorgestellte \textit{Quality} auf den spezifischen Anwendungsfall der Radwegerkennung anzupassen, 
+was in \autoref{sec:eval:biou} vorgenommen wird. 
 
 \section{Architekturkomponenten}
 
