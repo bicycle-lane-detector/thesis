@@ -138,6 +138,15 @@ $512 \cdot 0,2m = 102,4m$. Die Zweierpotenz wird gewählt,
 sodass das Bild nicht zu klein wird in der U-Net-Struktur, bzw. damit eine saubere Teilung der 
 Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren. 
 
+Jedes $10.000\times 10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
+$\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
+Die aufgerundeten 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Bereich mit Schwarz ($RGB=(0,0,0)$) gefüllt.
+Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte. \\
+Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
+Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
+wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
+dieser Anteil entspricht ca. 17,7\%. 
+
 \begin{wrapfigure}{r}{0.40\textwidth}
 	\centering
 	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
@@ -151,15 +160,6 @@ Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren.
 	Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz mit roter Maske.
 	\label{fig:cut-example}
 \end{wrapfigure}
-
-Jedes $10.000\times 10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
-$\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
-Die aufgerundeten 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Bereich mit Schwarz ($RGB=(0,0,0)$) gefüllt.
-Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte. \\
-Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
-Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
-wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
-dieser Anteil entspricht ca. 17,7\%. 
  
 \autoref{fig:cut-example} zeigt beispielhaft ein auf $512\times 512$ Pixel zugeschnittenes Bild aus dem Bike-Datensatz 
 mit der dazugehörigen Maske, die mit 50\% Transparenz in rot überlagert ist. Es ist zu erkennen, 
@@ -380,7 +380,7 @@ warum die jeweiligen architektonischen Entscheidungen getroffen wurden. \\
 In \autoref{sec:state-of-the-art-roads} wurde ausführlich der Stand der Technik und Wissenschaft 
 im Bereich der Straßenerkennung und -extraktion mittels Computer-Vision-Modellen beschrieben. 
 Aufgrund der Ähnlichkeit der Problemdomäne lässt sich vermuten, dass ähnliche Verfahren wie 
-zum Erkennen von Straßen auch für das Erkennen von Fahrradwegen nützlich sein könnten. 
+zum Erkennen von Straßen auch für das Erkennen von Fahrradwegen nützlich sein können. 
 Die Problemdomänen sind ähnlich, da Fahrradwege auch Straßen sind und eben jene Eigenschaften, 
 wie große Klassenimbalance zwischen Fahrradweg und Hintergrund, Beschattung durch andere Objekte,
 Verdeckung durch z.B. Bäume und ähnliche Annotationsfehler   
@@ -392,7 +392,7 @@ eine Straße markiert werden würde, die zwar einen Radweg hat, aber nicht klar 
 bzw. ob ein Radweg in beide Richtungen existiert. Aus demselben Grund ergibt eine reine Klassifikation, 
 ob ein Bild einen Radweg enthält oder nicht ebenfalls keinen Sinn. 
 Auf der anderen Seite würde Instanz-Segmentierung keine weiteren relevanten Informationen hinzufügen, 
-wonach semantische Segmentierung völlig ausreicht, um das Problem zu lösen. \\
+wonach semantische Segmentierung ausreicht, um das Problem zu lösen. \\
 Wie bereits in \autoref{sec:state-of-the-art-roads} dargelegt sind alle relevanten Modelle zur 
 Straßenerkennung basierend auf der U-Net-Archtiektur (vgl. \ref{sec:architekturkomponenten:unet}).
 Folglich sollen die hier betrachteten Modelle ebenfalls als angepasste U-Nets entworfen werden. 
@@ -402,14 +402,36 @@ was zu allgemein besseren Ergebnissen führen kann (s. \autoref{sec:transfer-lea
 Außerdem können so die erzielten Ergebnisse vom Pre-Training mit den öffentlichen Benchmarks verglichen werden,
 um deren Ergebnisse zu validieren und früh Fehler in den eigenen Entscheidungen und Implementationen zu entdecken.
 
-Zunächst soll so ein nur leicht modifiziertes U-Net, welches im Folgenden \textit{Bike-U-Net} 
-genannt wird, entworfen werden, welches als Baseline- und Vergleichs-Netz dienen soll.
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+
+Zunächst soll so ein nur leicht modifiziertes U-Net, welches im Folgenden \textit{\acf{BUNet}} 
+genannt wird, entworfen werden, welches als Baseline- und Vergleichs-Netz dienen soll und 
+wovon es zwei Komplexitätsvarianten, das \ac{BUNet2} mit 2 Mio. Parametern und das \ac{BUNet15} 
+mit 15 Mio. Parametern geben soll. \\
 Dann soll eine zweite Klasse an U-Nets beschrieben werden, die verschiedene vortrainierte \acp{CNN} (s. \autoref{sec:pretrained-backbones}) 
 als Backbones für ein U-Net verwendet, da \autoref{sec:state-of-the-art-roads} gezeigt hat, 
-dass im Falle der Straßendetektion die Performanz eines Netzes stark verbessert werden konnte, 
+dass im Falle der Straßendetektion die Performanz eines Netzes stark verbessert werden kann, 
 indem auf Techniken und Methoden von Modellen aus anderen Teilgebieten der Computer-Vision 
-zurückgegriffen wurde. 
-Gegebenenfalls ist das auch für die Radwegerkennung möglich. Dazu sollen mehrere Backbones untersucht werden. 
+zurückgegriffen wird. 
+Gegebenenfalls ist das auch für die Radwegerkennung möglich. Dazu sollen mehrere Backbones untersucht werden, 
+da die gewählten Backbones jeweils gut für die Straßenerkennung funktioniert haben und sich 
+herausstellen soll, ob es einen besonders guten Backbone für die Radwegerkennung gibt. 
+Folgende Liste zeigt eine Übersicht über die Netze, während die nachfolgenden Abschnitte genauer 
+den erläutern und begründen, warum ein Backbone gewählt wurde: 
+\begin{enumerate}
+	\item \textit{\acf{BUNet}}: Baseline Netz ohne Backbone.
+	\begin{enumerate}
+		\item \textit{\acf{BUNet2}}: Variante mit 2 Mio. Parameter.
+		\item \textit{\acf{BUNet15}}: Variante mit 15 Mio. Parameter.
+	\end{enumerate}
+	\item Backbone-U-Nets
+	\begin{enumerate}
+		\item \textit{\acf{VBUNet}}: Baseline Netz mit Baseline-Backbone.
+		\item \textit{\acf{RBUNet}}: Hoch-performant bei Straßenerkennung.
+		\item \textit{\acf{DBUNet}}: Hoch-performant bei Straßenerkennung.
+	\end{enumerate}
+\end{enumerate} 
 
 \subsection{Bike-U-Net} \label{sec:architecture:bike-u-net}
 
