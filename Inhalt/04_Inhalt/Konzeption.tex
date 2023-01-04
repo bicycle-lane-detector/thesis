@@ -59,39 +59,56 @@ Die Abgabe der farbigen Orthofotos, hier mit Stand März 2020, erfolgt im tif-Fo
 
 \subsection{Auslesen der Fahrradwege} \label{subsec:overpass-api}
 
-Offizielle Radwege können über die Overpass API von \ac{OSM} ausgelesen werden \cite{.05.10.2021}.
+Eingetragene Radwege können über die Overpass API von \ac{OSM} ausgelesen werden \cite{.05.10.2021}.
 Innerhalb der Anfrage kann zwischen einer Vielzahl von Attributen unterschieden werden.
 Alle Radwege und Fahrradstreifen innerhalb der angegebenen Zone sollen zurückgeliefert werden.
 Auch einseitige Radwege werden ausgegeben. 
 Die jeweiligen Attribute geben Aufschluss darüber, ob es sich um einen links- oder rechtsseitigen Weg handelt.
 Der mitgegebene Bereich entspricht genau der Abdeckung durch die Satellitenbilder.
 Die ausgelesenen Daten können als GeoJSON exportiert werden.
-Bei Straßen werden Radwege zentriert statt seitlich an der korrekten Position zurückgegeben.
-Dies muss nachher bei der Maskenerstellung entsprechend zurückgegeben, die Anzahl der vorhandenen Fahrstreifen lässt sich ebenfalls den gelieferten Daten entnehmen.
+Bei Straßen werden Fahrradstreifen zentriert, statt seitlich an der korrekten Position zurückgegeben.
+Dies muss nachher bei der Maskenerstellung entsprechend berücksichtigt werden. Die Anzahl der vorhandenen Fahrstreifen der Straße lässt sich ebenfalls aus den gelieferten Daten entnehmen.
 Außerdem werden die Koordinaten für die Fahrradwege beispielsweise bei Kreuzungen oder Brücken durchgehend zurückgegeben. 
-Hier lassen sich aus Satellitensicht keine Wege erkennen, was später zu einer Bestrafung des Netzes führt, obwohl sich keine Radwege erkennen lassen.
-Über manuelles Labeln hätten diese Bereiche ausgespart werden können, was zu einer besseren Ground Truth geführt hätte bzw. dem, was sich vom neuronalen Netz erwarten lässt.
+Hier lassen sich aus Satellitensicht keine Wege erkennen, was später zu Kosten für das Netz führt, obwohl sich keine Radwege erkennen lassen.
+Über manuelles Labeln können diese Bereiche ausgespart werden können, was zu einer besseren Ground Truth führt, bzw. dem, was sich vom neuronalen Netz erwarten lässt.
 
 \subsection{Maskenerstellung}
 
-Mit den vorhandenen Orthofotos und den Koordinaten der Radwege können nun die Masken generiert werden.
-Dafür werden zunächst die einzelnen Wege in zwei Klassen aufgeteilt, Fahrradwege und Fahrradstreifen.
+Mit den vorhandenen Orthofotos und den Koordinaten der Radwege können nun die Masken generiert 
+und deren Güte abgeschätzt (s. Ende des Unterabschnittes) werden.
+Dafür werden zunächst die einzelnen Wege in zwei Klassen aufgeteilt, \textit{Fahrradwege} und \textit{Fahrradstreifen}.
 Die zugehörigen Koordinaten werden als Liste mit Breiten- und Längengraden übergeben.
 Für die in \autoref{subsec:overpass-api} erwähnte Verschiebung werden zusätzlich die Anzahl der Fahrspuren sowie die Existenz eines links- oder rechtsseitigen Weges berücksichtigt.
 Die Berechnung wird heuristisch über die Anzahl an Autospuren durchgeführt.
-Je mehr Spuren vorhanden sind, desto weiter muss der Fahrradweg verschoben werden.
-Dabei wird eine durchschnittliche Breite einer Fahrbahn von $17.625px$ angenommen.\\
+Je mehr Spuren vorhanden sind, desto weiter muss der Fahrradstreifen verschoben werden.
+Es wird die durchschnittliche Breite einer Fahrbahn von, also eine Verschiebung um, $17.625px$ angenommen.
+Fahrradwege werden hingegen nicht verschoben, da diese passend von Menschen annotiert sind.\\
 Für jedes Satellitenbild wird zunächst eine leere Maske erstellt.
 Mithilfe der Koordinaten, die bei den einzelnen Klassen gespeichert sind, können die Linien eingezeichnet werden.
 Dafür werden die Koordinaten auf die korrespondierenden Pixelkoordinaten transformiert.
 Die Breite der einzuzeichnenden Linien orientiert sich an dem Durchschnitt verschiedener Radwege, welcher sich auf $11,8125px$ beläuft.
-Der Dateiname der erstellten Labels orientiert sich an der ursprünglichen tif-Datei.
+
+\subsubsection{Güteabschätzung der Masken}
 
 Die Heuristik beim Einzeichnen der Maske führt dazu, dass manchmal Radweg in Grünstreifen oder auf Straßen eingezeichnet werden, da sie falsch verschoben worden sind.
 In der Straßenmitte befindliche Schienen für Straßenbahnen werden ebenfalls nicht berücksichtigt.
 Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschweren, durchgängige Linien einzuzeichnen.
-Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, gerade auch wegen der geringeren Varianz.
+Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, wegen geringerer Varianz in den Stichproben, 
+die zur Ermittlung erhoben sind.
 
+Das Problem bei den generierten Masken sind nicht die Fahrrad\textit{wege}, denn diese sind von Menschen manuell annotiert und damit passend im Satellitenbild, 
+sondern die Fahrrad\textit{streifen}, denn diese sind durch die Heuristik ggf. daneben oder enthalten die beschriebenen Sprünge. \\
+Der Anteil an manuell annotierten Fahrradwegen und heuristisch annotierten Fahrradstreifen kann Aufschluss über die Güte geben. 
+Dieser Anteil trifft aber noch keine Aussage über die Länge der jeweiligen Wege. Um dies zu berücksichtigen, werden stattdessen die Kanten die zu 
+entweder Fahrradwegen oder Fahrradstreifen gehört gezählt. Hier liegt die Annahme zugrunde, dass Kanten im Schnitt ähnlich lang sind.\\
+Im Datensatz gibt es $129205$ Kanten die zu manuell annotierten Fahrradwegen gehören und $53256$ Kanten die zu heuristisch annotierten Fahrradstreifen gehören. 
+Demzufolge sind ungefähr $70,8\%$ der Daten manuell und circa $29,2\%$ der Daten heuristisch annotiert. 
+Aus Stichproben der heuristisch annotierten Fahrradstreifen lässt sich abschätzen, dass circa $30\%$ der Fahrradstreifen falsch liegen 
+(kaum bis wenig Überschneidung mit dem Fahrradweg; $<30\%$ Überschneidung), circa $50\%$ grob richtig liegen (ungefähr $50\%$ Überschneidung)
+und $20\%$ komplett richtig ($>80$ Überschneidung) liegen. Wird für grobe Richtigkeit ein Faktor von $\frac{1}{2}$ angenommen, so sind insgesamt
+als Gütemaß $0,292 \cdot (0,3 + \frac{1}{2} \cdot 0,5) = 0,1606$ also $16,06\%$ der Annotationen falsch, bzw. 
+\textbf{83,94\%} des Datensatzes auf dem Niveau einer manuellen Annotation. 
+   
 % dafür kannst du natürlich viele Bilder in das Kapitel ballern
 % der datensatz-code hat jetzt auch die möglichkeit den ganzen karren mit rotem overlay von radwegen zu generieren
 
@@ -138,15 +155,6 @@ $512 \cdot 0,2m = 102,4m$. Die Zweierpotenz wird gewählt,
 sodass das Bild nicht zu klein wird in der U-Net-Struktur, bzw. damit eine saubere Teilung der 
 Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren. 
 
-Jedes $10.000\times 10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
-$\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
-Die aufgerundeten 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Bereich mit Schwarz ($RGB=(0,0,0)$) gefüllt.
-Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte. \\
-Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
-Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
-wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
-dieser Anteil entspricht ca. 17,7\%. 
-
 \begin{wrapfigure}{r}{0.40\textwidth}
 	\centering
 	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
@@ -160,6 +168,15 @@ dieser Anteil entspricht ca. 17,7\%.
 	Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz mit roter Maske.
 	\label{fig:cut-example}
 \end{wrapfigure}
+
+Jedes $10.000\times 10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
+$\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
+Die aufgerundeten 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Bereich mit Schwarz ($RGB=(0,0,0)$) gefüllt.
+Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte. \\
+Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
+Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
+wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
+dieser Anteil entspricht ca. 17,7\%. 
  
 \autoref{fig:cut-example} zeigt beispielhaft ein auf $512\times 512$ Pixel zugeschnittenes Bild aus dem Bike-Datensatz 
 mit der dazugehörigen Maske, die mit 50\% Transparenz in rot überlagert ist. Es ist zu erkennen, 
@@ -435,8 +452,8 @@ den erläutern und begründen, warum ein Backbone gewählt wurde:
 
 \subsection{Bike-U-Net} \label{sec:architecture:bike-u-net}
 
-\autoref{fig:bike-unet-2} zeigt die von uns verwendete Architektur für das \textit{\ac{BUNet}}, 
-bzw. genauer das \textit{\ac{BUNet2}}. Hierfür wurde das in \autoref{fig:u-net-architecture} 
+\autoref{fig:bike-unet-2} zeigt die verwendete Architektur für das \textit{\ac{BUNet2}}. 
+Hierfür wurde das in \autoref{fig:u-net-architecture} 
 dargestellte originale U-Net auf den vorliegenden Anwendungsfall angepasst.
 Diese Anpassungen sind in der nachfolgenden Liste erklärt.
 
@@ -466,30 +483,28 @@ Diese Anpassungen sind in der nachfolgenden Liste erklärt.
 	Da aber die in \autoref{sec:state-of-the-art-roads} beschriebenen Netze ebenfalls 15-25 Mio. Parameter haben, 
 	soll ein weiteres U-Net mit mehr Parametern getestet werden. Das \textit{\ac{BUNet15}} hat 15 Mio. 
 	Parameter\footnote{\autoref{fig:bike-unet-15} zeigt \ac{BUNet15}}. Dies wird erzielt, 
-	indem die Filteranzahl ab dem zweiten Block dreimal höher ist als in Bike-U-Net-2. So sind hier 16 Filter in Block eins, 
+	indem die Filteranzahl ab dem zweiten Block dreimal höher ist als in \ac{BUNet2}. So sind hier 16 Filter in Block eins, 
 	dann 96 Filter in Block zwei, die sich verdoppeln bis hin zu 768 Filtern im mittleren Block und danach wieder halbieren bis zum vorletzten Block. 
 	Dabei hat der letzte Block wieder 16 Filter. 
 	Der erste und letzte Block haben jeweils 16 Filter, da damit der Rechen- und Speicheraufwand erheblich reduziert werden kann.
-	Bis auf die Filteranzahl und die daraus resultierende Tiefe der Feature-Maps, sind Bike-U-Net-2 und Bike-U-Net-15 identisch.
+	Bis auf die Filteranzahl und die daraus resultierende Tiefe der Feature-Maps, sind \ac{BUNet2} und Bike-U-Net-15 identisch.
 	\item Auf jede Convolution-Schicht folgt eine Batch-Normalization-Schicht. 
 	Dies hat mehrere Gründe: Zum einen übernimmt so das Netz selbst die Normalisierung und Standardisierung der Daten, 
 	wodurch sich das beim Vorverarbeiten gespart werden kann und zum anderen kann von den in \autoref{sec:architekturkomponenten:batchnorm} 
 	beschriebenen Vorteilen, wie schnellerem Training profitiert werden, 
 	ohne, dass dafür zusätzlicher Aufwand betrieben werden muss und keine Nachteile entstehen.
-	\item Zusätzlich zu den Batch-Normalization-Schichten wurden pro Block eine Dropout-Schicht 
+	\item Zusätzlich zu den Batch-Normalization-Schichten werden pro Block eine Dropout-Schicht 
 	nach der jeweils ersten Convolution-Schicht eingezogen. Diese sollen als 
     Hyperparameter eingebaut werden, um einfach kontrollierbar Regularisierung anzuwenden, 
 	falls die Modelle Probleme mit Overfitting durch zu hohe Komplexität bekommen. 
-	Aufgrund der eher wenigen Parameter wird dies aber gegebenenfalls nur beim Bike-U-Net-15, 
+	Aufgrund der eher wenigen Parameter wird dies aber gegebenenfalls nur beim \ac{BUNet15}, 
 	oder überhaupt nicht nötig.
 	\item Die Convolution-Schichten werden durch \ac{ELU} (s. \autoref{sec:activation:elu}) aktiviert, 
 	anstatt durch \ac{ReLU}, wie im Original-U-Net. 
 	Hierdurch können die meisten der in \autoref{sec:activation} herausgearbeiteten Vorteile von \ac{ReLU},
 	wie Robustheit gegen das Vanishing-Gradient-Problem, genutzt werden. Jedoch wurde bereits im ursprünglichen U-Net-Paper 
-	(\cite{Ronneberger.18052015}) auf ein Problem hingewiesen, worunter oftmals \acp{CNN} leiden: Häufig kommt es vor, 
-	dass Netzteile dauerhaft nicht oder nur kaum aktiviert werden und so kaum etwas beitragen. 
-	Dieses Problem ist insbesondere für \ac{ReLU} relevant, da diese Aktivierungsfunktion unter dem Dying-Neuron-Problem leidet.
-	Deshalb wurde hier auf \ac{ELU} zurückgegriffen, da damit alle Netzteile zum Beitrag animiert werden sollen. 
+	(\cite{Ronneberger.18052015}) beschrieben, dass Netzteile under \ac{ReLU} dauerhaft inaktiv werden (Dying-Neuron-Problem). 
+	Deshalb wurde hier auf \ac{ELU} zurückgegriffen, da damit alle Netzteile aktiv bleiben sollen. 
 	Nachteil ist hierbei, dass die Berechnung von \ac{ELU} etwas aufwendiger ist. 
 	Das Problem von unbeschränkt großen positiven Aktivierungen unter denen sowohl \ac{ELU} als auch \ac{ReLU} leiden,
 	wird in diesem Netz durch die wiederholte Batch-Normalisierung abgefedert.
