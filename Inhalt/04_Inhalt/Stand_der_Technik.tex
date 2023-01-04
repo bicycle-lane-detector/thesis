@@ -37,11 +37,14 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 	Für mehrere Objekte wird der Begriff Object Detection verwendet.
 	Die Darstellung erkannter Objekte wird über Bounding Boxes realisiert, welche die Objekte jeweils umschließen.
 
-	\item \textit{Image Semantic Segmentation:}
+	\item \textit{Semantic Segmentation:}
 	Die bei der Object Detection verwendeten Bounding Boxes geben keine Rückschlüsse auf die konkrete Form der Klasse.
 	Je nach Lage des Objektes kann nur ein Bruchteil der Bounding Box von der erkannten Klasse gefüllt sein.
 	Abhilfe schafft die Verwendung einer pixelweisen Maske anstelle einer Bounding Box, das Objekt kann von seiner Umgebung abgegrenzt werden.
-	Zusätzlich kann gefordert werden, dass einzelne Instanzen verschiedener Objekte unterschieden werden sollen.
+
+	\item \textit{Instance Segmentation:}
+	Zusätzlich zur Semantic Segmentation kann noch gefodert werden, dass einzelne Instanzen verschiedener Objekte 
+	unterschieden werden sollen.
 	Diese Forderung wird dann \textit{Instance Segmentation} genannt \cite{Sharma.21.08.2019}.
 \end{itemize}
 
@@ -69,7 +72,7 @@ Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated 
 	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}~.
 \end{align} 
 
-\subsection{\acf{ReLU}}
+\subsection{\acf{ReLU}} 
 
 Die \textit{\acf{ReLU}} ist eine Aktivierungsfunktion, welche durch \autoref{eq:relu} ausgedrückt wird. 
 \ac{ReLU} ist inzwischen der de-facto Standard von Aktivierungsfunktionen in den verborgenen Schichten eines Deep-Learning-Modells.
@@ -87,7 +90,7 @@ und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem
 als Sigmoid. Dies liegt zum einen an der Verbesserung des Vanishing-Gradient-Problems und zum anderen an der 
 simpleren und damit leichter zu berechnenden Funktion \cite{Goodfellow.2016}.
 
-\subsection{\acf{ELU}}
+\subsection{\acf{ELU}} \label{sec:activation:elu}
 
 Die \textit{\acf{ELU}} ist eine Aktivierungsfunktion, die das Dying-\ac{ReLU}-Problem adressieren soll. 
 Ausgedrückt wird die Funktion durch \autoref{eq:elu}. Die negative Komponente lässt zu, dass Neuronen nicht 
@@ -128,8 +131,8 @@ Um über $n$ Prediction-Label-Paare $(p_i; y_i)$ den \ac{BCE} zu berechnen, wird
 	\label{eq:bce-mean} BCE = -\frac{1}{n}\sum_{i = 1}^{n}[p_i \cdot \log(y_i) + (1-p_i) \cdot \log(1-y_i) ]~.
 \end{align}
 
-Im Sinne einer differenzierbaren Kostenfunktion im Kontext von \ac{ML} sind \ac{BCE},
-\textit{negative Log-Likelihood} und \textit{Logistic-Regression} synonym \cite{Murphy.2012}. 
+\acf{BCE} kann ebenfalls für semantische Segmentierung verwendet werden. So wird \acf{BCE} 
+für das originelle U-Net genutzt \cite{Ronneberger.18052015}. 
 
 Aus \autoref{eq:bce-mean} geht hervor, warum \ac{BCE} gut geeignet für Klassifikationsprobleme ist.
 Im Gegensatz zum mittleren absoluten Fehler, bei dem ein Fehler linear eingeht, und zum mittleren quadratischen Fehler,
@@ -154,16 +157,16 @@ Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 19
 
 Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gleich dem $F_1$-Maß, das ein Maß für die Qualität eines statistischen Tests darstellt. Dafür sei $X$ nun die Menge der positiven Elemente und $Y$ die Menge der als positiv eingestuften Elemente. Dann ist die \textit{Genauigkeit} oder auch \textit{Precision} gegeben durch
 \begin{align}
-	\label{eq:precision} precision = \frac{|X \cap Y|}{|Y|}~,
+	\label{eq:precision} P = \frac{|X \cap Y|}{|Y|}~,
 \end{align}
 der Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die \textit{Trefferquote} oder auch \textit{Recall} gegeben durch
 \begin{align}
-	\label{eq:recall} recall = \frac{|X \cap Y|}{|X|}~,
+	\label{eq:recall} R = \frac{|X \cap Y|}{|X|}~,
 \end{align}
 der Anteil der richtig eingestuften Elemente an allen positiven Elementen. \\
-Das F-Maß, bzw. genauer das $F_1$-Maß, ist dann gegeben durch das harmonische Mittel aus Precision und Recall, wobei $tp$ die Anzahl von wahr-positiven, $fp$ die Anzahl von falsch-positiven und $fn$ die Anzahl von falsch-negativen Elementen ist \cite{YutakaSasaki.2007}:
+Das F-Maß, bzw. genauer das $F_1$-Maß, ist dann gegeben durch das harmonische Mittel aus Precision $P$ und Recall $R$, wobei $tp$ die Anzahl von wahr-positiven, $fp$ die Anzahl von falsch-positiven und $fn$ die Anzahl von falsch-negativen Elementen ist \cite{YutakaSasaki.2007}:
 \begin{align}
-	\label{eq:f1} F_{1} = \frac{2\cdot precision \cdot recall}{precision + recall} = \frac{2\cdot tp}{2 \cdot tp + fp + fn}~.
+	\label{eq:f1} F_{1} = \frac{2\cdot P\cdot R}{P + R} = \frac{2\cdot tp}{2 \cdot tp + fp + fn}~.
 \end{align}
 Precision und Recall können mit einem Faktor $\alpha$ unterschiedlich zueinander gewichtet werden, um mit $F_{\alpha}$ unterschiedliche Aspekte zu fokussieren. 
 
@@ -193,17 +196,25 @@ gelegt.
 
 \subsection{Quality}
 
-Bei der \textit{Quality} handelt es sich um eine gepufferte Form des \ac{IoU},
+Die \textit{Quality} soll einige Probleme der \ac{IoU} beheben, um ein Ähnlichkeitsmaß darzustellen, 
+was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{ML}-Modells zur semantischen Segmentierung liegt.
+So soll relativiert werden, dass vor allem im Randbereich einer Segmentierung einzelne abweichende Pixel
+nicht als falsch anerkannt werden, sodass die Segmentierung im Großen und Ganzen als richtig anerkannt wird. 
+Ursprünglich wurde dieses Maß 1998 zur empirischen Bewertung der automatischen Straßenextraktion entwickelt \cite{ChristianWiedemann.1998}. 
+
+Konkret handelt es sich bei der \textit{Quality} um eine gepufferte Form des \ac{IoU},
 die toleranter bezüglich der Lokalität der Elemente der verglichenen Mengen, oder konkreter,
 der Pixel einer semantischen Segmentierung, ist, 
 wobei für dieselbe Eingabe $Quality \geq IoU$; $Quality \in [0;1]$ gilt, abhängig von der Puffergröße. 
+Die Puffergröße beschreibt den Radius um $tp$-Elemente, in dem $fp$ und $fn$ noch als $tp$ gelten.   
 Die Quality wird analog zur \ac{IoU} über eine gepufferte Precision - die \textit{Correctness} - 
 und über einen gepufferten Recall - die \textit{Completeness} - berechnet. Insbesondere werden einige Elemente, 
-die zuvor als $fp$ und $fn$ eingeordnet wurden, hiermit zu $tp$ konvertiert. \\
-Die Quality soll einige Probleme der \ac{IoU} beheben, um ein Ähnlichkeitsmaß darzustellen, 
-was näher an der praktischen und vom Menschen wahrgenommen Leistung eines \ac{ML}-Modells zur semantischen Segmentierung liegt.
-So soll relativiert werden, dass vor allem im Randbereich einer Segmentierung einzelne abweichende Pixel
-nicht als falsch anerkannt werden, sodass die Segmentierung im Großen und Ganzen als richtig anerkannt wird \cite{ChristianWiedemann.1998}. 
+die zuvor als $fp$ und $fn$ eingeordnet wurden, hiermit zu $tp$ konvertiert.
+
+Bezüglich der Quality ist die Puffergröße ein wichtiger Parameter.
+Wird diese zu groß gewählt, werden gegebenenfalls positive Pixel, die weit abseits liegen und keinen Radweg andeuten, fälschlicherweise 
+als $tp$ erkannt. Wird die Puffergröße zu klein gewählt, wird lediglich eine Toleranz gegenüber ungeraden 
+Kanten in der Prediction aufgebaut, nicht aber die Verschiebung des gesamten Radwegs akzeptiert.
 
 In dieser Arbeit für den Spezialfall von semantischer Segmentierung wird die Quality wie folgt berechnet: 
 Sei $P$ die Prediction der Segmentierungsmaske für ein Eingabebild, $Y$ die tatsächliche Segmentierungsmaske (Ground-Truth / Label)
@@ -249,7 +260,7 @@ Die Formel für die Quality ist analog zur \ac{IoU}, bis auf die Verwendung der 
 
 Im Folgenden werden verschiedene Architekturkomponenten diskutiert, die im \ac{ML} allgemein 
 bzw. bei semantischer Segmentierung im Speziellen verwendet werden. Hierzu werden zunächst Dropout-Layer 
-und Batch-Normalization-Layer begutachtet und dann die U-Net-Architektur zur semantischen Segmentierung vorgestellt. 
+und Batch-Normalization-Layer begutachtet. 
 
 \subsection{Dropout} \label{sec:architekturkomponenten:dropout}
 
@@ -281,11 +292,11 @@ Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion 
 Besonders gut funktioniert Batch-Normalization für \acp{CNN} und Netzwerke mit Sigmoid-Aktivierungsfunktion
 \cites{Goodfellow.2016}.
 
-\subsection{U-Net} \label{sec:architekturkomponenten:unet}
+\section{U-Net} \label{sec:architekturkomponenten:unet}
 
 Die \textit{U-Net-Architektur} beschreibt eine \textit{Fully-Convolutional-Network-Architektur}, die erstmals in Freiburg 2015 vorgestellt wurde 
 und herausragende Ergebnisse für verschiedene Benchmarks, insbesondere zur semantischen Segmentierung kleiner Datensätze, liefert. \\
-Aus \autoref{fig:u-net-architecture} geht die namensgebende Architektur der U-Net hervor. Die folgenden Besonderheiten 
+Aus \autoref{fig:u-net-architecture} geht die namensgebende Architektur des U-Net hervor. Die folgenden Besonderheiten 
 führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \cite{Ronneberger.18052015}:
 \begin{itemize}
 	\item Das Netz besteht aus einem kontrahierenden Encoder-Teil (linke Hälfte) und einem expandierenden und symmetrisch aufgebauten
@@ -308,12 +319,12 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 	\label{fig:u-net-architecture}
 \end{figure} 
 
-
 \section{Vortrainierte \ac{CNN}-Modelle} \label{sec:pretrained-backbones}
 
 Im Folgenden wird eine Auswahl an \ac{CNN}-Modellen vorgestellt, von denen es öffentlich zugängliche,
-vortrainierte Instanzen zur freien Verwendung gibt. Diese können zu Transfer-Learning-Zwecken 
-genutzt werden, indem sie zum Beispiel als Teilnetz in eine \ac{CNN}-Architektur eingebaut werden 
+vortrainierte Instanzen zur freien Verwendung gibt. Obwohl es sich um Klassifikationsmodelle handelt,
+können die Modelle zu Transfer-Learning-Zwecken für semantische Segmentierung
+genutzt werden, indem sie als \textit{Backbone} in den Encoder-Teil eines U-Net eingebaut werden 
 (mehr dazu in \autoref{sec:transfer-learning}). \\ 
 Die Klassifikations-Modelle sind auf dem Bildklassifikationsdatensatz \textit{ImageNet}, der über 14 Mio. Bilder 
 mit 1000 Objektklassen enthält, trainiert. Der ImageNet-Datensatz ist der größte und bekannteste 
@@ -372,7 +383,7 @@ Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse
 (93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
 
 
-\section{Transfer-Learning mit U-Net} \label{sec:transfer-learning}
+\section{Transfer-Learning} \label{sec:transfer-learning}
 
 \textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
 bestenfalls ähnliches Problem und Modell. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
@@ -413,8 +424,8 @@ Für das Training des VGG16-U-Nets wurde der Encoder-Teil eingefroren und somit 
 
 Im oben beschriebenen Problem zur semantischen Segmentierung wurde das vortrainierte Vergleichsnetz auf zwei Weisen fein-trainiert:
 \begin{enumerate}
-	\item Ohne Einfrieren mit einer Lernrate von $10^{-5}$
-	\item und mit Einfrieren des mittleren Blocks, welcher ungefähr $14\cdot 10^6$ der insgesamt $31 \cdot 10^6$ Parameter enthielt. 
+	\item Ohne Einfrieren mit einer Lernrate von $10^{-5}$ und
+	\item mit Einfrieren des mittleren Blocks, welcher ungefähr $14\cdot 10^6$ der insgesamt $31 \cdot 10^6$ Parameter enthielt. 
 \end{enumerate}
 Die 5-fache Kreuzvalidierung ergab sowohl für den besten Lauf, als auch für den durchschnittlichen Lauf, ein besseres Dice-Maß 
 für das Training aller Parameter. In keinem der Fälle gab es, anders als beim VGG16-U-Net, segmentierte Regionen ohne Zusammenhang mit der Ground-Truth \cite{Cheng.05.10.2021}. 
@@ -445,10 +456,13 @@ Im Anschluss werden auf den aktuellen Stand und Benchmark-Optionen eingegangen.
 
 \subsection{Datensätze} \label{sec:road-detection:roads-data}
 
-Im Folgenden sind alle relevanten Datensätze zur Straßenerkennung aus Luftbildern aufgeführt. 
+Im Folgenden sind relevante Datensätze zur Straßenerkennung aus Luftbildern aufgeführt. 
 Eine Auswahl der später zum Pre-Training verwendeten Datensätze findet im \autoref{sec:pre-training-roads} statt.\\
-Ein Testdatensatz ist hierbei ein meist sehr kleiner Datensatz, der ausschließlich zum Testen und Bewerten eines bereits 
-trainierten Modells verwendet werden soll. Im Rahmen der Straßenerkennung ist dies besonders relevant, 
+Im Folgenden wird der Begriff \textit{Testdatensatz} verwendet, was hier einen sehr kleinen Datensatz, 
+der ausschließlich zum Testen und Bewerten eines bereits 
+trainierten Modells verwendet werden soll und ausschließlich dafür annotiert wurde, beschreibt 
+und nicht den \textit{Test-Split} eines größeren Datensatzes. 
+Im Rahmen der Straßenerkennung ist dies besonders relevant, 
 da sich unterschiedliche Städte in unterschiedlichen Ländern und Kulturen stark unterscheiden können, 
 während die Trainingsdaten meist nur aus einer Stadt, die in sich ein eher homogenes Bild aufweist, bestehen.
 Der Testdatensatz soll also die Generalisierungsfähigkeit des Netzes testen, um zu sehen,
@@ -563,10 +577,12 @@ Forschung gibt und da beide Datensätze sich stark unterscheiden, soweit das im 
 Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensätze ähnliche gut funktionierende
 Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. \\   
 \autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Basline}-Modellen.
-Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht extrem auf den jeweiligen Datensatz optimiert sind,
+Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht sonderlich auf den jeweiligen Datensatz optimiert sind,
 was die Hyper-Parameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
 Mit den Baseline-Resultaten können diese Modelle zu Vergleichszwecken verwendet werden 
-und es bestehen Daten zu mehreren Benchmarks \cite{C.Henry.2021}.
+und es bestehen Daten zu mehreren Benchmarks. Aus den Baseline-Resultaten lässt sich schließen, dass das Vortrainieren eines Netzes auf einem 
+anderen Datensatz bessere Ergebnisse für die Straßendatensätze und somit ggf. auch für die spätere Betrachtung mit 
+den Radweg-Datensätzen liefert \cite{C.Henry.2021}.
 
 \begin{table}
 	\centering
@@ -581,7 +597,7 @@ und es bestehen Daten zu mehreren Benchmarks \cite{C.Henry.2021}.
 		Dense-U-Net-121 & \textbf{73,03} & \textbf{57,12} & \textbf{79,19} & \textbf{65,13}  \\
 	\end{tabular}
 	\caption{Baseline-Resultate verschiedener Modelle auf dem Massachusetts- 
-	bzw. Deep-Globe-Datensatz in Prozent, aufsteigend sortiert. Nicht one-hot-kodiert. * nicht vortrainiert. \cite{C.Henry.2021}.}
+	bzw. Deep-Globe-Datensatz in Prozent, aufsteigend sortiert. Nicht one-hot-kodiert. * nicht vortrainiert \cite{C.Henry.2021}.}
 	\label{tab:basline-benchmarks}
 \end{table}
 
@@ -603,13 +619,18 @@ Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verw
 
 \begin{table}
 	\centering
-	\begin{tabular}{l|lll|lll}
-		& \multicolumn{3}{c|}{Massachusetts} & \multicolumn{3}{c}{Deep Globe}  \\
-		\rot{Model} & \rot{RDRCNN} & \rot{\begin{tabular}[x]{@{}c@{}}Dense-U-Net-\\121\end{tabular}} & \rot{WRAU-Net} & \rot{EOSResUNet} & \rot{D-LinkNet} & \rot{\begin{tabular}[x]{@{}c@{}}U-Net-like\\ResNet34\end{tabular}} \\
+	\begin{tabular}{r|l|l}
+		& Modell & IoU \\
 		\midrule
-		IoU & \textbf{67,10} & 66,61 & 64,58 & \textbf{65,60} & 64,12 & 64,00 
+		& RDRCNN & \textbf{67,10} \\
+		Massachusetts & Dense-U-Net-121 & 66,61  \\
+		& WRAU-Net & 64,58 \\
+		\midrule
+		& EOSResUNet & \textbf{65,60} \\
+		Deep Globe & D-LinkNet & 64,12 \\
+		& U-Net-likeResNet34 & 64,00 \\
 	\end{tabular}
 	\caption{Optimierte Resultate verschiedener Modelle auf dem Massachusetts- 
-	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert von links nach rechts. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
+	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
 	\label{tab:optimized-benchmarks}
 \end{table}
