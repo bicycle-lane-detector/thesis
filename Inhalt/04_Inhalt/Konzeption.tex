@@ -95,6 +95,10 @@ Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, biete
 % dafür kannst du natürlich viele Bilder in das Kapitel ballern
 % der datensatz-code hat jetzt auch die möglichkeit den ganzen karren mit rotem overlay von radwegen zu generieren
 
+\section{Karlsruhe-Testdatensatz}
+
+< hier beschreiben, auch warum nur testdatensatz (nur 1 qkm); manuelle annotierung ?? >
+
 \section{Pre-Processing} \label{sec:pre-processing}
 
 Dieser Abschnitt befasst sich mit dem Pre-Processing, welches auf den in \autoref{sec:bike-data} 
@@ -201,11 +205,6 @@ generiert wurde und daher qualitativ eher unvorteilhaft ist, wodurch eine höher
 	\label{tab:bike-split}
 \end{table}
 
-Der Validationdatensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
-Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
-Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 
-Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  
-
 
 \subsection{Augmentation}
 
@@ -219,9 +218,6 @@ Nachteil ist, dass das Training länger dauert, da jedes Bild vor Eingabe bearbe
 Dieser Nachteil ist vor allem evident, wenn mehrere Netze auf demselben Datensatz trainiert werden, da jedes Mal 
 dieselben Augmentationen (da gleicher Seed) erneut vorgenommen werden müssen. Dieses Problem kann
 durch eine Vorausberechnung der aufeinanderfolgenden Augmentationen behoben werden, worauf allerdings verzichtet wird. 
-Die Verlängerung pro Epoche lag lediglich bei zwei Minuten beim Bike-Datensatz und fünf Minuten beim Pre-Training auf der 
-Straßenerkennung, daher wurde auf den zusätzlichen Aufwand einer solchen Implementation verzichtet 
-(vgl. eine Epoche benötigt im Schnitt 10-17 min bzw. 40-50 min). 
 
 Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation}, wird in ihrem Wertebereich pseudo-zufällig angewandt. 
 Sollte es die Veränderung erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
@@ -258,12 +254,7 @@ Diese Veränderungen werden nicht vorgenommen, um mit dem Testdatensatz besser a
 wie gut die Erkennung der Radwege allgemein - unter optimalen Bedingungen - funktioniert, ohne zunächst auf 
 maximale Generalsierungsfähigkeit zu untersuchen. Diese Abschätzung wird dann mithilfe des Testdatensatzes von 
 Karlsruhe, welcher im Erscheinungsbild stark vom Bike-Testdatensatz abweicht, vorgenommen, 
-indem die Ergebnisse für den Bike-Testdatensatz und den Karlsruhe-Datensatz verglichen werden. \\
-An dieser Stelle sei jedoch gesagt, dass insbesondere die Zoom-Augmentation sehr nützlich sein könnte, 
-sollte das Modell für Orhtofotos mit unterschiedlicher \ac{GSD} generalisiert werden. 
-
-Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
-Batches entstehen. 
+indem die Ergebnisse für den Bike-Testdatensatz und den Karlsruhe-Datensatz verglichen werden. 
 
 \begin{figure}
 	\centering
@@ -593,6 +584,16 @@ Architektur getestet, was eine Vielfalt an Architekturen abbildet.
 
 \section{Hyperparameter}
 < Batch size: kompromiss aus klein wie in u-net paper und batch normalization und trainingspeed/genauigkeit >
+
+\section{Training} 
+
+Der Validation-Datensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
+Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
+Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 
+Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  
+
+Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
+Batches mit neuer Augmentierung entstehen. 
 
 \section{Pre-Training auf Straßendatensätzen} \label{sec:pre-training-roads}
 
