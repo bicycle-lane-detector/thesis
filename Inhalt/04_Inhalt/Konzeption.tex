@@ -620,9 +620,48 @@ Darüber hinaus werden zusammen mit VGG16 und ResNet34 Netze mit verhältnismä�
 Architektur getestet, was eine Vielfalt an Architekturen abbildet.
 
 \section{Hyperparameter}
-< Batch size: kompromiss aus klein wie in u-net paper und batch normalization und trainingspeed/genauigkeit >
 
-\section{Training} 
+\subsubsection{Batch-Size:}
+
+Der Vorteil einer kleineren Batch-Size ist, dass das Netz besser lernt die Feinheiten der Daten abzubilden. 
+Der Vorteil einer görßeren Batch-Size ist, dass das Netz schneller trainiert. 
+Da allerdings Batch-Norm (vgl. \autoref{sec:architecture}) angewandt wird, würde eine Batch-Size von 1 (wie im originellen U-Net) keinen 
+Sinn ergeben, da die Daten im Pre-Processing nicht normalisiert werden (vgl. \autoref{sec:pre-processing}), wodurch Batch-Norm alle 
+Normalisierung übernimmt. Wenn das allerdings auf nur ein Bild angewandt wird, ist keine gute Normalisierung über den ganzen Datensatz zu erwarten. 
+Eine große Batch-Size, wie z.B. 16, ist allerdings sehr ressourcenintensiv, da alle Elemente des Batches simultan in den Speicher geladen und verarbeitet 
+werden müssen. \\
+Als Kompromiss wird eine Batch Size von 4 festgehalten. Durch die zufälligen Batches ist eine angemessene Normalisierung zu erwarten.
+
+\subsubsection{Dropout-Rate:}
+
+Dropout soll dem Overfitting, was aufgrund der wenigen Trainingsdaten auftreten kann, entgegen wirken. 
+Die Rate, mit der die Dropout-Layer Neuronen auf null setzen, wird nicht als ein konstanter Wert für das ganze Netz festgelegt, 
+sondern nimmt im Encoder-Teil sukzessive zu und ab dem Decoder-Teil gespiegelt sukzessive ab, siehe \autoref{tab:dropout}. 
+Das soll eine hohe Dropout-Rate im Mittelteil des Netzes ermöglichen, während die Rate in den äußeren Schichten eher niedrig ist. 
+Dies ist erwünscht, damit in den äußeren Schichten, möglichst alle Inputs eingefangen werden bzw. die Outputs richtig lokalisiert werden. 
+In den äußeren Schichten mit eher weniger Filtern und damit weniger Parametern stellt Overfitting ein geringeres Problem dar. 
+Für die mittleren Layer mit ausgeprägten Feature-Maps, vielen Filtern und Parametern jedoch ein größeres Problem, weswegen hier ein eher größerer
+Dropout erwünscht ist.     
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{r|ll|ll|l|ll|ll}
+		\textbf{Block} & 1 & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9 \\
+		\midrule
+		\textbf{Rate} & 0,1 & 0,1 & 0,2 & 0,2 & 0,3 & 0,2 & 0,2 & 0,1 & 0,1 \\ 
+	\end{tabular}
+	\caption{Dropout-Raten der unterschiedlichen Blöcke in \ac{BUNet}.}
+	\label{tab:dropout}
+\end{table}
+
+\subsubsection{Learning-Rate:}
+
+Als Learning-Rate wird ein Faktor von $0,0001$ angesetzt. Dieser Wert wird in einigen verwandten Problemen mit U-Nets genutzt, 
+weswegen der Wert auch hier zu Beginn verwendet wird. Falls das Training damit sehr langsam ist oder nicht konvergiert, 
+kann der Wert angepasst werden. Durch einen Scheduler wird während des Trainings die Learning-Rate bei stagnierendem Fortschritt 
+herabgesetzt, was in \autoref{sec:training} genauer erläutert ist. 
+
+\section{Training} \label{sec:training}
 
 Der Validation-Datensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
 Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
