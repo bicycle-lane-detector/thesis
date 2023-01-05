@@ -27,15 +27,15 @@ In den nachfolgenden Unterkapiteln werden auf die Einzelschritte detaillierter e
 
 \subsection{Satellitenbilder}
 
-Für die zu Satellitenbilder ist eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
+Für die zu Satellitenbilder wird eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
 Aufgrund der aufwändigen Gewinnung und Aufbereitung der Orthofotos, sind diese meist nur kostenpflichtig zu erlangen.
 Das Landesamt für Geoinformation und Landesvermessung Niedersachsen jedoch stellt Orthofotos in der benötigten Qualität kostenfrei zum Download zur Verfügung.
 Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von 3 Jahren.
 Für die Datenset-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
-Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2\times2 km^2$-Kacheln ($10.000\times 10.000\times 3$) inklusive ihrer Metadaten \cite{.26.10.2022}.
+Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2\times2 km^2$-Kacheln ($10.000\times 10.000\times 3$ Bilder) inklusive ihrer Metadaten \cite{.26.10.2022}.
 Für eine bessere Generalisierung des neuronalen Netzes, sind mehrere Städte verwendet worden.
 Die jeweilige Anzahl der Aufnahmen pro Stadt lässt sich \autoref{tab:city-distribution} entnehmen.
-Die Gesamtsumme beträgt 143 Satellitenbilder.
+Die Gesamtsumme beträgt 143 Satellitenbilder, also 572 $km^2$ Fläche.
 Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3,05 GB$.
 
 \begin{table}
@@ -53,9 +53,7 @@ Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3,05 GB$.
 Auch bei der Stadt Karlsruhe können Luftaufnahmen von Karlsruhe in benötigter Qualität für Lehre und Forschung kostenfrei beantragt werden.
 Der Richtwert für die zu beantragende Größe beträgt $1km^2$.
 Da in diesem kleinen Ausschnitt nicht genügend Fahrradwege enthalten sind, um ein neuronales Netz trainieren zu können, dienen diese Daten als Testdatensatz.
-Die Generalisierungsfähigkeit für andere Städte mit andersartigen Bildaufnahmen soll getestet werden.
-Eine Aktualisierung der Luftbilder erfolgt alle 2 Jahre.
-Die Abgabe der farbigen Orthofotos, hier mit Stand März 2020, erfolgt im tif-Format \cite{.04.12.2022}.
+Mehr dazu in \autoref{sec:karlsruhe} \cite{.04.12.2022}.
 
 \subsection{Auslesen der Fahrradwege} \label{subsec:overpass-api}
 
@@ -112,9 +110,30 @@ als Gütemaß $0,292 \cdot (0,3 + \frac{1}{2} \cdot 0,5) = 0,1606$ also $16,06\%
 % dafür kannst du natürlich viele Bilder in das Kapitel ballern
 % der datensatz-code hat jetzt auch die möglichkeit den ganzen karren mit rotem overlay von radwegen zu generieren
 
-\section{Karlsruhe-Testdatensatz}
+\section{Karlsruhe-Testdatensatz} \label{sec:karlsruhe}
 
-< hier beschreiben, auch warum nur testdatensatz (nur 1 qkm); manuelle annotierung ?? >
+Der Karlsruhe-Datensatz besteht aus Luftaufnahmen und manuell von Menschen annotierten Masken von Fahrradstreifen 
+über eine Stadtfläche von $1433 \times 1433~ m^2$ bzw. ca. $2,054~ km^2$, was im Vergleich zu den 
+$572~ km^2$ des Bike-Datensatzes also eher wenig ist. Ein Pixel im Karlsruhe-Datensatz entspricht $0,2~m$, 
+also hat der Datensatz eine GSD von $20 \frac{cm}{px}$.
+Der gesamte Datensatz samt rot annotierter Radstreifen ist in einem 
+$7168 \times 7168$ Pixel großen Bild in \autoref{fig:karlsruhe-data} zu sehen. Es fällt auf, 
+dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt einen Ausschnitt der Karlsruher Weststadt im März 2022. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{Bilder/karlsruhe-data-shrinked.png} 
+	\caption{Karlsruhe-Datensatz: $1433 \times 1433~ m^2$ Luftaufnahmen mit Radstreifen rot annotiert.}
+	\label{fig:karlsruhe-data}
+\end{figure} 
+
+Aufgrund der geringen Größe des Datensatzes wird dieser lediglich zum Testen der trainierten Modelle verwendet. 
+Da es sich um eine andere Stadt handelt und die Bilder visuell anders geartet sind, als aus dem Bike-Datensatz 
+kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen, insbesondere, da der Datensatz weder 
+im Training noch in der Validation des Bike-Datensatzes vorkommt, wodurch es sich um wahrhaftig neue Eingabedaten für die Modedelle handelt. 
+Es ist auch vorteilhaft, dass im Datensatz Radwege eher unterrepräsentiert sind, womit getestet werden kann, 
+ob Straßen allgemein alle Radwege erhalten oder eine echte Unterscheidung der Straßen im Modell stattfindet.
+
 
 \section{Pre-Processing} \label{sec:pre-processing}
 
@@ -138,7 +157,7 @@ Großteil des Bildes mit Wohngebiet gefüllt ist.
 Somit ist nur ein verschwindender Anteil aller Pixel des Datensatzes als Radweg markiert. 
 
 Um den Anteil an als Radweg annotierte Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
-die überhaupt Radwege enthalten. Da es technisch zu ressourcenaufwendig ist ein ganzes 
+die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist ein ganzes 
 $10.000 \times 10.000$-Pixel-Bild einzugeben, sollen die Bilder in kleinere Stücke zerteilt werden. 
 Dies ist auch bei den Modellen zur Straßenerkennung aus \autoref{sec:state-of-the-art-roads} die Praxis. 
 Vorgeschlagene Ausschnittsgrößen können hierbei $256\times 256$, $512\times 512$ und $1024 \times 1024$ sein. 
@@ -172,11 +191,13 @@ Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren.
 Jedes $10.000\times 10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
 $\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
 Die aufgerundeten 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Bereich mit Schwarz ($RGB=(0,0,0)$) gefüllt.
-Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte. \\
+Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte für den Bike-Datensatz. 
+Der Karlsruhe-Datensatz lässt sich in ${\frac{10.000}{512}}^2 = 196$ Bildausschnitte teilen.\\
 Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
 Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
 wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
-dieser Anteil entspricht ca. 17,7\%. 
+dieser Anteil entspricht ca. 17,7\%. Dieser Schritt wird für den Karlsruhe-Datensatz nicht durchgeführt. Hier bleiben alle 196 
+Bildausschnitte erhalten.
  
 \autoref{fig:cut-example} zeigt beispielhaft ein auf $512\times 512$ Pixel zugeschnittenes Bild aus dem Bike-Datensatz 
 mit der dazugehörigen Maske, die mit 50\% Transparenz in rot überlagert ist. Es ist zu erkennen, 
