@@ -669,16 +669,65 @@ Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste
 Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  
 
 Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
-Batches mit neuer Augmentierung entstehen. 
+Batches mit neuer Augmentierung entstehen. \\
+Es wird maximal 100 Epochen trainiert.
 
 \section{Pre-Training auf Straßendatensätzen} \label{sec:pre-training-roads}
 
-< Hier Beschreiben wie wir das (Pre-)Training auf dem Straßendatensatz machen > 
+Für das Pre-Training auf Straßendatensätzen werden die Datensätze \textit{DeepGlobe} und \textit{Massachusetts} 
+(vgl. \autoref{sec:road-detection:roads-data}) zu dem \textit{Combined}-Datensatz zusammengefasst. 
+Dabei sind die Vorteile eines heterogenen Pre-Trainings genutzt: Es sind sowohl homogene amerikanische Städte (Massachusetts), 
+als auch sehr heterogene weltweite städtische und ländliche Straßen (DeepGlobe) enthalten, wodurch 
+die grundlegenden Features, die Straßen ausmachen, sehr generalisiert gelernt werden sollen. Damit lassen sich diese 
+Features auf die Radwegerkennung übertragen. Zudem wurden diese beiden Datensätze gewählt, da sie die größten öffentlich zugänglichen 
+im Gebiet der Straßenerkennung darstellen und die viele der in diesem Kapitel vorgenommenen Entscheidungen 
+auf den Ergebnissen zu diesen Datensätzen basieren, sowie eine hohe Vergleichbarkeit möglich ist. 
+Auf weitere Datensätze wird verzichtet, da der Combined-Datensatz mit 25294 $512 \times 512$-Ausschnitten 
+bereits eine angemessene Größe hat und weitere Datensätze die Bewertung des Pre-Trainings erschweren und Vergleichswerte 
+darauf nicht zugänglich sind. 
+
+Der DeepGlobe-Datensatz kann ohne weiteres übernommen werden und nach den Regeln in \autoref{sec:pre-processing} vorverarbeitet werden. \\ 
+Für den Massachusetts-Datensatz wird eine weitere Vorverarbeitung vorgenommen. Der Massachusetts-Datensatz ist, 
+besteht aus einem grob kreisförmigen Ausschnitt von Massachusetts. Viele der $512 \times 512$-Zuschnitte enthalten 
+also große, weiße Flächen ohne Bild. Der Bike-Datensatz enthält ebenfalls Zuschnitte mit schwarzen Flächen, 
+doch im Gegensatz zum Bike-Datensatz hat der Massachusetts-Datensatz das Problem, dass die Masken nicht von einem 
+kreisförmigen Massachusetts-Ausschnitt genommen sind, sondern von einem quadratischen, sodass in den weißen Flächen 
+der Bilder in der dazugehörigen Maske Straßen eingezeichnet sind. Dadurch sieht das Netz also willkürlich 
+im weißen (RGB = (255, 255, 255)) Bereich als Straßen annotierte weiße Pixel. Um diese Verwirrung aufzulösen, werden 
+für den Combined-Datensatz alle Bild-Ausschnitte mit über 10\% weißer Fläche entfernt. 
+Ansonsten unterliegt es dem gleichen Pre-Processing wie die sonstigen Datensätze (vgl. \autoref{sec:pre-processing}). 
+
+Schließlich werden beide Datensätze gemischt und in einen Training-Validation-Test-Split unterteilt und diese Splits werden zum 
+Combined-Datensatz vereinigt, wofür der Split in \autoref{tab:combined-split} abgebildet ist. 
+Die Datensätze werden vor dem Zusammenfügen aufgespalten, damit das relative Verhältnis in allen Teildatensätzen gleich ist.  
+
+< TODO: Problembild mit Maske Massachusetts einfügen > 
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|l|l|l|l}
+		& Training & Val. & Test & Summe \\
+		\midrule
+		Absolut & 18598 & 1617 & 5079 & 25294 \\
+		Anteil & 73,5 & 6,4 & 20,1 & 100 \\ 
+	\end{tabular}
+	\caption{Training-Validation-Test-Split des \textit{Combined}-Datensatzes, welcher aus DeepGlobe und Massachusetts besteht, 
+	in gefilterten $512 \times 512$-Ausschnitten.}
+	\label{tab:combined-split}
+\end{table}
+
+Nach der Erstellung des Datensatzes werden alle in \autoref{sec:architecture} vorgestellten Netze
+auf dem Combined-Datensatz trainiert. 
+Die \autoref{acro:BUNet}-Netze werden dabei von Grund auf neu trainiert nach den Regeln aus \autoref{sec:training}, 
+wobei für die Backbone-Netze folgend Form des Fine-Tunings des Transfer-Learning angewandt wird (vgl. \autoref{sec:transfer-learning:backbones}): 
+Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert. Der Encoder ist für die ersten 12 Epochen des Trainings eingefroren, 
+während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 10 verringert, der Encoder 
+auf trainierbar gestellt und das Training fortgesetzt bis entweder 100 Epochen verstrichen sind oder das Training 
+zuvor gestoppt wird, wie in \autoref{sec:training} detailliert.    
 
 \section{Testkonzeption}
 
 < Hier unsere Testreihen für das ERgebniskapitel beschreiben > 
-
 
 % \begin{algorithm}
 % 	\caption{Algorithmus zum Propagieren und Akkumulieren von Knotenwerten.}\label{lst:prop}
