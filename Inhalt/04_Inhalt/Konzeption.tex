@@ -300,7 +300,7 @@ indem die Ergebnisse für den Bike-Testdatensatz und den Karlsruhe-Datensatz ver
 % 	"vertical_flip": "True",
 % 	"validation_split": 0.08
 
-\section{Evaluationsmaße}
+\section{Evaluationsmaße} \label{sec:eval}
 
 Dieses Kapitel bezieht alle Evaluationsmaße auf eine semantische Segmentierung, wobei jedem Pixel genau ein Output-Neuron 
 zugeordnet ist und der Pixel als Fahrradweg bei Aktivierung bzw. als Hintergrundpixel bei fehlender Aktivierung klassifiziert wird --
@@ -661,17 +661,6 @@ weswegen der Wert auch hier zu Beginn verwendet wird. Falls das Training damit s
 kann der Wert angepasst werden. Durch einen Scheduler wird während des Trainings die Learning-Rate bei stagnierendem Fortschritt 
 herabgesetzt, was in \autoref{sec:training} genauer erläutert ist. 
 
-\section{Training} \label{sec:training}
-
-Der Validation-Datensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
-Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
-Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 
-Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  
-
-Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
-Batches mit neuer Augmentierung entstehen. \\
-Es wird maximal 100 Epochen trainiert.
-
 \section{Pre-Training auf Straßendatensätzen} \label{sec:pre-training-roads}
 
 Für das Pre-Training auf Straßendatensätzen werden die Datensätze \textit{DeepGlobe} und \textit{Massachusetts} 
@@ -725,9 +714,51 @@ während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 
 auf trainierbar gestellt und das Training fortgesetzt bis entweder 100 Epochen verstrichen sind oder das Training 
 zuvor gestoppt wird, wie in \autoref{sec:training} detailliert.    
 
-\section{Testkonzeption}
+\section{Training} \label{sec:training}
 
-< Hier unsere Testreihen für das ERgebniskapitel beschreiben > 
+\begin{figure}
+	\centering
+	\includegraphics[width=1.\textwidth]{Bilder/training-concept.drawio.pdf} 
+	\caption{Training-Konzept der Architekturen aus \autoref{sec:architecture}. * heißt kein Pre-Training,
+	hochgestelltes l vortrainiert und Fine-Tuning mit eingefrorenem Encoder, hochgestelltes r Fine-Tuning mit eingefrorenem Decoder.}
+	\label{fig:training}
+\end{figure} 
+
+Zunächst Allgemeines zum Training:
+Der Validation-Datensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
+Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
+Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 
+Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  \\
+Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
+Batches mit neuer Augmentierung entstehen. \\
+Es wird maximal 100 Epochen trainiert.
+
+Ziel soll es sein, die beste Architektur für das Erkennen von Radwegen zu finden und zu untersuchen,
+ob es starke Unterschiede bei den verwendeten Fine-Tuning-Techniken gibt. 
+\autoref{fig:training} zeigt, wie die Architekturen aus \autoref{sec:architecture} trainiert werden. 
+Abzweigende Pfeile bedeuten, dass der Input dupliziert wird und beide Wege verfolgt. 
+Die Architekturen sind links im Diagramm zu sehen, wobei \ac{BUNet2} und \ac{BUNet15} den \ac{BUNet}-Block 
+bilden und die Backbone-Architekturen einen Block. Die \acp{BUNet} werden jeweils direkt auf 
+dem Bike-Datensatz trainiert (Pfeil ganz oben) und jeweils direkt auf dem Combined-Datensatz aus \autoref{sec:pre-training-roads}
+vortrainiert und dann diese vortrainierten \acp{BUNet} jeweils fine-tuned, indem ein mal die linke Hälfte des 
+Netzes (der Encoder) und ein mal die rechte Hälfte (der Decoder) eingefroren, als nicht modifizierbar gesetzt, werden,
+das Training so 12 Epochen vollzogen wird, dann die Lernrate verkleinert wird um Faktor 10 und daraufhin weiter 
+das \textit{ganze} Netz trainiert wird, bis es zum vorzeitigen Ende kommt oder 100 Epochen erreicht wird. \\
+Die Backbone-Netze werden, wie in \autoref{sec:pre-training-roads} beschrieben, jeweils auf dem Combined-Datensatz vortrainiert
+(wobei natürlich nur die linke Hälfte, also der Encoder, eingefroren wird) und dann jeweils auf dem Bike-Datensatz 
+fine-tuned wie die \acp{BUNet}. Die Backbone-Netze werden zusätzlich ohne Pre-Training direkt auf dem Bike-Datensatz 
+trainiert, wobei der Ablauf derselbe ist wie für den Combined-Datensatz. \\
+Es resultieren Netze, die \textit{nicht} auf dem Combined-Datensatz vortrainiert sind (hochgestellter *), 
+vortrainiert und über ein linksseitiges Einfrieren fine-tuned sind (hochgestelltes l) oder vortrainiert und über ein 
+rechtsseitiges Einfrieren fine-tuned sind (hochgestelltes r). 
+
+Das Fine-Tuning über links- und rechtsseitiges Einfrieren wird genutzt, da daraus klar werden soll, ob die unterschiedlichen 
+Fine-Tuning-Methoden zu einem signifikanten Unterschied in der Performanz führen, was sehr problemspezifisch ist, 
+wie aus der Literatur (vgl. \autoref{sec:transfer-learning}) hervorgeht. 
+
+Weiter werden die verschiedenen trainierten Modelle durch die Test-Partition des Bike-Datensatzes und durch den Karlsruhe-Datensatz 
+getestet und über die in \autoref{sec:evaluation} ausgewählten Maße bewertet.
+
 
 % \begin{algorithm}
 % 	\caption{Algorithmus zum Propagieren und Akkumulieren von Knotenwerten.}\label{lst:prop}
