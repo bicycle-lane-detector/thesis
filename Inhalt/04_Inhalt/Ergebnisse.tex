@@ -1,13 +1,62 @@
 \chapter{Ergebnisse} \label{sec:results}
 
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|c|c}
+		Modell & \ac{IoU} & \ac{BIoU} \\
+		\midrule
+        BUNet2 & 57,13 & 76,71 \\ 
+        BUNet15 & 60,75 & 80,80 \\ 
+        VBUNet & \textbf{64,26} & \textbf{85,64} \\ 
+        RBUNet & 61,45 & 83,86 \\ 
+        DBUNet & 62,56 & 84,46 \\ 
+        
+	\end{tabular}
+	\caption{Ergebnisse des Pre-Trainings der Modelle auf der Testpartition des Combined-Datensatzes in Prozent.}
+	\label{tab:results-roads}
+\end{table}
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|c|c}
+		Modell & \ac{IoU} & \ac{BIoU} \\
+		\midrule
+        BUNet2$^*$ & 23,54 & 47,71 \\ 
+        BUNet2$^l$ & 24,48 & 51,77 \\ 
+        BUNet2$^r$ & 25,35 & 51,27 \\ 
+		\midrule
+
+        BUNet15$^*$ & 27,93 & 56,55 \\ 
+        BUNet15$^l$ & 28,14 & 57,14 \\ 
+        BUNet15$^r$ & 28,22 & 57,26 \\ 
+		\midrule
+
+        VBUNet$^*$ & 30,45 & 61,48 \\ 
+        VBUNet$^l$ & \underline{\textbf{32,24}} & \textbf{62,93} \\ 
+        VBUNet$^r$ & \textbf{31,84} & 61,51 \\ 
+		\midrule
+
+        RBUNet$^*$ & 29,11 & 60,53 \\ 
+        RBUNet$^l$ & 30,98 & 60,51 \\ 
+        RBUNet$^r$ & 31,31 & \underline{\textbf{63,55}} \\ 
+		\midrule
+
+        DBUNet$^*$ & 30,76 & 61,78 \\ 
+        DBUNet$^l$ & 31,55 & 62,38 \\ 
+        DBUNet$^r$ & \textbf{32,12} & \textbf{62,99} \\ 
+        
+	\end{tabular}
+	\caption{Ergebnisse der Modelle auf der Testpartition des Bike-Datensatzes und dem Karlsruhe-Testdatensatz 
+    in Prozent.}
+	\label{tab:results}
+\end{table}
+
 \section{Laufzeit}
 
 [Bezug: Datenaugmentation on the Go, wie viel Länger, lohnt sich Vorausberechnung?]
 Die Verlängerung pro Epoche lag lediglich bei zwei Minuten beim Bike-Datensatz und fünf Minuten beim Pre-Training auf der 
 Straßenerkennung, daher wurde auf den zusätzlichen Aufwand einer solchen Implementation verzichtet 
 (vgl. eine Epoche benötigt im Schnitt 10-17 min bzw. 40-50 min). 
-
-% \subsubsection{Mittlere Szenarien}
 
 
 
