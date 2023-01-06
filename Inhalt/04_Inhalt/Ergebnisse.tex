@@ -18,37 +18,73 @@
 
 \begin{table}[ht]
 	\centering
-	\begin{tabular}{l|c|c}
-		Modell & \ac{IoU} & \ac{BIoU} \\
+	\begin{tabular}{l|cc|cc}
+        & \multicolumn{2}{c|}{BikeSat} & \multicolumn{2}{c}{Karlsruhe} \\
+		Modell & \ac{IoU} & \ac{BIoU} & \ac{IoU} & \ac{BIoU} \\
 		\midrule
-        BUNet2$^*$ & 23,54 & 47,71 \\ 
-        BUNet2$^l$ & 24,48 & 51,77 \\ 
-        BUNet2$^r$ & 25,35 & 51,27 \\ 
-		\midrule
-
-        BUNet15$^*$ & 27,93 & 56,55 \\ 
-        BUNet15$^l$ & 28,14 & 57,14 \\ 
-        BUNet15$^r$ & 28,22 & 57,26 \\ 
+        BUNet2$^*$ & 23,54 & 47,71 & 01,30 & 34,80 \\ 
+        BUNet2$^l$ & 24,48 & 51,77 & 02,19 & 12,11 \\ 
+        BUNet2$^r$ & 25,35 & 51,27 & 09,36 & 47,57 \\ 
 		\midrule
 
-        VBUNet$^*$ & 30,45 & 61,48 \\ 
-        VBUNet$^l$ & \underline{\textbf{32,24}} & \textbf{62,93} \\ 
-        VBUNet$^r$ & \textbf{31,84} & 61,51 \\ 
+        BUNet15$^*$ & 27,93 & 56,55 & \textbf{21,52} & \textbf{59,25} \\ 
+        BUNet15$^l$ & 28,14 & 57,14 & 16,47 & 54,17 \\ 
+        BUNet15$^r$ & 28,22 & 57,26 & 10,17 & 53,81 \\ 
 		\midrule
 
-        RBUNet$^*$ & 29,11 & 60,53 \\ 
-        RBUNet$^l$ & 30,98 & 60,51 \\ 
-        RBUNet$^r$ & 31,31 & \underline{\textbf{63,55}} \\ 
+        VBUNet$^*$ & 30,45 & 61,48 & 09,69 & 37,84 \\ 
+        VBUNet$^l$ & \underline{\textbf{32,24}} & \textbf{62,93} & 12,85 & 54,91 \\ 
+        VBUNet$^r$ & \textbf{31,84} & 61,51 & 17,53 & \textbf{61,51} \\ 
 		\midrule
 
-        DBUNet$^*$ & 30,76 & 61,78 \\ 
-        DBUNet$^l$ & 31,55 & 62,38 \\ 
-        DBUNet$^r$ & \textbf{32,12} & \textbf{62,99} \\ 
+        RBUNet$^*$ & 29,11 & 60,53 & 11,74 & 32,80 \\ 
+        RBUNet$^l$ & 30,98 & 60,51 & \underline{\textbf{24,67}} & \underline{\textbf{65,27}} \\ 
+        RBUNet$^r$ & 31,31 & \underline{\textbf{63,55}} & \textbf{18,21} & 55,53 \\ 
+		\midrule
+
+        DBUNet$^*$ & 30,76 & 61,78 & 07,14 & 45,97 \\ 
+        DBUNet$^l$ & 31,55 & 62,38 & 17,47 & 55,20 \\ 
+        DBUNet$^r$ & \textbf{32,12} & \textbf{62,99} & 14,03 & 51,73 \\ 
         
 	\end{tabular}
 	\caption{Ergebnisse der Modelle auf der Testpartition des BikeSat-Datensatzes und dem Karlsruhe-Testdatensatz 
     in Prozent.}
 	\label{tab:results}
+\end{table}
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|cc}
+		Modell & \ac{IoU} & \ac{BIoU}  \\
+		\midrule
+        BUNet2$^*$ & 02,78 & 07,31  \\ 
+        BUNet2$^l$ & 04,23 & 09,90  \\ 
+        BUNet2$^r$ & 01,94 & 04,67  \\ 
+		\midrule
+
+        BUNet15$^*$ & 07,85 & 17,12  \\ 
+        BUNet15$^l$ & 05,59 & 10,17  \\ 
+        BUNet15$^r$ & 04,94 & 10,06  \\ 
+		\midrule
+
+        VBUNet$^*$ & \underline{\textbf{23,80}} & \underline{\textbf{50,45}} \\ 
+        VBUNet$^l$ & 11,34 & 22,89 \\ 
+        VBUNet$^r$ & \textbf{22,93} & 38,69 \\ 
+		\midrule
+
+        RBUNet$^*$ & \textbf{20,97} & \textbf{48,42} \\ 
+        RBUNet$^l$ & 04,62 & 08,19 \\ 
+        RBUNet$^r$ & 11,58 & 20,49 \\ 
+		\midrule
+
+        DBUNet$^*$ & 17,52 & \textbf{43,53} \\ 
+        DBUNet$^l$ & 09,73 & 25,43 \\ 
+        DBUNet$^r$ & 19,77 & 36,33 \\ 
+        
+	\end{tabular}
+	\caption{Ergebnisse der Modelle auf dem Karlsruhe-Testdatensatz, wobei Bilder mit leeren Masken entfernt wurden, 
+    in Prozent.}
+	\label{tab:results-ka-small}
 \end{table}
 
 \section{Laufzeit}
@@ -59,40 +95,50 @@ Straßenerkennung, daher wurde auf den zusätzlichen Aufwand einer solchen Imple
 (vgl. eine Epoche benötigt im Schnitt 10-17 min bzw. 40-50 min). 
 
 
+% networks tested with karlsruhe test data set  
 
-% Die Messungen haben ergeben, dass für alle mittelgroßen Szenarien $s \in S_{Anon_M}$ gilt, dass $t_{sub_{MatFlowG}}(s) < t_{sub_{IdObj}}(s)$. Hierbei haben sich für Identical Objects die Laufzeiten über die 13 Szenarien von $S_{Anon_M}$ zwischen 11s und 1min 39s bewegt, während die Laufzeiten von Material Flow Graph zwischen 1s und 9s lagen. Mit $p=2,744 \cdot 10^{-9}$ ist Material Flow Graph \textit{statistisch signifikant} schneller\footnote{Einseitiger Zwei-Stichproben-t-Test mit unterschiedlicher Varianz; Normalverteilung angenommen; $n=12$; Szenario $z$ mit $t_{sub_{IdObj}}(z) = 1min 39s$ und $t_{sub_{MatFlowG}}(z) = 9s$ als Ausreißer von Test exkludiert.}. 
+% testing ./../Models/Double-Data\backbones\bike_mapper_pre-train-scratch-densenet121_Aug_IoU3076_q6178.h5
+% iou: 0.07135618478059769, quality:0.45967867970466614
 
-% \begin{table}[ht]
-% 	\centering
-% 	\begin{tabular}{l|l|l|l|l}
-% 		Szenario & $t_{sub_{IdObj}}$ & $t_{sub_{IdMat}}$& $t_{sub_{MatFlowG}}$ & $f_{IdObj \rightarrow MatFlowG}$ \\
-% 		\midrule
-% 		$s_{Krit}$ & 9h 41min 20s & 14min 47s & 3min 31s & $168,15$ \\
-% 		$s_{Ult}$ & 21h & 2h 45min & 15min & $83,\bar{3}$ \\
-		
-% 	\end{tabular}
-% 	\caption{Ergebnisse der Laufzeitmessungen von $S_L$ nach verschiedenen Methoden. Außerdem der Beschleunigungsfaktor $f$ von Identical Objects zu Material Flow Graph. Szenario $s_{Ult}$ wurde auf einem Server durchgeführt (Speicherbedarf zu hoch), $s_{Krit}$ auf dem in \autoref{sec:rahmen} beschriebenen Rechner.}
-% 	\label{tab:large_scenarios}
-% \end{table}
+% testing ./../Models/Double-Data\backbones\bike_mapper_pre-train-scratch-resnet34_Aug_IoU2911_q6053.h5
+% iou: 0.11737822741270065, quality:0.3280484974384308
 
-% \begin{table}[ht]
-% 	\centering
-% 	\begin{tabular}{l|l|l|l}
-% 		$S_X$ & $\bar{m}_{pre}$ & $\bar{m}_{post}$& $f$ \\
-% 		\midrule
-% 		small & $45,11$ & $5,94$ & $7,6$ \\
-% 		medium & $395,82$ & $120,3$ & $3,29$ \\
-% 		large & $4711,24$ & $50,01$ & $94,19$ \\
-% 	\end{tabular}
-% 	\caption{Durchschnittliche Knotenanzahl vor der Graphenreduktion $\bar{m_{pre}}$, nach der Graphenreduktion $\bar{m_{post}}$ und deren mittlerer Reduktionsfaktor $f$ nach Szenario-Klassen.}
-% 	\label{tab:scenarios_node_nb}
-% \end{table}
+% testing ./../Models/Double-Data\backbones\bike_mapper_pre-train-scratch-vgg16_Aug_IoU3045_q6148.h5
+% iou: 0.09694375097751617, quality:0.3783626854419708
 
-% \begin{figure}
-% 	\centering
-% 	\includegraphics[width=1.00\textwidth]{Bilder/performance_per_comp.pdf} 
-% 	\caption{Mittlere Graphengröße $m$ mittelgroßer Szenarien abgebildet auf die durchschnittliche Laufzeit von $t_{sim}$ in $ms$ nach Identical Objects (orange), Material Flow Graph (blau) mit Trendlinien nach linearer Regression.}
-% 	\label{fig:time_comp}
-% \end{figure}
+% testing ./../Models/Double-Data\pre-train\bike_mapper_pre-train-freeze-left_Aug_IoU2448_q5177.h5
+% iou: 0.020918812602758408, quality:0.1211065948009491
 
-% Abschließend zur Untersuchung der praktischen Tests lässt sich also festhalten, dass die erwarteten Ergebnisse erzielt, sowie die theoretischen Überlegungen praktisch bestätigt werden konnten.
+% testing ./../Models/Double-Data\pre-train\bike_mapper_pre-train-freeze-right_Aug_IoU2535_q5127.h5
+% iou: 0.09364935010671616, quality:0.47571051120758057
+
+% testing ./../Models/Double-Data\pre-train\bike_mapper_triple-param_pre-train-freeze-left_Aug_IoU2814_q5714.h5
+% iou: 0.1647404581308365, quality:0.5417148470878601
+
+% testing ./../Models/Double-Data\pre-train\bike_mapper_triple-param_pre-train-freeze-right_Aug_IoU2822_q5726.h5
+% iou: 0.10167630761861801, quality:0.5381019115447998
+
+% testing ./../Models/Double-Data\road-pre-trained-backbones\bike_mapper_pre-train-densenet121freeze-left_Aug_IoU3155_q6238.h5
+% iou: 0.17469285428524017, quality:0.5520145893096924
+
+% testing ./../Models/Double-Data\road-pre-trained-backbones\bike_mapper_pre-train-densenet121freeze-right_Aug_IoU3212_q6299.h5
+% iou: 0.14031212031841278, quality:0.5172706246376038
+
+% testing ./../Models/Double-Data\road-pre-trained-backbones\bike_mapper_pre-train-resnet34freeze-left_Aug_IoU3098_q6051.h5
+% iou: 0.24674279987812042, quality:0.6527144312858582
+
+% testing ./../Models/Double-Data\road-pre-trained-backbones\bike_mapper_pre-train-resnet34freeze-right_Aug_IoU3131_q6355.h5
+% iou: 0.18207795917987823, quality:0.5552724599838257
+
+% testing ./../Models/Double-Data\road-pre-trained-backbones\bike_mapper_pre-train-vgg16freeze-left_Aug_IoU3224_q6293.h5
+% iou: 0.12852726876735687, quality:0.5490880012512207
+
+% testing ./../Models/Double-Data\road-pre-trained-backbones\bike_mapper_pre-train-vgg16freeze-right_Aug_IoU3184_q6151.h5
+% iou: 0.175296351313591, quality:0.6151095628738403
+
+% testing ./../Models/Double-Data\bike_mapper_scratch_Aug_IoU2354_q4771.h5
+% iou: 0.013092363253235817, quality:0.3479517698287964
+
+% testing ./../Models/Double-Data\bike_mapper_scratch_triple-param_Aug_IoU2793_q5655.h5
+% iou: 0.21523651480674744, quality:0.5924956798553467
+
