@@ -435,9 +435,24 @@ ob das Modell, das bspw. auf einem Datensatz einer modernen amerikanischen Stadt
 auch auf Bildern einer mitteleuropäischen Altstadt funktioniert. Deswegen ist es wichtig, 
 dass keine Bilder des Testdatensatzes im Training verwendet werden. 
 
+\begin{wrapfigure}{r}{0.50\textwidth}
+	\centering
+	\vspace{-20pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.45\textwidth]{Bilder/mass_example.png}
+	\vspace{-5pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[$1500\times 1500$-Pixel Beispiel des Massachusetts-Datensatzes.]{\unskip}
+	$1500\times 1500$-Pixel Beispiel des Massachusetts-Datensatzes.
+	\label{fig:mass-example}
+\end{wrapfigure}
+
 % Bei den letzten Datensets zu Toronto, Vaihingent und Potsdam handelt es sich um Testdatensätze. 
 Beim \textit{Massachusetts Roads Dataset} liegen $1171$ Luftaufnahmen aus dem Gebiet Massachusetts vor.
 Jedes der Bilder besteht aus $1500\times 1500$ Pixeln, was einer Fläche von $2.25 km^2$ entspricht.
+Ein Beispiel hiervon zeigt \autoref{fig:mass-example}.
 Die gesamte Abdeckung sind $2600 km^2$ bestehend aus städtischer und ländlicher Gegend.
 Der Split erfolgt im Verhältnis $95:1:4$. 
 Über den Split wird sichergestellt, dass keine Durchmischung der Test- und Validierungsdaten mit den Trainingsdaten erfolgt und die Bewertung des Netzes verfälscht wird.
@@ -457,9 +472,23 @@ Die Aufnahmen stammen aus Polen und Zentraleuropa in einer Größe von $21627 km
 $33$ Orthophotos haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000\times 9500$ Pixeln, $8$ Bilder von $50 \frac{cm}{px}$ mit $4200 \times 4700$ Pixeln \cite{.20.04.2022}.
 Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländlichen Gebieten.
 
+\begin{wrapfigure}{l}{0.5\textwidth}
+	\centering
+	\vspace{-20pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.45\textwidth]{Bilder/deep_globe_example.jpg}
+	\vspace{-5pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[$1024\times 1024$-Pixel Beispiel des Deep-Globe-Datensatzes.]{\unskip}
+	$1024\times 1024$-Pixel Beispiel des Deep-Globe-Datensatzes.
+	\label{fig:deep_globe-example}
+\end{wrapfigure}
+
 Mithilfe des \textit{Deep Globe Road Extraction Datasets} können in Kathastrophgebieten Informationen über Karten und Zugänglichkeitsmöglichkeiten für die Krisenbewältigung gesammelt werden.
 Der Datensatz besteht aus $6226$ Satellitenbildern in RGB mit einer Größe von $1024\times 1024$.
-Die Auflösung der Aufnahmen beträgt $50 cm$.
+Die Auflösung der Aufnahmen beträgt $50 cm$. \autoref{fig:deep_globe-example} zeigt ein Beispiel.
 Mit $1243$ Validierungs- und $1101$ Testdaten ist der Split in Training, Validierung und Test zu $73:15:13$ erfolgt.
 Der hohe Aufwand zur Erstellung der Labels führt zu Ungenauigkeiten, insbesondere in ländlichen Regionen. 
 Kleine Straßen innerhalb von Landwirtschaftsflächen sind bewusst unbeschriftet geblieben.
