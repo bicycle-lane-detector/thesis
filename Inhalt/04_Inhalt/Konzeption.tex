@@ -2,10 +2,10 @@
 
 < hier wird noch was eingefüllt > 
 
-\section{Bike-Datensatz} \label{sec:bike-data}
+\section{BikeSat-Datensatz} \label{sec:bike-data}
 
 Da sich die im \autoref{sec:road-detection:roads-data} vorgestellten Datensätze zur Erkennung von Straßen nicht auf die Fahrradwege übertragen lassen, 
-ist es erforderlich einen eigenen Datensatz, den \textit{Bike-Datensatz}, zu erstellen.
+ist es erforderlich einen eigenen Datensatz, den \textit{BikeSat-Datensatz}, zu erstellen.
 Prinzipiell gibt es die Möglichkeiten, die Datensätze manuell zu labeln oder automatisch generieren zu lassen.
 Manuelles Labeln führt zu einer hohen Genauigkeit.
 Allerdings ist diese Art der Datensatzerstellung entsprechend zeitintensiv und mit hohen Kosten verbunden.
@@ -114,7 +114,7 @@ als Gütemaß $0,292 \cdot (0,3 + \frac{1}{2} \cdot 0,5) = 0,1606$ also $16,06\%
 
 Der Karlsruhe-Datensatz besteht aus Luftaufnahmen und manuell von Menschen annotierten Masken von Fahrradstreifen 
 über eine Stadtfläche von $1433 \times 1433~ m^2$ bzw. ca. $2,054~ km^2$, was im Vergleich zu den 
-$572~ km^2$ des Bike-Datensatzes also eher wenig ist. Ein Pixel im Karlsruhe-Datensatz entspricht $0,2~m$, 
+$572~ km^2$ des BikeSat-Datensatzes also eher wenig ist. Ein Pixel im Karlsruhe-Datensatz entspricht $0,2~m$, 
 also hat der Datensatz eine GSD von $20 \frac{cm}{px}$.
 Der gesamte Datensatz samt rot annotierter Radstreifen ist in einem 
 $7168 \times 7168$ Pixel großen Bild in \autoref{fig:karlsruhe-data} zu sehen. Es fällt auf, 
@@ -128,9 +128,9 @@ dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt ein
 \end{figure} 
 
 Aufgrund der geringen Größe des Datensatzes wird dieser lediglich zum Testen der trainierten Modelle verwendet. 
-Da es sich um eine andere Stadt handelt und die Bilder visuell anders geartet sind, als aus dem Bike-Datensatz 
+Da es sich um eine andere Stadt handelt und die Bilder visuell anders geartet sind, als aus dem BikeSat-Datensatz 
 kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen, insbesondere, da der Datensatz weder 
-im Training noch in der Validation des Bike-Datensatzes vorkommt, wodurch es sich um wahrhaftig neue Eingabedaten für die Modedelle handelt. 
+im Training noch in der Validation des BikeSat-Datensatzes vorkommt, wodurch es sich um wahrhaftig neue Eingabedaten für die Modedelle handelt. 
 Es ist auch vorteilhaft, dass im Datensatz Radwege eher unterrepräsentiert sind, womit getestet werden kann, 
 ob Straßen allgemein alle Radwege erhalten oder eine echte Unterscheidung der Straßen im Modell stattfindet.
 
@@ -183,15 +183,15 @@ Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren.
 	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
 	% im Abbildungsverzeichnis. Der Text darunter wird
 	% tatsächlich angezeigt.
-	\caption[Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz.]{\unskip}
-	Beispiel $512\times 512$-Ausschnitt aus Bike-Datensatz mit roter Maske.
+	\caption[Beispiel $512\times 512$-Ausschnitt aus BikeSat-Datensatz.]{\unskip}
+	Beispiel $512\times 512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.
 	\label{fig:cut-example}
 \end{wrapfigure}
 
 Jedes $10.000\times 10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
 $\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
 Die aufgerundeten 39 Ausschnitte, die nur partiell im Bild liegen, werden im überstehenden Bereich mit Schwarz ($RGB=(0,0,0)$) gefüllt.
-Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte für den Bike-Datensatz. 
+Damit ergeben sich bei 143 Bildern $143 \cdot 400 = 57.200$ $512 \times 512$-Bildausschnitte für den BikeSat-Datensatz. 
 Der Karlsruhe-Datensatz lässt sich in ${\frac{10.000}{512}}^2 = 196$ Bildausschnitte teilen.\\
 Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
 Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
@@ -199,7 +199,7 @@ wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von
 dieser Anteil entspricht ca. 17,7\%. Dieser Schritt wird für den Karlsruhe-Datensatz nicht durchgeführt. Hier bleiben alle 196 
 Bildausschnitte erhalten.
  
-\autoref{fig:cut-example} zeigt beispielhaft ein auf $512\times 512$ Pixel zugeschnittenes Bild aus dem Bike-Datensatz 
+\autoref{fig:cut-example} zeigt beispielhaft ein auf $512\times 512$ Pixel zugeschnittenes Bild aus dem BikeSat-Datensatz 
 mit der dazugehörigen Maske, die mit 50\% Transparenz in rot überlagert ist. Es ist zu erkennen, 
 dass die Klassenimbalance noch recht stark ist, allerdings deutlich geringer, als in den ursprünglichen Bildern,
 und dass auch trotzdem genügend Straßen ohne Radwege vorhanden sind und die Struktur und der Verlauf des Radweges 
@@ -239,7 +239,7 @@ generiert wurde und daher qualitativ eher unvorteilhaft ist, wodurch eine höher
 		Absolut & 7738 & 672 & 1771 & 10181 \\
 		Anteil & 75,9 & 6,6 & 17,5 & 100 \\ 
 	\end{tabular}
-	\caption{Training-Validation-Test-Split des Bike-Datensatzes in gefilterten $512 \times 512$-Ausschnitten.}
+	\caption{Training-Validation-Test-Split des BikeSat-Datensatzes in gefilterten $512 \times 512$-Ausschnitten.}
 	\label{tab:bike-split}
 \end{table}
 
@@ -291,8 +291,8 @@ Auf weitergehende Veränderungen wie Gamma-Korrektur, Helligkeitsanpassung, Zoom
 Diese Veränderungen werden nicht vorgenommen, um mit dem Testdatensatz besser abschätzen zu können, 
 wie gut die Erkennung der Radwege allgemein - unter optimalen Bedingungen - funktioniert, ohne zunächst auf 
 maximale Generalsierungsfähigkeit zu untersuchen. Diese Abschätzung wird dann mithilfe des Testdatensatzes von 
-Karlsruhe, welcher im Erscheinungsbild stark vom Bike-Testdatensatz abweicht, vorgenommen, 
-indem die Ergebnisse für den Bike-Testdatensatz und den Karlsruhe-Datensatz verglichen werden. 
+Karlsruhe, welcher im Erscheinungsbild stark vom BikeSat-Testdatensatz abweicht, vorgenommen, 
+indem die Ergebnisse für den BikeSat-Testdatensatz und den Karlsruhe-Datensatz verglichen werden. 
 
 \begin{figure}
 	\centering
@@ -337,7 +337,7 @@ Ein weiteres Problem ist, dass die \ac{IoU} sehr streng und intolerant gegenübe
 bewertet. Wenn ein Fahrradweg, der nur wenige Pixel breit ist, um die Hälfte der Breite verschoben segmentiert würde
 aber ansonsten komplett dem Radweg entspricht, würde die \ac{IoU} bereits von 1 auf 0,5 sinken, obwohl \textit{qualitativ} 
 der Weg exakt erkannt wurde. Diese Intoleranz gegenüber leichter lokaler Verschiebung ist insbesondere in dem 
-in dieser Arbeit vorgestellten Bike-Datensatz aus \autoref{sec:bike-data} problematisch, 
+in dieser Arbeit vorgestellten BikeSat-Datensatz aus \autoref{sec:bike-data} problematisch, 
 da dieser über \ac{OSM} annotiert ist und für viele Straßen die Lage des zugehörigen Radwegs heuristisch über 
 die Spuranzahl ermittelt wird. \\
 Aufgrund der genannten Einschränkungen ist die \ac{IoU} ungeeignet als Verlustfunktion, kann jedoch als ein Maß 
@@ -699,8 +699,8 @@ darauf nicht zugänglich sind.
 Der DeepGlobe-Datensatz kann ohne weiteres übernommen werden und nach den Regeln in \autoref{sec:pre-processing} vorverarbeitet werden. \\ 
 Für den Massachusetts-Datensatz wird eine weitere Vorverarbeitung vorgenommen. Der Massachusetts-Datensatz ist, 
 besteht aus einem grob kreisförmigen Ausschnitt von Massachusetts. Viele der $512 \times 512$-Zuschnitte enthalten 
-also große, weiße Flächen ohne Bild. Der Bike-Datensatz enthält ebenfalls Zuschnitte mit schwarzen Flächen, 
-doch im Gegensatz zum Bike-Datensatz hat der Massachusetts-Datensatz das Problem, dass die Masken nicht von einem 
+also große, weiße Flächen ohne Bild. Der BikeSat-Datensatz enthält ebenfalls Zuschnitte mit schwarzen Flächen, 
+doch im Gegensatz zum BikeSat-Datensatz hat der Massachusetts-Datensatz das Problem, dass die Masken nicht von einem 
 kreisförmigen Massachusetts-Ausschnitt genommen sind, sondern von einem quadratischen, sodass in den weißen Flächen 
 der Bilder in der dazugehörigen Maske Straßen eingezeichnet sind. Dadurch sieht das Netz also willkürlich 
 im weißen (RGB = (255, 255, 255)) Bereich als Straßen annotierte weiße Pixel. Um diese Verwirrung aufzulösen, werden 
@@ -760,14 +760,14 @@ ob es starke Unterschiede bei den verwendeten Fine-Tuning-Techniken gibt.
 Abzweigende Pfeile bedeuten, dass der Input dupliziert wird und beide Wege verfolgt. 
 Die Architekturen sind links im Diagramm zu sehen, wobei \ac{BUNet2} und \ac{BUNet15} den \ac{BUNet}-Block 
 bilden und die Backbone-Architekturen einen Block. Die \acp{BUNet} werden jeweils direkt auf 
-dem Bike-Datensatz trainiert (Pfeil ganz oben) und jeweils direkt auf dem Combined-Datensatz aus \autoref{sec:pre-training-roads}
+dem BikeSat-Datensatz trainiert (Pfeil ganz oben) und jeweils direkt auf dem Combined-Datensatz aus \autoref{sec:pre-training-roads}
 vortrainiert und dann diese vortrainierten \acp{BUNet} jeweils fine-tuned, indem ein mal die linke Hälfte des 
 Netzes (der Encoder) und ein mal die rechte Hälfte (der Decoder) eingefroren, als nicht modifizierbar gesetzt, werden,
 das Training so 12 Epochen vollzogen wird, dann die Lernrate verkleinert wird um Faktor 10 und daraufhin weiter 
 das \textit{ganze} Netz trainiert wird, bis es zum vorzeitigen Ende kommt oder 100 Epochen erreicht wird. \\
 Die Backbone-Netze werden, wie in \autoref{sec:pre-training-roads} beschrieben, jeweils auf dem Combined-Datensatz vortrainiert
-(wobei natürlich nur die linke Hälfte, also der Encoder, eingefroren wird) und dann jeweils auf dem Bike-Datensatz 
-fine-tuned wie die \acp{BUNet}. Die Backbone-Netze werden zusätzlich ohne Pre-Training direkt auf dem Bike-Datensatz 
+(wobei natürlich nur die linke Hälfte, also der Encoder, eingefroren wird) und dann jeweils auf dem BikeSat-Datensatz 
+fine-tuned wie die \acp{BUNet}. Die Backbone-Netze werden zusätzlich ohne Pre-Training direkt auf dem BikeSat-Datensatz 
 trainiert, wobei der Ablauf derselbe ist wie für den Combined-Datensatz. \\
 Es resultieren Netze, die \textit{nicht} auf dem Combined-Datensatz vortrainiert sind (hochgestellter *), 
 vortrainiert und über ein linksseitiges Einfrieren fine-tuned sind (hochgestelltes l) oder vortrainiert und über ein 
@@ -777,7 +777,7 @@ Das Fine-Tuning über links- und rechtsseitiges Einfrieren wird genutzt, da dara
 Fine-Tuning-Methoden zu einem signifikanten Unterschied in der Performanz führen, was sehr problemspezifisch ist, 
 wie aus der Literatur (vgl. \autoref{sec:transfer-learning}) hervorgeht. 
 
-Weiter werden die verschiedenen trainierten Modelle durch die Test-Partition des Bike-Datensatzes und durch den Karlsruhe-Datensatz 
+Weiter werden die verschiedenen trainierten Modelle durch die Test-Partition des BikeSat-Datensatzes und durch den Karlsruhe-Datensatz 
 getestet und über die in \autoref{sec:evaluation} ausgewählten Maße bewertet.
 
 
