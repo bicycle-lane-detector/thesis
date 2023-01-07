@@ -2,6 +2,13 @@
 
 \chapter{Stand der Technik}
 
+Die zur Erreichung der in \autoref{sec:motivation} definierten Ziele nötigen Grundlagen der Technik sind 
+in diesem Kapitel beschrieben. Hierfür bietet \autoref{sec:state-of-the-art-overview}
+\textit{\nameref{sec:state-of-the-art-overview}}
+zunächst eine Übersicht der in diesem Kapitel beschriebenen Inhalte, um deren Bedeutung besser zu verstehen. 
+
+\section{Übersicht} \label{sec:state-of-the-art-overview}
+
 Dieses Kapitel beschäftigt sich mit dem Stand der Technik, der Einordnung dieser Arbeit in die Literatur 
 und den Grundlagen der Konzeption. Hierfür sind zunächst 
 die Aufgabenkategorien der Computer-Vision zu vergleichen, um eine geeignete für das gegebene Problem finden zu können.
@@ -72,7 +79,7 @@ Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated 
 	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}~.
 \end{align} 
 
-\subsection{\acf{ReLU}} 
+\subsection{\acf{ReLU}} \label{sec:activation:relu}
 
 Die \textit{\acf{ReLU}} ist eine Aktivierungsfunktion, welche durch \autoref{eq:relu} ausgedrückt wird. 
 \ac{ReLU} ist inzwischen der de-facto Standard von Aktivierungsfunktionen in den verborgenen Schichten eines Deep-Learning-Modells.
@@ -277,6 +284,14 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 	Hieraus folgt ein Zuschneiden für die Skip-Connections. 
 \end{itemize}
 
+Im originalen U-Net beginnt der erste Convolutional-Block mit 64 Filtern, welche
+sich jeden weiteren Block mit zum Mittel-Block verdoppeln, der dann 1024 Filter
+besitzt. Daraufhin halbieren sich die Filter mit jedem weiteren Decoder-Block
+wieder.
+Das U-Net hat ca. 24 Mio. Parameter. \\
+Ein Problem, welches im ursprünglich U-Net-Paper erwähnt wird, ist dass unter \ac{ReLU} ganze Netzteile dauerhaft inaktiv 
+werden, aufgrund des Dying-Neuron-Problem (vgl. \autoref{sec:activation:relu}) \cite{Ronneberger.18052015}.
+
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{Bilder/u-net-architecture.png} 
@@ -287,7 +302,7 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 \section{Vortrainierte \ac{CNN}-Modelle} \label{sec:pretrained-backbones}
 
 Im Folgenden wird eine Auswahl an \ac{CNN}-Modellen vorgestellt, von denen es öffentlich zugängliche,
-vortrainierte Instanzen zur freien Verwendung gibt. Obwohl es sich um Klassifikationsmodelle handelt,
+vortrainierte Instanzen zur akademischen Verwendung gibt. Obwohl es sich um Klassifikationsmodelle handelt,
 können die Modelle zu Transfer-Learning-Zwecken für semantische Segmentierung
 genutzt werden, indem sie als \textit{Backbone} in den Encoder-Teil eines U-Net eingebaut werden 
 (mehr dazu in \autoref{sec:transfer-learning}). \\ 
@@ -330,6 +345,15 @@ und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fu
 
 ResNet34 hat 63,5 Mio. Parameter. Wird auf die letzte Fully-Connected-Layer verzichtet, sind es 21,2 Mio. Parameter.
 
+\subsection{Vortrainierte CNN-Modelle als U-Net-Backbone} \label{sec:pretrained-as-unet-backbone}
+
+Prinzipiell dienen die Convolution-Schichten aller in \autoref{sec:pretrained-backbones} beschriebenen vortrainierten Backbone-Netze 
+der Feature-Erkennung und -Extraktion. Lediglich die letzten Schichten, die bei den beschriebenen Klassifikationsmodellen  
+Fully-Connected-Schichten waren, sind für die Zuordnung der Features zu den Objektklassen 
+im ImageNet-Datensatz notwendig. Werden diese Schichten mit einem Decoder-Teil, der den Encoder - hier 
+also das vortrainierte Klassifikationsnetz - spiegelt, ersetzt, entsteht ein Modell zur semantischen Segmentierung. 
+Weiter müssen lediglich an geeigneter Stelle Skip-Connections zwischen Encoder und Decoder eingefügt werden,
+um die U-Net-Form nachzubilden. 
 
 \subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
 
@@ -628,3 +652,9 @@ Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verw
 	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
 	\label{tab:optimized-benchmarks}
 \end{table}
+
+\section{Neuheitswert} \label{sec:novelty}
+Die Problemdomänen sind ähnlich, da Fahrradwege auch Straßen sind und eben jene Eigenschaften, 
+wie große Klassenimbalance zwischen Fahrradweg und Hintergrund, Beschattung durch andere Objekte,
+Verdeckung durch z.B. Bäume und ähnliche Annotationsfehler   
+teilen. Schwierigkeit ist, Fahrradwege von Straßen zu unterscheiden. 
