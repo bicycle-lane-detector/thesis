@@ -9,17 +9,35 @@ zunächst eine Übersicht der in diesem Kapitel beschriebenen Inhalte, um deren 
 
 \section{Übersicht} \label{sec:state-of-the-art-overview}
 
-Dieses Kapitel beschäftigt sich mit dem Stand der Technik, der Einordnung dieser Arbeit in die Literatur 
-und den Grundlagen der Konzeption. Hierfür sind zunächst 
-die Aufgabenkategorien der Computer-Vision zu vergleichen, um eine geeignete für das gegebene Problem finden zu können.
-Ebenso wird für verschiedene state-of-the-art Aktivierungsfunktionen und Ähnlichkeitsmaße verfahren, 
-sodass später geeignete ausgewählt und diskutiert werden können. Daraufhin sind 
-die Vorteile einiger relevanter Architekturkomponenten zu betrachten und einige 
-state-of-the-art Klassifikationsmodelle des ImageNet-Datensatzes, welche ggf. 
-als vortrainierte Bestandteile der späteren Architektur verwendet werden können, 
-was genauer im Abschnitt \textit{Transfer-Learning mit U-Net} betrachtet ist. 
-Schließlich wird der aktuelle Stand bei der verwandten Domäne der Straßenerkennung 
-aus Luftaufnahmen untersucht.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.\textwidth]{Bilder/overview-background.drawio.pdf} 
+	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentrale vier Kästen 
+	beschreiben Hauptvorgehen in der Arbeit.}
+	\label{fig:overview-background}
+\end{figure} 
+
+\autoref{fig:overview-background} zeigt eine Übersicht über die in diesem Kapitel relevanten Inhalte und wie diese 
+zusammenspielen. Dabei nehmen die zentralen vier Kästen eine besondere Rolle ein: Sie beschreiben das grundsätzliche 
+für diese Arbeit geplante Vorgehen, um zu einem guten Ergebnis für die Radwegerkennung zu gelangen. 
+\begin{enumerate}
+	\item Es werden verschiedene Modelle mit verschiedenen Architekturen erstellt, die dann
+	\item auf den Datensätzen, die zur Straßenerkennung zur Verfügung stehen, trainiert werden, um dann mit diesem Pre-Training
+	\item auf dem Datensatz zur Radwegerkennung, der in dieser Arbeit erstellt wird, da  
+    bisher keiner existiert, trainiert zu werden.
+	\item Schließlich werden die Ergebnisse bewertet, diskutiert und die unterschiedlichen Modelle und Methoden miteinander verglichen.  
+\end{enumerate}
+Um die spätere Konzeption der Modelle verstehen zu können, müssen einige Grundlagen im Bereich von verschiedenen 
+Architekturkomponenten, Aktivierungsfunktionen, Netzarchitekturen, wie U-Nets oder Klassifikationsnetze, und 
+weiteren Elementen, die die Performance verbessern können, gelegt werden. 
+Außerdem wird Transfer-Learning und unterschiedliche Methoden dafür aus der Literatur erörtert, um damit von den 
+großen Datensätzen zur Straßenerkennung für die Radwegerkennung profitieren zu können. 
+Hierfür wird auch der aktuelle Stand bei der Straßenerkennung untersucht, da die Domäne sehr verwandt zur Radwegerkennung ist.
+Weiter werden Ähnlichkeitsmaße untersucht, die zum einen für das Training relevant sind, aber auch für die 
+abschließende Bewertung der Resultate.  \\
+Zunächst werden allerdings Grundlagen zu Neuronalen Netzen und dem Maschinellen Lernen, 
+sowie die unterschiedlichen Aufgabenkategorien der Computer-Vision untersucht, sodass die vorher angeführten Themen 
+besser zu verstehen sind.  
 
 \section{Grundlagen Neuronale Netze, Training, ... etc. pp.}
 
@@ -345,16 +363,6 @@ und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fu
 
 ResNet34 hat 63,5 Mio. Parameter. Wird auf die letzte Fully-Connected-Layer verzichtet, sind es 21,2 Mio. Parameter.
 
-\subsection{Vortrainierte CNN-Modelle als U-Net-Backbone} \label{sec:pretrained-as-unet-backbone}
-
-Prinzipiell dienen die Convolution-Schichten aller in \autoref{sec:pretrained-backbones} beschriebenen vortrainierten Backbone-Netze 
-der Feature-Erkennung und -Extraktion. Lediglich die letzten Schichten, die bei den beschriebenen Klassifikationsmodellen  
-Fully-Connected-Schichten waren, sind für die Zuordnung der Features zu den Objektklassen 
-im ImageNet-Datensatz notwendig. Werden diese Schichten mit einem Decoder-Teil, der den Encoder - hier 
-also das vortrainierte Klassifikationsnetz - spiegelt, ersetzt, entsteht ein Modell zur semantischen Segmentierung. 
-Weiter müssen lediglich an geeigneter Stelle Skip-Connections zwischen Encoder und Decoder eingefügt werden,
-um die U-Net-Form nachzubilden. 
-
 \subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
 
 \textit{DenseNet121} wurde 2018 erstmals vorgeschlagen und wurde designed, um das Vanishing-Gradient-Problem 
@@ -370,6 +378,16 @@ anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall 
 DenseNet121 enthält circa 7,6 Mio. Parameter. Ohne die letzte Fully-Connected-Schicht sind es noch circa 6,9 Mio. 
 Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse als VGG16 auf dem ImageNet-Datensatz 
 (93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
+
+\subsection{Vortrainierte CNN-Modelle als U-Net-Backbone} \label{sec:pretrained-as-unet-backbone}
+
+Prinzipiell dienen die Convolution-Schichten aller in \autoref{sec:pretrained-backbones} beschriebenen vortrainierten Backbone-Netze 
+der Feature-Erkennung und -Extraktion. Lediglich die letzten Schichten, die bei den beschriebenen Klassifikationsmodellen  
+Fully-Connected-Schichten waren, sind für die Zuordnung der Features zu den Objektklassen 
+im ImageNet-Datensatz notwendig. Werden diese Schichten mit einem Decoder-Teil, der den Encoder - hier 
+also das vortrainierte Klassifikationsnetz - spiegelt, ersetzt, entsteht ein Modell zur semantischen Segmentierung. 
+Weiter müssen lediglich an geeigneter Stelle Skip-Connections zwischen Encoder und Decoder eingefügt werden,
+um die U-Net-Form nachzubilden. 
 
 
 \section{Transfer-Learning} \label{sec:transfer-learning}

@@ -8,6 +8,32 @@ die relevanten Neuerungen und deren Wichtigkeit für das Erfüllen der Ziele zu 
 
 \section{Übersicht} \label{sec:concept-overview}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.\textwidth]{Bilder/overview.drawio.pdf} 
+	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentrale vier Kästen 
+	beschreiben Hauptvorgehen in der Arbeit. Ausgegraute Elemente zeigen 
+	Inhalte des Stands der Technik.}
+	\label{fig:overview-concept}
+\end{figure} 
+
+\autoref{fig:overview-concept} zeigt eine Übersicht über die in diesem Kapitel relevanten Inhalte und wie diese 
+zusammenspielen. Dabei nehmen die zentralen vier Kästen eine besondere Rolle ein: Sie beschreiben das grundsätzliche 
+für diese Arbeit geplante Vorgehen, um zu einem guten Ergebnis für die Radwegerkennung zu gelangen. Das Vorgehen ist 
+\autoref{sec:state-of-the-art-overview} beschrieben, grob sollen aber Modelle verschiedener Architekturen 
+konzipiert werden, auf den Straßendatensätzen vortrainiert, dann auf einem neu zu erstellenden Datensatz für Radwegerkennung 
+trainiert und schließlich untereinander verglichen werden, um die geeignetste Architektur und Methode des Trainings zu identifizieren. 
+Die ausgegrauten Inhalte im Diagramm gehören zum Grundlagenkapitel, sind natürlich aber für die Konzeption relevant. \\ 
+Wie in \autoref{sec:novelty} beschrieben, existiert kein Datensatz zur Erkennung von Radwegen. Daher wird hier 
+der \textit{BikeSat}-Datensatz konzipiert, um zum Training verwendet zu werden. Weiter wird der \textit{Karlsruhe-Datensatz} 
+erstellt, um die Ergebnisse auf einer anderen Stadt mit Bildern, die sich visuell vom BikeSat-Datensatz unterscheiden, zu testen. \\
+Mit den eigenen Datensätzen kann dann eine geeignete Methode des Pre-Processing konzipiert werden, mit der die Datensätze 
+auf das Training vorbereitet werden können. Wie in \autoref{sec:evaluation-metrics:quality} erwähnt, muss zudem 
+eine geeignete Bewertungsfunktion für die Quantifizierung der Ergebnisse entwickelt werden, was in \autoref{sec:eval:biou} 
+vorgenommen wird. Mit dem Wissen aus dem Grundlagenkapitel können die Architekturen für die zu vergleichenden Modelle entworfen werden 
+und deren Hyperparameter festgelegt werden. Schließlich kann die Trainings- und Pre-Trainingsmethodik und die daraus resultierenden 
+trainierten Modelle im Abschnitt \textit{Training} erörtert werden.  
+
 \section{BikeSat-Datensatz} \label{sec:bike-data}
 
 Da sich die im \autoref{sec:road-detection:roads-data} vorgestellten Datensätze zur Erkennung von Straßen nicht auf die Fahrradwege übertragen lassen, 
