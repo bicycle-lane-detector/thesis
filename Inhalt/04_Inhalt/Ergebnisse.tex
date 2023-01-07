@@ -1,5 +1,18 @@
 \chapter{Ergebnisse} \label{sec:results}
 
+\section{Benötigte Trainingszeit}
+
+\begin{itemize}
+    \item Eine Epoche des Pre-Trainings auf dem Combined-Straßendatensatz dauert zwischen 40 und 50 Minuten. 
+    \item Eine Epoche des Trainings auf dem BikeSat-Datensatz dauert zwischen 10 und 17 Minuten. 
+    \item Die Netze konvergieren nach circa 33-57 Epochen auf beiden Datensätzen. 
+    \item Das Training wird immer vorzeitig vor dem Ablaufen der 100 Epochen beendet.
+    \item Der zeitliche Mehraufwand durch die Daten-Augmentierung während des Trainings (vgl. \autoref{sec:pre-processing}) 
+    liegt im Schnitt bei 3 min 30s pro Epoche.  
+\end{itemize}
+
+\section{Pre-Training-Ergebnisse zur Straßenerkennung}
+
 \begin{table}[ht]
 	\centering
 	\begin{tabular}{l|c|c}
@@ -15,6 +28,14 @@
 	\caption{Ergebnisse des Pre-Trainings der Modelle auf der Testpartition des Combined-Datensatzes in Prozent.}
 	\label{tab:results-roads}
 \end{table}
+
+\autoref{tab:results-roads} zeigt die Test-Ergebnisse der Modelle nach Training auf dem Combined-Datensatz 
+(vgl. \autoref{sec:pre-training-roads}) in Prozent. Pro Spalte ist das höchste Ergebnis hervorgehoben. 
+\ac{BUNet2} und \ac{BUNet15} sind von Grund auf trainiert, während \ac{VBUNet}, \ac{RBUNet} und \ac{DBUNet} einen auf 
+ImageNet vortrainierten Encoder aufweisen. Die \ac{BIoU} verwendet wie bei der Radwegerkennung und wie in \autoref{sec:eval:biou} 
+festgelegt eine Puffergröße von 15 Pixeln. 
+
+\section{Ergebnisse der Radwegerkennung}
 
 \begin{table}[ht]
 	\centering
@@ -87,13 +108,18 @@
 	\label{tab:results-ka-small}
 \end{table}
 
-\section{Laufzeit}
+\autoref{tab:results} zeigt die Test-Ergebnisse der Modelle nach Training (s. \autoref{sec:training} für Details) auf dem BikeSat-Datensatz 
+(s. \autoref{sec:bike-data}) in Prozent. Zusätzlich zeigt die Tabelle die Test-Ergebnisse auf allen 196 $512{\times}512$-Ausschnitten 
+des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. Der Karlsruhe-Datensatz in dieser Tabelle
+enthält Ausschnitte, die keine Radwege enthalten. \\ 
+Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
+Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
 
-[Bezug: Datenaugmentation on the Go, wie viel Länger, lohnt sich Vorausberechnung?]
-Die Verlängerung pro Epoche lag lediglich bei zwei Minuten beim BikeSat-Datensatz und fünf Minuten beim Pre-Training auf der 
-Straßenerkennung, daher wurde auf den zusätzlichen Aufwand einer solchen Implementation verzichtet 
-(vgl. eine Epoche benötigt im Schnitt 10-17 min bzw. 40-50 min). 
-
+\autoref{tab:results-ka-small} zeigt die Test-Ergebnisse der Modelle aus \autoref{tab:results} auf allen 49 $512{\times}512$-Ausschnitten, 
+\textit{die Radwegen enthalten}, des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. 
+Ein Ausschnitt enthält einen Radweg, wenn in der zugehörigen Label-Maske mindestens ein Pixel als Radweg annotiert ist. \\
+Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
+Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
 
 % networks tested with karlsruhe test data set  
 
