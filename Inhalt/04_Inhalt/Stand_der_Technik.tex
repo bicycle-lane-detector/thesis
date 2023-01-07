@@ -39,9 +39,71 @@ Zunächst werden allerdings Grundlagen zu Neuronalen Netzen und dem Maschinellen
 sowie die unterschiedlichen Aufgabenkategorien der Computer-Vision untersucht, sodass die vorher angeführten Themen 
 besser zu verstehen sind.  
 
-\section{Grundlagen Neuronale Netze, Training, ... etc. pp.}
+\section{Grundlagen Neuronale Netze}
 
-< wird noch gemacht > 
+Ein \ac{NN} besteht aus mehreren einzelnen Neuronen, die miteinander verbunden werden.
+Der Aufbau eines Neurons lässt sich \autoref{fig:neuron} entnehmen.
+Die Ausgänge der Neuronen sind mit denen der nächsten Schicht verbunden.
+Die einzelnen Eingänge können über Parameter gewichtet einfließen.
+Zusätzlich gibt es bei jedem Neuron einen Bias, der gesetzt werden kann.
+Das Training eines \ac{NN} besteht darin, optimale Werte der Gewichte zu finden, damit korrekte Schlüsse des Netzes gezogen werden.
+Hierfür wird eine Unterteilung des vorhandenen Datensatzes in Training-, Test- und Validation-Set vorgenommen.
+
+\subsection{Training eines neuronalen Netzes}
+
+Für das Training werden Daten aus dem Trainingssatz als Eingabe für das \ac{NN} verwendet.
+Die Output-Aktivierung einer Einheit $i$ mit Aktivierungsfunktion $g$ lässt sich mithilfe von \autoref{eq:activationNeuron} bestimmen:
+\begin{align}
+	\label{eq:activationNeuron} a_j = g(\sum_{i = 0}^{n}w_{i,j} \cdot a_i) ~.
+\end{align}
+Liegt der Wert über dem Schwellwert der Aktivierungsfunktion, wird das nachfolgende Neuron aktiviert.
+Der errechnete Output wird mit dem erwarteten Ergebnis verglichen.
+Die Anpassung der Gewichte erfolgt anschließend über Backpropagation.
+Hierbei werden die Fehler der Ausgabeneuronen auf jedes vorherige Neuron zurückprojiziert.
+Die für die Aktualisierung genutzte Lernrate entscheidet darüber, wie schnell eine Anpassung der Gewichte erfolgt.
+Sie kann im Laufe des Trainings verringert werden, um die Parameter feingranular anzupassen.
+
+Das \ac{NN} wird mithilfe der Testdaten kontrolliert, die Validierungsdaten können für eine Hyperparameter-Anpassung verwendet werden.
+Für ein gutes Ergebnis sollten verschiedene Kategorien der Bilder in allen drei Datensets gleichermaßen repräsentiert sein.
+Eine Klassen-Imbalance sollte vermieden werden.
+Diese liegt vor, wenn eine Klasse deutlich stärker als eine andere vertreten ist, z.B. Hintergrundpixel im Vergleich zu Straßen.
+Das \ac{NN} vernachlässigt dann ggf. die unterrepräsentierte Klasse und führt zu schlechteren Ergebnissen.
+
+Bei der \textit{Ground Truth} eines Datensatzes handelt es sich um das vorgegebene Ergebnis, mit dem der Output des \ac{NN}	verglichen wird.
+Das Ergebnis kann beispielsweise ein Label für eine Klassifizierung sein.
+Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter direkt von der Ground Truth abhängig ist
+\cites{Goodfellow.2016, Russell.2012}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{Bilder/Modell eines Neurons.png} 
+	\caption{Modell eines Neurons \cite{Russell.2012}.}
+	\label{fig:neuron}
+\end{figure} 
+
+\subsection{\acf{CNN}}
+
+Ein \ac{CNN} ist eine bestimmte Art eines \ac{NN}.
+Zwischen den einzelnen Schichten befinden sich \textit{convolutional layers}, auch Faltungsschichten genannt.
+Die Faltungsschichten lernen die Merkmalsextraktion, indem sie sogenannte Features mithilfe von Filtern erkennen.
+Innerhalb der ersten Schichten handelt es sich häufig um Kantendetektion oder die Ermittlung von einfachen Formen.
+Das Ergebnis der convolutional layers bilden Feature-Maps.
+
+Um den Fokus auf stark ausgeprägte Features zu legen, können \textit{pooling layers} verwendet werden.
+Diese verringern die Dimensionen des Outputs, indem sie beispielsweise nur den maximalen Wert eines bestimmten Bereiches an die nächste Schicht weitergeben.
+Die Größe der Reduktion ist abhängig von der gewählten Kernelgröße, sowie dem Stride, der jeweiligen Verschiebung des Kernels.
+\ac{CNN}s werden häufig bei Bildern eingesetzt, da eine räumliche Beziehung zwischen einzelnen Bildpunkten Berücksichtigung findet, räumlich zusammengehörige Regionen werden verbunden.
+Die Pooling-Schichten besitzen im Gegensatz zu den Convolutional-Schichten keine Parameter.
+Zu beachten ist, dass das Pooling zu einer räumlichen Invarianz der Merkmale führt.
+Über eine vollvermaschte Schicht nach der letzten Pooling-Schicht kann z.B. eine Klassfikation gelernt werden.
+\autoref{fig:LeNet} zeigt ein Beispiel für ein \ac{CNN}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{Bilder/LeNet.png} 
+	\caption{LeNet als Beispiel für ein einfaches \ac{CNN} \cite{.17.12.2022}.}
+	\label{fig:LeNet}
+\end{figure}
 
 \section{Aufgabenkategorien} \label{sec:aufgabenkategorien}
 Im Bereich der Computer Vision gibt es verschiedene Problemstellungen, die unterschiedlich gelöst werden können.
