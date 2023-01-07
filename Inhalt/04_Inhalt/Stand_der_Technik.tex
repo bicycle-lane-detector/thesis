@@ -672,7 +672,22 @@ Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verw
 \end{table}
 
 \section{Neuheitswert} \label{sec:novelty}
-Die Problemdomänen sind ähnlich, da Fahrradwege auch Straßen sind und eben jene Eigenschaften, 
-wie große Klassenimbalance zwischen Fahrradweg und Hintergrund, Beschattung durch andere Objekte,
-Verdeckung durch z.B. Bäume und ähnliche Annotationsfehler   
-teilen. Schwierigkeit ist, Fahrradwege von Straßen zu unterscheiden. 
+
+Aus der vorangegangenen Betrachtung des Stands der Technik ergeben sich drei neuartige Probleme, die 
+diese Arbeit untersucht:
+\begin{enumerate}
+	\item Bisher existieren keine wissenschaftlichen Untersuchungen, die versuchen unterschiedliche Straßenelemente,
+	wie Gehwege, Radwege, Busspuren o.Ä. auf Luftaufnahmen von Straßen zu unterscheiden. Da Straßen als Ganzes 
+	auf Satellitenbildern gut zu erkennen sind, deren unterschiedliche, sehr heterogenen Bestandteile jedoch weniger, 
+	kann mit dem Beispiel der Radwege überprüft werden, ob die Unterscheidung mit derzeitigen Luftbildqualitäten von circa 20 bis 50 cm \ac{GSD} 
+	machbar ist. 
+	\item Da für vorgenannten Punkt noch keinen Datensatz vorhanden ist, muss ein solcher erstellt werden. Dieser muss umfangreich 
+	genug sein, dass er für \ac{ML} verwendbar ist. Es soll geklärt werden, ob bisherige Methoden Datensätze für die Straßenerkennung 
+	((semi-)automatisch) zu erstellen auch für Radwege angewandt werden kann und wie die Güte eines solchen Datensatzes bewertet werden kann. 
+	\item Die Literatur bezüglich der Straßenerkennung fordert eine sehr genaue Segmentierung des Bildes. Für Radwege ist es ausreichend, 
+	zu ermitteln, dass einer existiert und wo dieser grob liegt (auf welcher Straßenseite). Für diesen Verwendugnszweck gibt 
+	es auch ein Bewertungsmaß -- die \textit{Quality} (vgl. \autoref{sec:evaluation-metrics:quality}). Für die Quality gibt es allerdings
+	keine Implementation auf Rastern, wie einer semantischen Segmentierung, sondern nur auf daraus extrahierten Graphen. 
+	Folglich soll diese Arbeit eine Berechnungsmethode konzipieren, um die Quality auf die Masken der semantischen Segmentierung anzuwenden 
+	(s. \autoref{sec:eval:biou} \textit{BIoU}), also einen Schritt bevor aus der Maske die Graphen extrahiert werden.     
+\end{enumerate} 
