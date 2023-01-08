@@ -65,7 +65,7 @@ Sie kann im Laufe des Trainings verringert werden, um die Parameter feingranular
 
 Das \ac{NN} wird mithilfe der Testdaten bewertet, die Validierungsdaten können für eine Hyperparameter-Anpassung während des Trainings
 verwendet werden. Das Training verläuft in Epochen, wobei eine Epoche das Durchlaufen aller Trainingsdaten meint. 
-Es folgen so viele Epochen, wie vorgegeben, oder bis das Netz nicht mehr verbessert. Für Schnelleres Training werden die 
+Es folgen so viele Epochen, wie vorgegeben, oder bis das Netz nicht mehr verbessert. Für ein schnelleres Training werden die 
 Trainingsdaten in Batches einer bestimmten Größe eingeteilt, die parallel verarbeitet werden können. \\  
 Für ein gutes Ergebnis sollten verschiedene Kategorien der Bilder in allen drei Datensets gleichermaßen repräsentiert sein.
 Eine Klassen-Imbalance sollte vermieden werden.
@@ -140,7 +140,7 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 	\item \textit{Instance Segmentation:}
 	Zusätzlich zur Semantic Segmentation kann noch gefodert werden, dass einzelne Instanzen verschiedener Objekte 
 	unterschieden werden sollen.
-	Diese Forderung wird dann \textit{Instance Segmentation} genannt \cite{Sharma.21.08.2019}.
+	Diese Forderung wird dann als \textit{Instance Segmentation} bezeichnet \cite{Sharma.21.08.2019}.
 \end{itemize}
 
 \begin{figure}
@@ -336,8 +336,7 @@ Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert \cites{Goodfellow.2016}{NitishS
 
 Es hat sich gezeigt, dass Dropout eine effektivere Regularisierungstechnik zur Minderung von Overfitting ist, 
 als andere ressourcenschonende Techniken, wie \textit{Weight-Decay}, \textit{Filter-Norm-Constraints} oder 
-\textit{Sparse-Activity-Regularization}, wobei Dropout mit diesen kombiniert werden kann, für noch bessere 
-Regularisierung \cites{Goodfellow.2016}.
+\textit{Sparse-Activity-Regularization}, wobei Dropout für eine noch bessere Regularisierung mit diesen kombiniert werden kann \cites{Goodfellow.2016}.
 
 \subsection{Batch-Normalization} \label{sec:architekturkomponenten:batchnorm}
 
@@ -345,8 +344,8 @@ Regularisierung \cites{Goodfellow.2016}.
 und der Streuung einer Batch während des Trainings. Für die Inferenz werden Durchschnittswerte 
 des Mittelwerts und der Streuung der Batches des Trainingsdatensatzes herangezogen und angewandt. \\
 Batch-Normalization führt zu einer schnelleren Konvergenz im Training, 
-sodass die Anzahl an benötigten Epochen in manchen Fällen bis zu halbiert werden können. Des Weiteren führt 
-Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion zu einem gewissen Grad glättet 
+sodass die Anzahl an benötigten Epochen in manchen Fällen halbiert werden kann. Des Weiteren führt 
+Batch-Normalization zu einer gewissen Regularisierung, da es die Kostenfunktion zu einem bestimmten Grad glättet 
 \cites{Goodfellow.2016}{Ioffe.11022015}.
 Besonders gut funktioniert Batch-Normalization für \acp{CNN} und Netzwerke mit Sigmoid-Aktivierungsfunktion
 \cites{Goodfellow.2016}.
@@ -366,18 +365,18 @@ führen zu der sehr guten Performanz des Netzes bei semantischer Segmentierung \
 	wie auch den größeren Kontext von früheren Blocks mittels Skip-Connection erhält. 
 	\item Zur Mitte des Netzes hin erhöht sich die Anzahl der Convolution-Filter und damit die Anzahl der \textit{Channel}, 
 	während sich die Dimensionen der einzelnen Feature-Maps durch das \textit{Downsampling} verringert. 
-	Hierbei ist anzumerken, dass bei der Implementation kein \textit{Padding} für die Convolutions verwendet wurde,
+	Hierbei ist anzumerken, dass bei der Implementation kein \textit{Padding} für die Convolutions verwendet wird,
 	wodurch sich die Dimensionen der Feature-Maps nach jeder Convolution verringert. 
 	Hieraus folgt ein Zuschneiden für die Skip-Connections. 
 \end{itemize}
 
 Im originalen U-Net beginnt der erste Convolutional-Block mit 64 Filtern, welche
-sich jeden weiteren Block mit zum Mittel-Block verdoppeln, der dann 1024 Filter
+sich blockweise bis zum Mittel-Block verdoppeln, der dann 1024 Filter
 besitzt. Daraufhin halbieren sich die Filter mit jedem weiteren Decoder-Block
 wieder.
 Das U-Net hat ca. 24 Mio. Parameter. \\
-Ein Problem, welches im ursprünglich U-Net-Paper erwähnt wird, ist dass unter \ac{ReLU} ganze Netzteile dauerhaft inaktiv 
-werden, aufgrund des Dying-Neuron-Problem (vgl. \autoref{sec:activation:relu}) \cite{Ronneberger.18052015}.
+Ein Problem, welches im ursprünglichen U-Net-Paper erwähnt wird, ist, dass unter \ac{ReLU} ganze Netzteile aufgrund des Dying-Neuron-Problems dauerhaft inaktiv 
+werden (vgl. \autoref{sec:activation:relu}) \cite{Ronneberger.18052015}.
 
 \begin{figure}
 	\centering
@@ -422,7 +421,7 @@ Hierin lag auch der Erfolg von VGG16 bzw. VGG19. Jedoch führt das einfache Vert
 flachere Netze besser performen, als tiefere, da die tieferen sehr schwer zu trainieren sind. \\
 Dieses Problem adressiert \textit{ResNet} erfolgreich, indem \textit{Residual-Blocks} eingeführt werden. 
 Hierdurch können mit \textit{ResNet} tiefere Netze erstellt werden als bisher, die trotzdem noch effizient trainiert werden können.
-Ein Residual-Block besteht dabei aus zwei Convolutional-Layer mit einer Skip-Connection zwischen Input der ersten Layer und Output 
+Ein Residual-Block besteht dabei aus zwei Convolutional-Layern mit einer Skip-Connection zwischen dem Input der ersten und dem Output 
 der zweiten Layer. Durch die Skip-Connections kann bei der Backpropagation der Gradient ungehindert rückwärts laufen, 
 um so auch die flachen Layer upzudaten. So kann z.B. \textit{ResNet34} 34 trainierbare Layer haben, 
 während zuvor mit VGG nur 16 bzw. 19 effektiv waren \cite{He.10122015}. 
@@ -434,13 +433,13 @@ ResNet34 hat 63,5 Mio. Parameter. Wird auf die letzte Fully-Connected-Layer verz
 
 \subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
 
-\textit{DenseNet121} wurde 2018 erstmals vorgeschlagen und wurde designed, um das Vanishing-Gradient-Problem 
+\textit{DenseNet121} wurde 2018 erstmals vorgeschlagen und designed, um das Vanishing-Gradient-Problem 
 zu verbessern, bessere Feature-Übertragung in tiefere Netzschichten zu ermöglichen und das Wiederverwenden von Features 
-zu unterstützen, um somit die Anzahl der benötigten Parameter deutlich zu reduzieren, bei gleichbleibender Performanz \cite{Huang.25082016}.
+zu unterstützen, um somit die Anzahl der benötigten Parameter bei gleichbleibender Performanz deutlich zu reduzieren \cite{Huang.25082016}.
 
-Das Netz besteht aus mehreren sogenannten Dense-Blöcke, die wie folgt aufgebaut sind: 
+Das Netz besteht aus mehreren sogenannten Dense-Blöcken, die wie folgt aufgebaut sind: 
 Jede angegebene Convolution-Schicht besteht aus einer Batch-Normalization-Schicht mit \ac{ReLU}-Aktivierung,
-gefolgt von der angegebenen Convoltuion-Schicht. Außerdem - und hier liegt die große Erweiterung des DenseNet - sind alle 
+gefolgt von der angegebenen Convolution-Schicht. Außerdem - und hier liegt die große Erweiterung des DenseNet - sind alle 
 Convolution-Schichten eines Dense-Blocks mit allen nachfolgenden Convolution-Schichten des Dense-Blocks konkateniert,
 anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall ist\footnote{\autoref{fig:densenet121-architecture} veranschaulicht DenseNet121.}. 
 
@@ -450,7 +449,7 @@ Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse
 
 \subsection{Vortrainierte CNN-Modelle als U-Net-Backbone} \label{sec:pretrained-as-unet-backbone}
 
-Prinzipiell dienen die Convolution-Schichten aller in \autoref{sec:pretrained-backbones} beschriebenen vortrainierten Backbone-Netze 
+Prinzipiell dienen die Convolution-Schichten aller in \autoref{sec:pretrained-backbones} beschriebenen, vortrainierten Backbone-Netze 
 der Feature-Erkennung und -Extraktion. Lediglich die letzten Schichten, die bei den beschriebenen Klassifikationsmodellen  
 Fully-Connected-Schichten waren, sind für die Zuordnung der Features zu den Objektklassen 
 im ImageNet-Datensatz notwendig. Werden diese Schichten mit einem Decoder-Teil, der den Encoder - hier 
@@ -472,9 +471,8 @@ weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Date
  und auch insgesamt eine höhere Genauigkeit 
 am Ende des Trainings erreicht wird, als bei herkömmlichem Training. Diese Effekte sind verstärkt, 
 abhängig davon, wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
-Insbesondere bei Computer-Vision ist Transfer-Learning effektiv, da bei Bildern high-level Features wie Clustering 
-ähnlichfarbener Pixel oder Kantenerkennung oftmals sehr ähnlich zwischen unterschiedlichen Datensätzen ausfallen 
-und damit schon vorhanden sind \cite{Ruder.3212017}. 
+Insbesondere bei Computer-Vision ist Transfer-Learning effektiv, da sich bei Bildern high-level Features wie Clustering 
+ähnlichfarbiger Pixel oder Kantenerkennung kaum unterscheiden zwischen unterschiedlichen Datensätzen und damit schon vorhanden sind \cite{Ruder.3212017}. 
 
 Für Transfer-Learning mit U-Nets gibt es verschiedene Strategien: Backbone-Netze als Encoder, 
 partielles Einfrieren verschiedener Netzbereiche und direktes Trainieren mit geringer Learning-Rate.
@@ -489,7 +487,7 @@ Hierdurch kann eine geeignete \ac{CNN}-Architektur für das spezifische Problem 
 Modelle auf sehr großen Datensätzen, wie \textit{ImageNet}, vortrainiert öffentlich zugänglich. 
 
 Bei der semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern, wurden die besten Ergebnisse von einem Dice-Maß-Standpunkt aus, 
-mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches zuerst auf dem \textit{Salien Object}
+mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches zuerst auf dem \textit{Salient Object}
 Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse von dem Dice-Maß her, wobei allerdings das VGG16-U-Net kleine falsch-positive 
 Regionen erkannte, die weit außerhalb der Ground-Truth lagen. Die falsch-positiven beim Vergleichsnetz, lagen direkt an der Ground-Truth, 
 dies lässt auf eine sensitivere Kantenerkennung beim VGG16-U-Net schließen, die manchmal aber auch übersensitiv war \cite{Cheng.05.10.2021}. 
@@ -508,7 +506,7 @@ für das Training aller Parameter. In keinem der Fälle gab es, anders als beim 
 
 In einem weiteren Paper wurde untersucht, welche Layer eines U-Net am besten eingefroren werden sollten, für das Fine-Tuning von medizinischen Bildern - 
 zum einen von Lungen-Ultraschall-Bildern und zum anderen von Brust-Röntgen-Aufnahmen. 
-Hier wurde wieder mit dem \textit{Salien Objetcs} Datensatz vortrainiert. Dann wurden für beide Anwendungsfälle folgende Tests durchgeführt: 
+Hier wurde wieder mit dem \textit{Salient Objetcs} Datensatz vortrainiert. Dann wurden für beide Anwendungsfälle folgende Tests durchgeführt: 
 \begin{enumerate}
 	\item Einfrieren der linken Hälfte (Encoder) des Netzes,
 	\item Einfrieren der rechten Hälfte (Decoder) des Netzes,
@@ -682,7 +680,7 @@ da sie sehr häufig als Benchmark zum Erkennen von Straßen genutzt werden, es d
 Forschung gibt und da beide Datensätze sich stark unterscheiden, soweit das im Rahmen der Straßenerkennung möglich ist. 
 Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensätze ähnliche gut funktionierende
 Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. \\   
-\autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Basline}-Modellen.
+\autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Baseline}-Modellen.
 Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht sonderlich auf den jeweiligen Datensatz optimiert sind,
 was die Hyper-Parameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
 Mit den Baseline-Resultaten können diese Modelle zu Vergleichszwecken verwendet werden 
@@ -713,7 +711,7 @@ Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:baslin
 bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall. 
 Dense-U-Net-121 ist dabei ein U-Net mit einem vortrainierten DenseNet121 als Backbone \cite{C.Henry.2021}. \\
 Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
-indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen Input der ersten und Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
+indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen dem Input der ersten und dem Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
 ersetzt wurden und der Bottleneck-Block
 um Dilation erweitert wurde \cite{Gao.2019}. 
 Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}. \\
@@ -748,16 +746,16 @@ diese Arbeit untersucht:
 \begin{enumerate}
 	\item Bisher existieren keine wissenschaftlichen Untersuchungen, die versuchen unterschiedliche Straßenelemente,
 	wie Gehwege, Radwege, Busspuren o.Ä. auf Luftaufnahmen von Straßen zu unterscheiden. Da Straßen als Ganzes 
-	auf Satellitenbildern gut zu erkennen sind, deren unterschiedliche, sehr heterogenen Bestandteile jedoch weniger, 
+	auf Satellitenbildern gut zu erkennen sind, deren unterschiedlichen, sehr heterogenen Bestandteile jedoch weniger, 
 	kann mit dem Beispiel der Radwege überprüft werden, ob die Unterscheidung mit derzeitigen Luftbildqualitäten von circa 20 bis 50 cm \ac{GSD} 
 	machbar ist. 
 	\item Da für vorgenannten Punkt noch keinen Datensatz vorhanden ist, muss ein solcher erstellt werden. Dieser muss umfangreich 
-	genug sein, dass er für \ac{ML} verwendbar ist. Es soll geklärt werden, ob bisherige Methoden Datensätze für die Straßenerkennung 
-	((semi-)automatisch) zu erstellen auch für Radwege angewandt werden kann und wie die Güte eines solchen Datensatzes bewertet werden kann. 
+	genug sein, dass er für \ac{ML} verwendbar ist. Es soll geklärt werden, ob bisherige Methoden, Datensätze für die Straßenerkennung 
+	((semi-)automatisch) zu erstellen, auch für Radwege angewandt werden können und wie die Güte eines solchen Datensatzes bewertet werden kann. 
 	\item Die Literatur bezüglich der Straßenerkennung fordert eine sehr genaue Segmentierung des Bildes. Für Radwege ist es ausreichend, 
-	zu ermitteln, dass einer existiert und wo dieser grob liegt (auf welcher Straßenseite). Für diesen Verwendugnszweck gibt 
+	zu ermitteln, ob einer existiert und wo dieser grob liegt (auf welcher Straßenseite). Für diesen Verwendugnszweck gibt 
 	es auch ein Bewertungsmaß -- die \textit{Quality} (vgl. \autoref{sec:evaluation-metrics:quality}). Für die Quality gibt es allerdings
-	keine Implementation auf Rastern, wie einer semantischen Segmentierung, sondern nur auf daraus extrahierten Graphen. 
+	keine Implementation auf Rastern, wie bei einer semantischen Segmentierung, sondern nur auf daraus extrahierten Graphen. 
 	Folglich soll diese Arbeit eine Berechnungsmethode konzipieren, um die Quality auf die Masken der semantischen Segmentierung anzuwenden 
 	(s. \autoref{sec:eval:biou} \textit{BIoU}), also einen Schritt bevor aus der Maske die Graphen extrahiert werden.     
 \end{enumerate} 
