@@ -41,7 +41,7 @@ besser zu verstehen sind.
 
 \section{Grundlagen Neuronale Netze}
 
-Ein \ac{NN} besteht aus mehreren einzelnen Neuronen, die miteinander verbunden werden.
+Ein \ac{NN} ist eine \ac{ML}-Methode und besteht aus mehreren einzelnen \textit{Neuronen}, die miteinander verbunden werden.
 Der Aufbau eines Neurons lässt sich \autoref{fig:neuron} entnehmen.
 Die Ausgänge der Neuronen sind mit denen der nächsten Schicht verbunden.
 Die einzelnen Eingänge können über Parameter gewichtet einfließen.
@@ -56,22 +56,31 @@ Die Output-Aktivierung einer Einheit $i$ mit Aktivierungsfunktion $g$ lässt sic
 \begin{align}
 	\label{eq:activationNeuron} a_j = g(\sum_{i = 0}^{n}w_{i,j} \cdot a_i) ~.
 \end{align}
-Liegt der Wert über dem Schwellwert der Aktivierungsfunktion, wird das nachfolgende Neuron aktiviert.
+Die Aktivierungsfunktion bestimmt den Grad der Aktivierung, also den numerischen Wert, des nachfolgenden Neurons.
 Der errechnete Output wird mit dem erwarteten Ergebnis verglichen.
 Die Anpassung der Gewichte erfolgt anschließend über Backpropagation.
 Hierbei werden die Fehler der Ausgabeneuronen auf jedes vorherige Neuron zurückprojiziert.
 Die für die Aktualisierung genutzte Lernrate entscheidet darüber, wie schnell eine Anpassung der Gewichte erfolgt.
 Sie kann im Laufe des Trainings verringert werden, um die Parameter feingranular anzupassen.
 
-Das \ac{NN} wird mithilfe der Testdaten kontrolliert, die Validierungsdaten können für eine Hyperparameter-Anpassung verwendet werden.
+Das \ac{NN} wird mithilfe der Testdaten bewertet, die Validierungsdaten können für eine Hyperparameter-Anpassung während des Trainings
+verwendet werden. Das Training verläuft in Epochen, wobei eine Epoche das Durchlaufen aller Trainingsdaten meint. 
+Es folgen so viele Epochen, wie vorgegeben, oder bis das Netz nicht mehr verbessert. Für Schnelleres Training werden die 
+Trainingsdaten in Batches einer bestimmten Größe eingeteilt, die parallel verarbeitet werden können. \\  
 Für ein gutes Ergebnis sollten verschiedene Kategorien der Bilder in allen drei Datensets gleichermaßen repräsentiert sein.
 Eine Klassen-Imbalance sollte vermieden werden.
 Diese liegt vor, wenn eine Klasse deutlich stärker als eine andere vertreten ist, z.B. Hintergrundpixel im Vergleich zu Straßen.
 Das \ac{NN} vernachlässigt dann ggf. die unterrepräsentierte Klasse und führt zu schlechteren Ergebnissen.
+Die Eingabedaten sollten zusätzlich standardisiert und normalisiert sein, um das Lernen zu beschleunigen. 
 
 Bei der \textit{Ground Truth} eines Datensatzes handelt es sich um das vorgegebene Ergebnis, mit dem der Output des \ac{NN}	verglichen wird.
 Das Ergebnis kann beispielsweise ein Label für eine Klassifizierung sein.
-Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter direkt von der Ground Truth abhängig ist
+Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter direkt von der Ground Truth abhängig ist.
+
+Ist ein Modell zu komplex für die gegebenen Trainingsdaten, kann es zu \textit{Overfitting} kommen. Das bedeutet, 
+das Netz lernt die Beispiele auswendig und generalisiert nicht. 
+Dem kann entweder mit \textit{Regularisierung} entgegengewirkt werden, welche die Komplexität eines Modells zu reduzieren versucht,
+oder mit \textit{Augmentierung} der Eingaben, wodurch ein Auswendiglernen durch mehr unterschiedliche Eingaben erschwert wird  
 \cites{Goodfellow.2016, Russell.2012}.
 
 \begin{figure}
@@ -84,18 +93,17 @@ Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter di
 \subsection{\acf{CNN}}
 
 Ein \ac{CNN} ist eine bestimmte Art eines \ac{NN}.
-Zwischen den einzelnen Schichten befinden sich \textit{convolutional layers}, auch Faltungsschichten genannt.
+Zwischen den einzelnen Schichten befinden sich \textit{Convolutional Layers}, auch Faltungsschichten genannt.
 Die Faltungsschichten lernen die Merkmalsextraktion, indem sie sogenannte Features mithilfe von Filtern erkennen.
 Innerhalb der ersten Schichten handelt es sich häufig um Kantendetektion oder die Ermittlung von einfachen Formen.
-Das Ergebnis der convolutional layers bilden Feature-Maps.
+Das Ergebnis der Convolutional Layers bilden Feature-Maps.
 
-Um den Fokus auf stark ausgeprägte Features zu legen, können \textit{pooling layers} verwendet werden.
+Um den Fokus auf stark ausgeprägte Features zu legen, können \textit{Pooling Layers} verwendet werden.
 Diese verringern die Dimensionen des Outputs, indem sie beispielsweise nur den maximalen Wert eines bestimmten Bereiches an die nächste Schicht weitergeben.
-Die Größe der Reduktion ist abhängig von der gewählten Kernelgröße, sowie dem Stride, der jeweiligen Verschiebung des Kernels.
-\ac{CNN}s werden häufig bei Bildern eingesetzt, da eine räumliche Beziehung zwischen einzelnen Bildpunkten Berücksichtigung findet, räumlich zusammengehörige Regionen werden verbunden.
+\ac{CNN}s werden bei Bildern eingesetzt, da eine räumliche Beziehung zwischen einzelnen Bildpunkten Berücksichtigung findet, räumlich zusammengehörige Regionen werden verbunden.
 Die Pooling-Schichten besitzen im Gegensatz zu den Convolutional-Schichten keine Parameter.
 Zu beachten ist, dass das Pooling zu einer räumlichen Invarianz der Merkmale führt.
-Über eine vollvermaschte Schicht nach der letzten Pooling-Schicht kann z.B. eine Klassfikation gelernt werden.
+Über eine vollvermaschte Schicht nach der letzten Convolutional-Schicht kann z.B. eine Klassifikation gelernt werden.
 \autoref{fig:LeNet} zeigt ein Beispiel für ein \ac{CNN}.
 
 \begin{figure}
