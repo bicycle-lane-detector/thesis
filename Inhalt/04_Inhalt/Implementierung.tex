@@ -4,6 +4,38 @@ Diese Kapitel beschäftigt sich mit der konkreten und detaillierten technischen 
 der in Kapitel 3 \textit{Konzeption} vorgestellten Vorhaben, sodass die Experimente und deren Ergebnisse 
 reproduziert werden können.
 
+
+\section{Bewertungsmaße und Kostenfunktion} \label{sec:eval}
+
+
+Als eine direkte und intuitiv sehr anschauliche Metrik zum Bewerten der Modellperformanz bei Segmentierungsproblemen
+kann \ac{IoU} herangezogen werden. \\ 
+Problematisch an der \ac{IoU} ist, dass alle möglichen Klassifikationen ($tp$, $fp$, $fn$, $tn$)
+gleich stark gewichtet werden, wobei die wahr-positiven $tp$ zunächst Priorität haben sollten, 
+während die Fehler der falsch-positiven $fp$ und falsch-negativen $fn$ im Gleichgewicht bleiben sollten, 
+sodass es nicht zu einer trivialen Klassifikation als rein positiv oder rein negativ kommt. \\
+Ein weiteres Problem ist, dass die \ac{IoU} sehr streng und intolerant gegenüber leichter Verschiebung der Erkennung 
+bewertet. Wenn ein Fahrradweg, der nur wenige Pixel breit ist, um die Hälfte der Breite verschoben segmentiert würde
+aber ansonsten komplett dem Radweg entspricht, würde die \ac{IoU} bereits von 1 auf 0,5 sinken, obwohl \textit{qualitativ} 
+der Weg exakt erkannt wurde. Diese Intoleranz gegenüber leichter lokaler Verschiebung ist insbesondere in dem 
+in dieser Arbeit vorgestellten BikeSat-Datensatz aus \autoref{sec:bike-data} problematisch, 
+da dieser über \ac{OSM} annotiert ist und für viele Straßen die Lage des zugehörigen Radwegs heuristisch über 
+die Spuranzahl ermittelt wird. \\
+Aufgrund der genannten Einschränkungen ist die \ac{IoU} ungeeignet als Verlustfunktion, kann jedoch als ein Maß 
+in die Bewertung der Modellperformanz mit einfließen. 
+
+Dice gewichtet die $tp$ mehr als die \ac{IoU}. Damit wird das Ungleichgewichtsproblem vermindert und Dice ist 
+besser geeignet als Verlustfunktion gegenüber der \ac{IoU}. Wie die \ac{IoU} hat Dice allerdings keine Toleranz 
+ggü. leichter Verschiebung der Radwege. Auf einem handannotierten Datensatz funktioniert Dice besser. 
+Aufgrund der Beliebtheit von Dice in der semantsichen Segmentierung 
+wird ein guter Vergleich mit anderen Modellen ermöglicht. 
+Aus diesen Gründen wird Dice für die Radwegerkennung als Verlustfunktion herangezogen.
+
+BCE wird für das originelle U-Net eingesetzt, ist aber in neueren U-Nets durch Dice abgelöst. 
+Auch für das Problem der Radwegerkennung wird BCE nicht eingesetzt, da wie im originellen U-Net eine Weight-Map erstellt werden müsste, 
+um das Klassenimbalanceproblem der BCE auszugleichen, was aber einen zu hohen Implementationsaufwand bedeuten würde, im Gegensatz zu 
+Dice, welches ohne weiteren Aufwand funktioniert. 
+
 \section{Implementation der Architekturen} \label{sec:arch-impl}
 
 \subsection{Bike-U-Net} \label{sec:arch-impl:bunet}
