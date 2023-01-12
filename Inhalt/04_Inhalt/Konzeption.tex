@@ -51,6 +51,13 @@ Abweichende Koordinaten wirken sich jedoch nachteilig auf die Qualität des Date
 Aufgrund der Vielfältigkeit der Radwege, der damit verbundenen Größe des benötigten Datensatzes und dem geringeren Arbeitsaufwand, ist eine Entscheidung zugunsten der automatischen Datengenerierung gefallen.
 Eine schlechtere Datenqualität des Labels wird hingenommen.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=.6\textwidth]{Bilder/Hannover.png} 
+	\caption{$2000{\times}2000~ m^2$ Luftaufnahmen-Ausschnitt von Hannover.}
+	\label{fig:hannover-data}
+\end{figure} 
+
 Die Erstellung ist in mehreren Schritten vorgenommen worden.
 Zunächst mussten Satellitenbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
 In dem durch die Luftbilder abgedeckten Gebiet sind anschließend offizielle Fahrradwege aus einer API ausgelesen worden.
@@ -65,6 +72,7 @@ Das Landesamt für Geoinformation und Landesvermessung Niedersachsen jedoch stel
 Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von 3 Jahren.
 Für die Datenset-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
 Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2{\times}2 ~km^2$-Kacheln ($10.000{\times}10.000{\times}3$ Bilder) inklusive ihrer Metadaten \cite{.26.10.2022}.
+\autoref{fig:hannover-data} zeigt ein solches Bild. 
 Für eine bessere Generalisierung des neuronalen Netzes, sind mehrere Städte verwendet worden.
 Die jeweilige Anzahl der Aufnahmen pro Stadt lässt sich \autoref{tab:city-distribution} entnehmen.
 Die Gesamtsumme beträgt 143 Satellitenbilder, also 572 $km^2$ Fläche.
@@ -102,6 +110,22 @@ Außerdem werden die Koordinaten für die Fahrradwege beispielsweise bei Kreuzun
 Hier lassen sich aus Satellitensicht keine Wege erkennen, was später zu Kosten für das Netz führt, obwohl sich keine Radwege erkennen lassen.
 Über manuelles Labeln können diese Bereiche ausgespart werden können, was zu einer besseren Ground Truth führt, bzw. dem, was sich vom neuronalen Netz erwarten lässt.
 
+\begin{figure}
+	\centering
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/good-cut-ex.png} 
+	\end{minipage}
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/good-cut-ex-mask.png} 
+	\end{minipage}
+
+	\caption{$512{\times}512$-Pixel-Auschnitt des BikeSat-Datensatzes (links) 
+	mit zugehöriger optimal automatisch generierter Maske (rechts).}
+	\label{fig:good-mask}
+\end{figure} 
+
 \subsection{Maskenerstellung}
 
 Mit den vorhandenen Orthofotos und den Koordinaten der Radwege können nun die Masken generiert 
@@ -117,10 +141,27 @@ Für jedes Satellitenbild wird zunächst eine leere Maske erstellt.
 Mithilfe der Koordinaten, die bei den einzelnen Klassen gespeichert sind, können die Linien eingezeichnet werden.
 Dafür werden die Koordinaten auf die korrespondierenden Pixelkoordinaten transformiert.
 Die Breite der einzuzeichnenden Linien orientiert sich an dem Durchschnitt verschiedener Radwege, welcher sich auf $11,8125px$ beläuft.
+\autoref{fig:good-mask} zeigt einen Luftbildausschnitt (links) zusammen mit der dafür automatisch generierten Maske (rechts),
+wobei die automatische Annotation sehr gut funktioniert. 
 
 \subsubsection{Güteabschätzung der Masken}
 
+\begin{wrapfigure}{r}{0.40\textwidth}
+	\centering
+	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.35\textwidth]{Bilder/bad-mask-example.png}
+	\vspace{-10pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[Schlechte Maske eines $512{\times}512$-Ausschnittes aus BikeSat-Datensatz.]{\unskip}
+	$512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit rot-überlagerter, mangelhaft automatisch generierter Maske.
+	\label{fig:bad-mask}
+\end{wrapfigure}
+
 Die Heuristik beim Einzeichnen der Maske führt dazu, dass manchmal Radweg in Grünstreifen oder auf Straßen eingezeichnet werden, da sie falsch verschoben worden sind.
+\autoref{fig:bad-mask} zeigt ein solches Negativbeispiel: Großteil der Annotationen (heuristisch generiert) trifft den eigentlichen Radweg nicht. 
 In der Straßenmitte befindliche Schienen für Straßenbahnen werden ebenfalls nicht berücksichtigt.
 Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschweren, durchgängige Linien einzuzeichnen.
 Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, wegen geringerer Varianz in den Stichproben, 
@@ -144,6 +185,14 @@ als Gütemaß $0,292 \cdot (0,3 + \frac{1}{2} \cdot 0,5) = 0,1606$ also $16,06\%
 
 \section{Karlsruhe-Testdatensatz} \label{sec:karlsruhe}
 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Bilder/karlsruhe-data-shrinked.png} 
+	\caption{Karlsruhe-Datensatz: $1433{\times}1433~ m^2$ Luftaufnahmen mit Radstreifen rot annotiert.}
+	\label{fig:karlsruhe-data}
+\end{figure} 
+
 Der Karlsruhe-Datensatz besteht aus Luftaufnahmen und manuell von Menschen annotierten Masken von Fahrradstreifen 
 über eine Stadtfläche von $1433{\times}1433~ m^2$ bzw. ca. $2,054~ km^2$, was im Vergleich zu den 
 $572~ km^2$ des BikeSat-Datensatzes also eher wenig ist. Ein Pixel im Karlsruhe-Datensatz entspricht $0,2~m$, 
@@ -152,12 +201,6 @@ Der gesamte Datensatz samt rot annotierter Radstreifen ist in einem
 $7168{\times}7168$ Pixel großen Bild in \autoref{fig:karlsruhe-data} zu sehen. Es fällt auf, 
 dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt einen Ausschnitt der Karlsruher Weststadt im März 2022. 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.6\textwidth]{Bilder/karlsruhe-data-shrinked.png} 
-	\caption{Karlsruhe-Datensatz: $1433{\times}1433~ m^2$ Luftaufnahmen mit Radstreifen rot annotiert.}
-	\label{fig:karlsruhe-data}
-\end{figure} 
 
 Aufgrund der geringen Größe des Datensatzes wird dieser lediglich zum Testen der trainierten Modelle verwendet. 
 Da es sich um eine andere Stadt handelt und die Bilder visuell anders geartet sind, als aus dem BikeSat-Datensatz 
@@ -188,6 +231,20 @@ Selbst in Bildern der Innenstadt haben oft nur größere Straßen dedizierte Rad
 Großteil des Bildes mit Wohngebiet gefüllt ist. 
 Somit ist nur ein verschwindender Anteil aller Pixel des Datensatzes als Radweg markiert. 
 
+\begin{wrapfigure}{r}{0.40\textwidth}
+	\centering
+	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.35\textwidth]{Bilder/cut-example.jpg}
+	\vspace{-10pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz.]{\unskip}
+	Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.
+	\label{fig:cut-example}
+\end{wrapfigure}
+
 Um den Anteil an als Radweg annotierte Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
 die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist ein ganzes 
 $10.000{\times}10.000$-Pixel-Bild einzugeben, sollen die Bilder in kleinere Stücke zerteilt werden. 
@@ -205,20 +262,6 @@ Aus diesen Gründen wird als Kompromiss die $512{\times}512$-Größe gewählt. S
 $512 \cdot 0,2m = 102,4m$. Die Zweierpotenz wird gewählt, 
 sodass das Bild nicht zu klein wird in der U-Net-Struktur, bzw. damit eine saubere Teilung der 
 Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren. 
-
-\begin{wrapfigure}{r}{0.40\textwidth}
-	\centering
-	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
-	\includegraphics[width=0.35\textwidth]{Bilder/cut-example.jpg}
-	\vspace{-10pt}
-	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
-	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
-	% im Abbildungsverzeichnis. Der Text darunter wird
-	% tatsächlich angezeigt.
-	\caption[Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz.]{\unskip}
-	Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.
-	\label{fig:cut-example}
-\end{wrapfigure}
 
 Jedes $10.000{\times}10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
 $\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
