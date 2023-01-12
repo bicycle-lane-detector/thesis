@@ -32,11 +32,29 @@ wird eine Übersicht über die benötigte Trainingszeit für die Modelle gegeben
 	\label{tab:results-roads}
 \end{table}
 
+\begin{figure}
+	\centering
+	\begin{minipage}{.41\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-Combined/bunet2.png}
+	\end{minipage}
+	\begin{minipage}{.41\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-Combined/vbunet.png}
+	\end{minipage}
+
+	\caption{Beispiel-Predictions des $BUNet2$ (links) und $VBUNet$ (rechts) auf dem Combined-Datensatz.}
+	\label{fig:combined-samples-bune2-vbunet}
+\end{figure}
+
 \autoref{tab:results-roads} zeigt die Test-Ergebnisse der Modelle nach Training auf dem Combined-Datensatz 
 (vgl. \autoref{sec:pre-training-roads}) in Prozent. Pro Spalte ist das höchste Ergebnis hervorgehoben. 
 \ac{BUNet2} und \ac{BUNet15} sind von Grund auf trainiert, während \ac{VBUNet}, \ac{RBUNet} und \ac{DBUNet} einen auf 
 ImageNet vortrainierten Encoder aufweisen. Die \ac{BIoU} verwendet wie bei der Radwegerkennung und wie in \autoref{sec:eval:biou} 
 festgelegt eine Puffergröße von 15 Pixeln. 
+
+\autoref{fig:combined-samples-bune2-vbunet} zeigt ausgewählte Beispielpredictions des \ac{BUNet2} (links) und 
+des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-combined}.}
 
 \section{Ergebnisse der Radwegerkennung}
 
@@ -76,6 +94,21 @@ festgelegt eine Puffergröße von 15 Pixeln.
 	\label{tab:results}
 \end{table}
 
+\begin{figure}
+	\centering
+	\begin{minipage}{.41\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-Bikesat/bunet2-s.png}
+	\end{minipage}
+	\begin{minipage}{.41\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-Bikesat/vbunet-l.png}
+	\end{minipage}
+
+	\caption{Beispiel-Predictions des $BUNet2^*$ (links) und $VBUNet^l$ (rechts) auf dem BikeSat-Datensatz.}
+	\label{fig:bikesat-samples-bunet2-s-vbunet-l}
+\end{figure}
+
 \begin{table}[ht]
 	\centering
 	\begin{tabular}{l|cc}
@@ -111,12 +144,33 @@ festgelegt eine Puffergröße von 15 Pixeln.
 	\label{tab:results-ka-small}
 \end{table}
 
+\begin{figure}
+	\centering
+	\begin{minipage}{.41\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-l.png}
+	\end{minipage}
+	\begin{minipage}{.41\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-s.png}
+	\end{minipage}
+
+	\caption{Beispiel-Predictions des $RBUNet^l$ (links) und $RBUNet^*$ (rechts) auf dem Karlsruhe-Datensatz.}
+	\label{fig:ka-samples-rbunet-l-rbunet-s}
+\end{figure}
+
 \autoref{tab:results} zeigt die Test-Ergebnisse der Modelle nach Training (s. \autoref{sec:training} für Details) auf dem BikeSat-Datensatz 
 (s. \autoref{sec:bike-data}) in Prozent. Zusätzlich zeigt die Tabelle die Test-Ergebnisse auf allen 196 $512{\times}512$-Ausschnitten 
 des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. Der Karlsruhe-Datensatz in dieser Tabelle
 enthält Ausschnitte, die keine Radwege enthalten. \\ 
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
 Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
+
+\autoref{fig:bikesat-samples-bunet2-s-vbunet-l} zeigt ausgewählte Beispielpredictions des $BUNet2^*$ (links) und 
+des $VBUNet^l$.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-bikesat}.}
+
+\autoref{fig:ka-samples-rbunet-l-rbunet-s} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (links) und 
+des $RBUNet^*$.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-karlsruhe}.}
 
 \autoref{tab:results-ka-small} zeigt die Test-Ergebnisse der Modelle aus \autoref{tab:results} auf allen 49 $512{\times}512$-Ausschnitten, 
 \textit{die Radwegen enthalten}, des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. 
