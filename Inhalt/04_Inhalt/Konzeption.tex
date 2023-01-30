@@ -49,7 +49,16 @@ Diese Art der Datensatzgenerierung ist deutlich weniger aufwändig als das manue
 Ebenso können unter der Beschränkung der gegebenen Koordinaten und Satellitenbilder große Datensets erzeugt werden.
 Abweichende Koordinaten wirken sich jedoch nachteilig auf die Qualität des Datensatzes aus, da keine menschliche Überprüfung im Anschluss erfolgt.
 Aufgrund der Vielfältigkeit der Radwege, der damit verbundenen Größe des benötigten Datensatzes und dem geringeren Arbeitsaufwand, ist eine Entscheidung zugunsten der automatischen Datengenerierung gefallen.
-Eine schlechtere Datenqualität des Labels wird hingenommen.
+Eine schlechtere Datenqualität des Labels wird hingenommen. \\
+Die Abdeckung der automatischen Annotationen ist allerdings sehr gut. Auch wenn die 
+automatisch generierten Label nicht immer die Position des Fahrradweges genau treffen, 
+ist die Datengrundlage äußerst vollständig. Eine manuelle Sichtung der Datengrundlage mit 
+einer Stichprobengröße von 234 zufällig 
+ausgewählten Bildausschnitten, die laut Datengrundlage insgesamt 722 Radwege enthalten, hat ergeben, 
+dass lediglich zwei Radwege nicht in der Datengrundlage verzeichnet sind. Es sind also \textbf{722} 
+von \textbf{724} realen Radwegen in der Stichprobe enthalten. Demnach wird der Einfluss von 
+fehlenden Radwegen auf das Training als eher gering eingestuft.   
+ 
 
 \begin{figure}
 	\centering

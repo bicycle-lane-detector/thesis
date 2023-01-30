@@ -178,6 +178,60 @@ Ein Ausschnitt enthält einen Radweg, wenn in der zugehörigen Label-Maske minde
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
 Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
 
+\subsection{Ergebnisse bei fehlender Annotation}
+
+Wie in \autoref{sec:bike-data} und \ref{sec:karlsruhe} beschrieben, wurde der BikeSat-Datensatz automatisch 
+annotiert und der Karlsruhe-Datensatz von Menschen. Die Netze sind mit dem BikeSat-Datensatz trainiert. 
+Wie bereits in \autoref{sec:bike-data} erwähnt, erhält die Datengrundlage zum BikeSat-Datensatz 
+in einer von Menschen gesichteten und bewerteten Stichprobe \textbf{722} von \textbf{724} realen Radwegen.
+Es fehlen also zwei Radwege. 
+
+Die manuell von Menschen annotierten Bilder des Karlsruhe-Datensatzes zeigen dagegen eine höhere 
+Fehlerquote. Die bestehenden Label sind zwar genauer platziert, aber dafür weniger vollständig. 
+Hier ist bei einer Sichtung der Daten aufgefallen, dass ca. 20\% der Radwege nicht annotiert sind. 
+Das hat aber keine Auswirkung auf das Training, da der Karlsruhe-Datensatz nur zum Testen verwendet wird.
+\autoref{fig:annotation-mistake} zeigt ausgewählte Predictions (b)-(d) 
+zu einem Ausschnitt aus dem Karlsruhe-Datensatz, bei dem bei der manuellen Annotation 
+Radwege in der Straße, die von links unten nach rechts oben verläuft, übersehen wurden. 
+In den Ausschnitten (c) und (d) sind die Radwege trotzdem erkannt, während es aber auch 
+Beispiele wie (b) gibt, worin die querenden Radwege nicht getroffen sind. Ausschnitte (c) 
+und (d) zeigen allerdings, dass die Netze Radwege erkennen können, die ein Mensch übersieht.
+Es war allerdings kein Netz in der Lage für den gegebenen Bildausschnitt alle Radwege korrekt 
+zu erkennen. \\
+Was außerdem auffällig ist, ist, dass in Bild (c) der Radweg rechts unten genau getroffen ist 
+(vgl. menschliche Annotation aus (a)), während in Bild (c) und (d) der Gehweg neben dem eigentlichen 
+Radweg annotiert ist. Zudem fällt in (d) ein grober Fehler des Netzes auf, da hier klar Teile des 
+blauen Dachs auf der rechten Bildseite annotiert sind.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/annotation-mistake/overlayed.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/annotation-mistake/straight-dbunet-r.png}
+		\caption{}
+	\end{subfigure} 
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/annotation-mistake/fitting-vbunet-r.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/annotation-mistake/full-vbunet-s.png}
+		\caption{}
+	\end{subfigure}
+
+	\caption{(a) zeigt ein manuell annotierten Ausschnitt aus dem Karlsruhe-Datensatz, wobei Radwege 
+	fälschlicherweise nicht annotiert sind. Abbildungen (b), (c) und (d) zeigen die Predictions von \ac{DBUNet}$^r$,
+	\ac{VBUNet}$^r$, bzw. \ac{VBUNet}$^*$.}
+	\label{fig:annotation-mistake}
+\end{figure}
+
 % networks tested with karlsruhe test data set  
 
 % testing ./../Models/Double-Data\backbones\bike_mapper_pre-train-scratch-densenet121_Aug_IoU3076_q6178.h5
