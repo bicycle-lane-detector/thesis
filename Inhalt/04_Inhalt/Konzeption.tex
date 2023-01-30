@@ -450,6 +450,29 @@ Variablen:\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implem
 	\label{eq:quality} BIoU = \frac{tp_B}{tp_B + fp_B + fn_B} ~.
 \end{align}
 
+\begin{figure}
+	\centering
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/biou/badish-q3918-iou0063-idx498.png}
+		\caption{\ac{BIoU}: 39,18 \ac{IoU}: 0,63}
+	\end{subfigure}
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/biou/medium-q5804-iou3622-idx907.png}
+		\caption{\ac{BIoU}: 58,04 \ac{IoU}: 36,22}
+	\end{subfigure} 
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/biou/best-q1-iou6156-idx903.png}
+		\caption{\ac{BIoU}: 100 \ac{IoU}: 61,56}
+	\end{subfigure}
+
+	\caption{Ausschnitte aus dem BikeSat-Datensatz mit roter Prediction- und blauer Ground-Truth-Maske. 
+	Dazu die jeweiligen Werte für \ac{BIoU} und \ac{IoU} in Prozent.}
+	\label{fig:biou-showcase}
+\end{figure}
+
 Die \ac{BIoU} adressiert das Verschiebungs-Problem der \ac{IoU} mit einem Puffer zur relaxierteren Ermittlung der 
 $tp$, $fp$ und $fn$. Hierbei ist allerdings die Puffergröße in Pixeln eine wichtige Stellschraube.  
 Da ein Radweg im Mittel ca. 11,8 Pixel und eine Straßenfahrbahn ca. 17,6 Pixel breit ist (s. \autoref{sec:bike-data}), 
@@ -465,6 +488,15 @@ Gegebenenfalls kann eine Ableitung für die \ac{BIoU} gefunden werden,
 die Untersuchung dessen geht allerdings über den Umfang dieser Arbeit hinaus. 
 Zuletzt wird das Verwenden der \ac{BIoU} als Loss-Funktion - unter der Prämisse, dass dies möglich ist - einen weiteren 
 Hyperparameter - die Puffergröße - einführen, was weiter die Komplexität des Modells erhöht.  
+
+\autoref{fig:biou-showcase} zeigt anhand von drei Beispielen, wie die BIoU ausfällt. Hierfür wird 
+der Buffer von den oben genannten 15 Pixeln genutzt. 
+Die blaue Maske ist die Ground-Truth und die rote die Prediction. In (a) ist kaum 
+tatsächliche Überschneidung, was sich in der IoU wiederspiegelt (0,63\%), es kann allerdings trotzdem 
+klar erkannt werden, auf welcher Straßenseite sich der obere rote Radweg befindet. Die BIoU 
+bestätigt diese menschliche Intuition mit einem Wert von 39,18\%. In (c) wird der Radweg perfekt getroffen
+(BIoU = 100\&), die IoU beträgt allerdings nur 61,56\%, was in der Auswertung die tatsächliche Performanz 
+sehr verzerrt. Zusammenfassend ist die BIoU ein Maß, das geeigneter die menschliche Intuition vertritt.
 
 \section{Architektur} \label{sec:architecture}
 
