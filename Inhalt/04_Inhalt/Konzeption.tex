@@ -339,9 +339,48 @@ verringert die Gefahr von Overfitting. Das Netz sieht so viel mehr Varianten der
 Nachteil ist, dass das Training länger dauert, da jedes Bild vor Eingabe bearbeitet wird. 
 Dieser Nachteil ist vor allem evident, wenn mehrere Netze auf demselben Datensatz trainiert werden, da jedes Mal 
 dieselben Augmentationen (da gleicher Seed) erneut vorgenommen werden müssen. Dieses Problem kann
-durch eine Vorausberechnung der aufeinanderfolgenden Augmentationen behoben werden, worauf allerdings verzichtet wird. 
+durch eine Vorausberechnung der aufeinanderfolgenden Augmentationen behoben werden, worauf allerdings verzichtet wird,
+da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten sind im Ergebniskapitel zu finden. 
 
-Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation}, wird in ihrem Wertebereich pseudo-zufällig angewandt. 
+\begin{figure}
+	\centering
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/color_aug/149_karlsruhe.png}
+		Original
+	\end{subfigure}
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/color_aug/RandomBrightness.png}
+		Helligkeit
+	\end{subfigure} 
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/color_aug/RandomContrast.png}
+		Kontrast
+	\end{subfigure} 
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/color_aug/RGBShift.png}
+		RGB-Shift
+	\end{subfigure}
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/color_aug/ChannelShuffle.png}
+		Kanaltausch
+	\end{subfigure}
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/color_aug/ColorJitter.png}
+		Farb-Jitter
+	\end{subfigure} 
+
+	\caption{Beispielhafte Farb-Augmentierungen eines Beispielbildes mit Originalbild links oben. }
+	\label{fig:color-aug}
+\end{figure}
+
+Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation} und \autoref{fig:color-aug}, 
+werden in ihrem Wertebereich pseudo-zufällig angewandt. 
 Sollte es die Veränderung erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
 schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei mit nichts Neuem konfrontiert ist. 
 \begin{enumerate}
@@ -360,23 +399,28 @@ schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei mit nichts Neuem
 	entstehenden Ränder werden mit Schwarz gefüllt. Auch diese Augmentation ist realistisch und erhöht lediglich 
 	die Möglichkeit der Veränderung der Bilder. 
 	\item Vertikale Verschiebung im Intervall von $[-0,1 \cdot h; 0,1 \cdot h]$ Pixel entlang der vertikalen Achse,
-	wobei $h$ die Höhe des Bildes ist. Ansonsten ist die vertikale Verschiebung wie die horizontale Verschiebung.    
+	wobei $h$ die Höhe des Bildes ist. Ansonsten ist die vertikale Verschiebung wie die horizontale Verschiebung.  
+	\item Erhöhung oder Senkung der Helligkeit des Bildes.
+	\item Erhöhung oder Senkung des Kontrasts des Bildes.
+	\item RGB-Shift. Es werden zufällige Werte im Intervall $[-30; 30]$ zu den drei 255-stufigen Kanälen rot, grün und blau addiert.   
+	\item Kanaltausch. Hierbei werden zufällig die Werte der Kanäle rot, grün und blau getauscht. 
+	\item Fab-Jitter. Es werden Helligkeit, Kontrast, Sättigung und Farbton zufällig angepasst. 
 \end{enumerate} 
+Punkte 6. bis 10. werden mit einer Wahrscheinlichkeit von 20\% durchgeführt und sind in \autoref{fig:color-aug} an einem Beispielbild dargestellt. 
 
 \autoref{fig:augmentation} zeigt eine beispielhafte Augmentierung des Bildes und der dazugehörigen Maske aus \autoref{fig:cut-example},
 wobei eine horizontale Spiegelung\footnote{Die Spiegelachse ist hierbei \textit{vertikal}.},
-eine Rotation um 13° und eine Verschiebung um 8\%, also $\lceil 0,08 \cdot 512 \rceil = 41$ Pixel, 
-nach links dargestellt ist. Es ist keine vertikale Spieglung oder vertikale Verschiebung vorhanden.
+eine Rotation um 13°, eine Verschiebung um 8\%, also $\lceil 0,08 \cdot 512 \rceil = 41$ Pixel,
+nach links und eine Erhöhung der Helligkeit um 60\% dargestellt ist. 
 Die Randbereiche, wofür aufgrund der Verschiebung und Rotation keine Daten vorhanden sind, sind mit Schwarz gefüllt. 
 
-Die angewandten Augmentationen sind eher konservativ gewählt. An den Bildern wird kaum etwas verändert, 
-außer die Pixel leicht umzusetzen. Dadurch würde ein augmentiertes Bild im Original-Datensatz nicht auffallen. 
-Auf weitergehende Veränderungen wie Gamma-Korrektur, Helligkeitsanpassung, Zoom und Scherung wird hingegen verzichtet. 
-Diese Veränderungen werden nicht vorgenommen, um mit dem Testdatensatz besser abschätzen zu können, 
-wie gut die Erkennung der Radwege allgemein - unter optimalen Bedingungen - funktioniert, ohne zunächst auf 
-maximale Generalsierungsfähigkeit zu untersuchen. Diese Abschätzung wird dann mithilfe des Testdatensatzes von 
-Karlsruhe, welcher im Erscheinungsbild stark vom BikeSat-Testdatensatz abweicht, vorgenommen, 
-indem die Ergebnisse für den BikeSat-Testdatensatz und den Karlsruhe-Datensatz verglichen werden. 
+Die angewandten Augmentationen sind so gewählt, dass eine maximale Generalisierungsfähigkeit erreicht werden kann. 
+Insbesondere die Farbveränderungen sollen ermöglichen, dass Städte mit unterschiedlichen Farben von Fahrradweg-Untergründen 
+zuverlässig generalisiert werden. Wie gut das funktioniert, kann der Karlsruhe-Datensats zeigen: Im BikeSat-Datensatz 
+besteht der Untergrund von Fahrradwegen häufig aus leicht rötlichen Pflastersteinen, während in Karlsruhe der Untergrund zumeist 
+aus Asphalt ist.   
+Auch sonst unterscheidet sich der Karlsruhe-Datensatz stark im Erscheinungsbild vom BikeSat-Datensatz. 
+Ein Vergleich der Ergebnisse auf den beiden Datensätzen im Ergebnis-Kapitel zeigt, ob die Augmentierungen effektiv sind. 
 
 \begin{figure}
 	\centering
@@ -389,9 +433,9 @@ indem die Ergebnisse für den BikeSat-Testdatensatz und den Karlsruhe-Datensatz 
 		\includegraphics[width=.7\linewidth]{Bilder/augmentation-example.png} 
 	\end{minipage}
 
-	\caption{Beispielhafte Datenaugmentation mit Originalbild und Maske in Rot links 
-	und augmentiertes (horizontale Spiegelung, Rotation, Verschiebung nach links) Bild 
-	mit Maske in Rot rechts.  }
+	\caption{Beispielhafte Augmentierung mit Originalbild und Maske in Rot links 
+	und augmentiertes (horizontale Spiegelung, Rotation, Verschiebung nach links, Helligkeit erhöht) Bild 
+	mit Maske in Rot rechts.}
 	\label{fig:augmentation}
 \end{figure} 
 
