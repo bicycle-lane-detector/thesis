@@ -459,6 +459,8 @@ Sei $P$ die Prediction der Segmentierungsmaske für ein Eingabebild, $Y$ die tat
 und $P, Y \in \{0, 1\}^{w{\times}h}$, wobei $w$ und $h$ die Breite und Höhe des Eingabebildes darstellen.
 Die Einträge mit Wert eins von $P$ und $Y$ sind Radweg, die Einträge mit Wert null Hintergrund. Einträge repräsentieren Pixel.
 $B$ sei die Puffergröße in Pixeln. \\
+Die folgenden Formeln beziehen sich auf die Bestimmung der \ac{BIoU} \textit{einer} Prediction $P$ zu \textit{einer} Ground-Truth-Maske $Y$. 
+Über einen Batch lassen sich die einzelnen \ac{BIoU}-Werte mitteln. 
 Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w{\times}h} \mapsto \{0,1\}^{w{\times}h}$ definiert als 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \begin{align}
@@ -466,12 +468,25 @@ Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w{\times}h} \mapsto \{0,1\}^
 		1 & \exists a_{kl} \in A: a_{kl} = 1 \land \norm{
 			\begin{pmatrix} k \\ l \end{pmatrix} - \begin{pmatrix} i \\ j \end{pmatrix} }_2 \leq B \\
 		0 & else 
-	\end{cases} \right)_{ij}~.
+	\end{cases} \right)_{1 \leq i \leq h, 1 \leq j \leq w}~.
 \end{align}
 Die Funktion $dilate_B$ bildet eine Matrix auf eine weitere derselben Ordnung ab, 
 sodass alle Einträge gleich eins sind, die in der Eingabematrix eins sind. Zusätzlich sind alle Einträge eins, 
 die im Umkreis von $B$ Pixel um eine Eins in der Eingabematrix liegen. Somit werden die positiven (Wert = 1)
 Pixel der Eingabematrix um die Bufferzone erweitert.  \\
+\autoref{eq:dilate_example} zeigt den Funktionswert von $dilate_B$ für eine Beispieleingabe 
+bei Puffergröße $B=1$.
+\begin{align}
+	\label{eq:dilate_example} dilate_1\left(\begin{pmatrix} 
+	0 & 0 & 1 \\ 
+	0 & 1 & 0 \\ 
+	0 & 0 & 0 
+	\end{pmatrix}\right) = \begin{pmatrix} 
+	0 & 1 & 1 \\ 
+	1 & 1 & 1 \\ 
+	0 & 1 & 0 
+	\end{pmatrix}~.
+\end{align}
 Damit lassen sich die gepufferten, fehlertoleranteren wahr-positiv $tp_B$, falsch-positiv $fp_B$ und 
 falsch-negativ $fn_B$ Werte berechnen: 
 \begin{align}
@@ -488,11 +503,12 @@ Durch die zuvor durchgeführte Pufferung mit $dilate_B$ sind allerdings auch Ein
 zuvor null waren. Hierdurch besitzt das Hadamard-Produkt mehr Einträge mit eins, als bei der Berechnung der \ac{IoU}.
 Diese Zahl ist genau um die Anzahl an positiven Pixeln aus $P$ größer, die in der Pufferzone liegen. 
 Schließlich wird mit der $1,1$-Höldernorm für Matritzen die Anzahl an Einsen gezählt, was dann $tp_B$ ergibt. \\
-Die Formel für die \ac{BIoU} ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten 
+Die Formel für die \ac{BIoU} pro Ausgabe ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten 
 Variablen:\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}
 \begin{align}
 	\label{eq:quality} BIoU = \frac{tp_B}{tp_B + fp_B + fn_B} ~.
 \end{align}
+Für einen \ac{BIoU}-Wert über einen Batch können die individuellen Werte pro Ausgabe gemittelt werden.
 
 \begin{figure}
 	\centering
