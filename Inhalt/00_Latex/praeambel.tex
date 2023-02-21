@@ -59,28 +59,34 @@
 \usepackage[
 	backend = biber,                % Verweis auf biber
 	language = auto,
-	style = numeric,                % Nummerierung der Quellen mit Zahlen
+	citestyle = numeric,                % Nummerierung der Quellen mit Zahlen
 	sorting = none,                 % none = Sortierung nach der Erscheinung im Dokument
 	sortcites = true,               % Sortiert die Quellen innerhalb eines cite-Befehls
 	block = space,                  % Extra Leerzeichen zwischen Blocks
 	hyperref = true,                % Links sind klickbar auch in der Quelle
 	%backref = true,                % Referenz, auf den Text an die zitierte Stelle
 	bibencoding = auto,
-	giveninits = true,              % Vornamen werden abgekürzt
+	giveninits = false,              % Vornamen werden NICHT abgekürzt
 	doi=false,                      % DOI nicht anzeigen
 	isbn=false,                     % ISBN nicht anzeigen
-    alldates=short                  % Datum immer als DD.MM.YYYY anzeigen
+    alldates=short,                 % Datum immer als DD.MM.YYYY anzeigen
+	bibstyle=mla   				% use the mla style for bibiliography
 ]{biblatex}
 \addbibresource{Inhalt/literatur.bib}
 \setcounter{biburlnumpenalty}{3000}     % Umbruchgrenze für Zahlen
 \setcounter{biburlucpenalty}{6000}      % Umbruchgrenze für Großbuchstaben
 \setcounter{biburllcpenalty}{9000}      % Umbruchgrenze für Kleinbuchstaben
 \DeclareNameAlias{default}{family-given}  % Nachname vor dem Vornamen
-\AtBeginBibliography{\renewcommand{\multinamedelim}{\addslash\space
-}\renewcommand{\finalnamedelim}{\multinamedelim}}  % Schrägstrich zwischen den Autorennamen
+% \AtBeginBibliography{\renewcommand{\multinamedelim}{\addslash\space
+% }\renewcommand{\finalnamedelim}{\multinamedelim}}  % Schrägstrich zwischen den Autorennamen
 \DefineBibliographyStrings{german}{
   urlseen = {Einsichtnahme:},                      % Ändern des Titels von "besucht am"
 }
+\makeatletter
+\input{numeric.bbx}
+\makeatother
+% \setlength\bibitemsep{0pt}
+
 \usepackage[babel,german=quotes]{csquotes}         % Deutsche Anführungszeichen + Zitate
 
 
