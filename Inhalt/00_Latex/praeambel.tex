@@ -78,6 +78,18 @@
 \setcounter{biburlucpenalty}{6000}      % Umbruchgrenze für Großbuchstaben
 \setcounter{biburllcpenalty}{9000}      % Umbruchgrenze für Kleinbuchstaben
 \DeclareNameAlias{default}{family-given}  % Nachname vor dem Vornamen
+\AtEveryBibitem{% remove from references
+  \clearname{translator}%
+  \clearlist{location}%
+  \clearfield{series}%
+  %\clearfield{url}%
+  \clearfield{note}%
+  \clearlist{language}%
+  \clearfield{pagetotal}%
+  \clearfield{edition}%
+  \clearfield{subtitle}%
+  %\clearfield{volume}%
+}
 % \AtBeginBibliography{\renewcommand{\multinamedelim}{\addslash\space
 % }\renewcommand{\finalnamedelim}{\multinamedelim}}  % Schrägstrich zwischen den Autorennamen
 \DefineBibliographyStrings{german}{
