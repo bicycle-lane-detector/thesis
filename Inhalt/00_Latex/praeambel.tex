@@ -59,7 +59,7 @@
 \usepackage[
 	backend = biber,                % Verweis auf biber
 	language = auto,
-	citestyle = numeric,                % Nummerierung der Quellen mit Zahlen
+	%citestyle = numeric,                % Nummerierung der Quellen mit Zahlen
 	sorting = none,                 % none = Sortierung nach der Erscheinung im Dokument
 	sortcites = true,               % Sortiert die Quellen innerhalb eines cite-Befehls
 	block = space,                  % Extra Leerzeichen zwischen Blocks
@@ -70,8 +70,9 @@
 	doi=false,                      % DOI nicht anzeigen
 	isbn=false,                     % ISBN nicht anzeigen
     alldates=short,                 % Datum immer als DD.MM.YYYY anzeigen
-	bibstyle=mla   				% use the mla style for bibiliography
+	style=numeric   				% use the mla style for bibiliography
 ]{biblatex}
+% https://tex.stackexchange.com/questions/12806/guidelines-for-customizing-biblatex-styles
 \addbibresource{Inhalt/literatur.bib}
 \setcounter{biburlnumpenalty}{3000}     % Umbruchgrenze für Zahlen
 \setcounter{biburlucpenalty}{6000}      % Umbruchgrenze für Großbuchstaben
@@ -81,10 +82,11 @@
 % }\renewcommand{\finalnamedelim}{\multinamedelim}}  % Schrägstrich zwischen den Autorennamen
 \DefineBibliographyStrings{german}{
   urlseen = {Einsichtnahme:},                      % Ändern des Titels von "besucht am"
+  in = {},
 }
-\makeatletter
-\input{numeric.bbx}
-\makeatother
+% \makeatletter
+% \input{numeric.bbx}
+% \makeatother
 % \setlength\bibitemsep{0pt}
 
 \usepackage[babel,german=quotes]{csquotes}         % Deutsche Anführungszeichen + Zitate
