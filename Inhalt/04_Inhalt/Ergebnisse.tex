@@ -97,16 +97,18 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
 
 \begin{figure}
 	\centering
-	\begin{minipage}{.41\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
 		\includegraphics[width=1.\linewidth]{Bilder/Samples-Bikesat/bunet2-s.png}
-	\end{minipage}
-	\begin{minipage}{.41\textwidth}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
 		\centering
 		\includegraphics[width=1.\linewidth]{Bilder/Samples-Bikesat/vbunet-l.png}
-	\end{minipage}
+		\caption{}
+	\end{subfigure}
 
-	\caption{Beispiel-Predictions des $BUNet2^*$ (links) und $VBUNet^l$ (rechts) auf dem BikeSat-Datensatz.}
+	\caption{Beispiel-Predictions des $BUNet2^*$ (a) und $VBUNet^l$ (b) auf dem BikeSat-Datensatz trainiert mit \textit{Basic}-Augmentation.}
 	\label{fig:bikesat-samples-bunet2-s-vbunet-l}
 \end{figure}
 
@@ -148,17 +150,36 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
 
 \begin{figure}
 	\centering
-	\begin{minipage}{.41\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
 		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-l.png}
-	\end{minipage}
-	\begin{minipage}{.41\textwidth}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
 		\centering
 		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-s.png}
-	\end{minipage}
+		\caption{}
+	\end{subfigure}
 
-	\caption{Beispiel-Predictions des $RBUNet^l$ (links) und $RBUNet^*$ (rechts) auf dem Karlsruhe-Datensatz.}
+	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz trainiert mit \textit{Basic}-Augmentation.}
 	\label{fig:ka-samples-rbunet-l-rbunet-s}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/karlsruhe-color-samples/rbunet-l.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/karlsruhe-color-samples/rbunet-s.png}
+		\caption{}
+	\end{subfigure}
+	\label{fig:ka-samples-rbunet-l-rbunet-s-color}
+	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz trainiert mit \textit{Color}-Augmentation.}
 \end{figure}
 
 \begin{table}[ht]
