@@ -90,8 +90,8 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
         DBUNet$^r$ & \textbf{32,12} & \textbf{62,99} & 14,03 & 51,73 &  30,30 & 61,24 & \textbf{17,43} & \textbf{62,28} \\
         
 	\end{tabular}
-	\caption{Ergebnisse der Modelle auf der Testpartition des BikeSat-Datensatzes und dem Karlsruhe-Datensatz 
-    in Prozent.}
+	\caption{Ergebnisse der Modelle auf der Testpartition des BikeSat-Datensatzes und dem Karlsruhe-Datensatz. 
+    In Prozent.}
 	\label{tab:results}
 \end{table}
 
@@ -141,8 +141,8 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
         DBUNet$^r$ & 19,77 & 36,33 &  \textbf{22,14} & 44,96 \\
         
 	\end{tabular}
-	\caption{Ergebnisse der Modelle auf dem Karlsruhe-Datensatz, wobei Bilder mit leeren Masken entfernt wurden, 
-    in Prozent.}
+	\caption{Ergebnisse der Modelle auf dem Karlsruhe-Datensatz, wobei Bilder mit leeren Masken entfernt wurden. 
+    In Prozent.}
 	\label{tab:results-ka-small}
 \end{table}
 
@@ -160,6 +160,42 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
 	\caption{Beispiel-Predictions des $RBUNet^l$ (links) und $RBUNet^*$ (rechts) auf dem Karlsruhe-Datensatz.}
 	\label{fig:ka-samples-rbunet-l-rbunet-s}
 \end{figure}
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|cc|cc|cc}
+        & \multicolumn{2}{c|}{\textcolor{gray}{BikeSat}} & \multicolumn{2}{c|}{\textcolor{gray}{Karlsruhe}} & \multicolumn{2}{c}{Wolfsburg} \\
+		Modell & \textcolor{gray}{\ac{IoU}} & \textcolor{gray}{\ac{BIoU}} & \textcolor{gray}{\ac{IoU}} & \textcolor{gray}{\ac{BIoU}} & \ac{IoU} & \ac{BIoU} \\
+		\midrule
+        BUNet2$^*$ & \textcolor{gray}{23,54} & \textcolor{gray}{47,71} & \textcolor{gray}{01,30} & \textcolor{gray}{34,80} &  28,44 & 57,30 \\
+        BUNet2$^l$ & \textcolor{gray}{24,48} & \textcolor{gray}{51,77} & \textcolor{gray}{02,19} & \textcolor{gray}{12,11} &  29,92 & 59,64 \\
+        BUNet2$^r$ & \textcolor{gray}{25,35} & \textcolor{gray}{51,27} & \textcolor{gray}{09,36} & \textcolor{gray}{47,57} &  28,62 & 57,98 \\
+		\midrule
+
+        BUNet15$^*$ & \textcolor{gray}{27,93} & \textcolor{gray}{56,55} & \textcolor{gray}{\textbf{21,52}} & \textcolor{gray}{\textbf{59,25}} &  30,68 & 61,86 \\
+        BUNet15$^l$ & \textcolor{gray}{28,14} & \textcolor{gray}{57,14} & \textcolor{gray}{16,47} & \textcolor{gray}{54,17} &  31,31 & 61,71 \\
+        BUNet15$^r$ & \textcolor{gray}{28,22} & \textcolor{gray}{57,26} & \textcolor{gray}{10,17} & \textcolor{gray}{53,81} &  30,99 & 60,84 \\
+		\midrule
+
+        VBUNet$^*$ & \textcolor{gray}{30,45} & \textcolor{gray}{61,48} & \textcolor{gray}{09,69} & \textcolor{gray}{37,84} &  \textbf{32,90} & \textbf{66,08} \\
+        VBUNet$^l$ & \textcolor{gray}{\underline{\textbf{32,24}}} & \textcolor{gray}{\textbf{62,93}} & \textcolor{gray}{12,85} & \textcolor{gray}{54,91} &  22,79 & 50,18 \\
+        VBUNet$^r$ & \textcolor{gray}{\textbf{31,84}} & \textcolor{gray}{61,51} & \textcolor{gray}{17,53} & \textcolor{gray}{\textbf{61,51}} &  27,53 & 56,97 \\
+		\midrule
+
+        RBUNet$^*$ & \textcolor{gray}{29,11} & \textcolor{gray}{60,53} & \textcolor{gray}{11,74} & \textcolor{gray}{32,80} &  \underline{\textbf{34,42}} & \textbf{67,74} \\
+        RBUNet$^l$ & \textcolor{gray}{30,98} & \textcolor{gray}{60,51} & \textcolor{gray}{\underline{\textbf{24,67}}} & \textcolor{gray}{\underline{\textbf{65,27}}} &  30,80 & 63,30 \\
+        RBUNet$^r$ & \textcolor{gray}{31,31} & \textcolor{gray}{\underline{\textbf{63,55}}} & \textcolor{gray}{\textbf{18,21}} & \textcolor{gray}{55,53} &  31,17 & 63,47 \\
+		\midrule
+
+        DBUNet$^*$ & \textcolor{gray}{30,76} & \textcolor{gray}{61,78} & \textcolor{gray}{07,14} & \textcolor{gray}{45,97} &  \textbf{33,70} & \underline{\textbf{68,48}} \\
+        DBUNet$^l$ & \textcolor{gray}{31,55} & \textcolor{gray}{62,38} & \textcolor{gray}{17,47} & \textcolor{gray}{55,20} &  31,02 & 63,21 \\
+        DBUNet$^r$ & \textcolor{gray}{\textbf{32,12}} & \textcolor{gray}{\textbf{62,99}} & \textcolor{gray}{14,03} & \textcolor{gray}{51,73} &  31,48 & 64,48 \\
+        
+	\end{tabular}
+	\caption{Ergebnisse der Modelle auf dem Wolfsburg-Datensatz mit farbverändernden Augmentierungen. In Prozent.
+	(Die Ergebnisse von BikeSat und Karlsruhe entsprechen \autoref{tab:results} und sind zur einfacheren Vergleichbarkeit erneut aufgeführt.)}
+	\label{tab:results-wolfsburg}
+\end{table}
 
 \autoref{tab:results} zeigt die Test-Ergebnisse der Modelle nach Training (s. \autoref{sec:training} für Details) auf dem BikeSat-Datensatz 
 (s. \autoref{sec:bike-data}) in Prozent. Zusätzlich zeigt die Tabelle die Test-Ergebnisse auf allen 196 $512{\times}512$-Ausschnitten 
