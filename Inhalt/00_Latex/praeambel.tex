@@ -66,11 +66,12 @@
 	hyperref = true,                % Links sind klickbar auch in der Quelle
 	%backref = true,                % Referenz, auf den Text an die zitierte Stelle
 	bibencoding = auto,
-	giveninits = false,              % Vornamen werden NICHT abgekürzt
+	giveninits = true,              % Vornamen werden NICHT abgekürzt
 	doi=false,                      % DOI nicht anzeigen
 	isbn=false,                     % ISBN nicht anzeigen
     alldates=short,                 % Datum immer als DD.MM.YYYY anzeigen
-	style=numeric   				% use the mla style for bibiliography
+	style=numeric,   				% use the mla style for bibiliography
+	maxnames=2                  % use et al. if more than 2 names
 ]{biblatex}
 % https://tex.stackexchange.com/questions/12806/guidelines-for-customizing-biblatex-styles
 \addbibresource{Inhalt/literatur.bib}
@@ -78,11 +79,15 @@
 \setcounter{biburlucpenalty}{6000}      % Umbruchgrenze für Großbuchstaben
 \setcounter{biburllcpenalty}{9000}      % Umbruchgrenze für Kleinbuchstaben
 \DeclareNameAlias{default}{family-given}  % Nachname vor dem Vornamen
+\DeclareFieldFormat[inproceedings]{booktitle}{In Proc. #1}
+\DeclareFieldFormat[inproceedings,article,thesis,book,misc,online]{title}{#1}
+\DeclareFieldFormat[article]{journaltitle}{#1}
 \AtEveryBibitem{% remove from references
   \clearname{translator}%
   \clearlist{location}%
   \clearfield{series}%
   %\clearfield{url}%
+  \ifentrytype{inproceedings}{\clearfield{url}}{}
   \clearfield{note}%
   \clearlist{language}%
   \clearfield{pagetotal}%
@@ -92,6 +97,7 @@
   \clearfield{eprint}%
   \clearfield{eventtitle}%
   \clearfield{venue}%
+  \clearfield{titleaddon}
 }
 % \AtBeginBibliography{\renewcommand{\multinamedelim}{\addslash\space
 % }\renewcommand{\finalnamedelim}{\multinamedelim}}  % Schrägstrich zwischen den Autorennamen
