@@ -192,7 +192,40 @@ als Gütemaß $0,292 \cdot (0,3 + \frac{1}{2} \cdot 0,5) = 0,1606$ also $16,06\%
 % dafür kannst du natürlich viele Bilder in das Kapitel ballern
 % der datensatz-code hat jetzt auch die möglichkeit den ganzen karren mit rotem overlay von radwegen zu generieren
 
-\section{Karlsruhe-Testdatensatz} \label{sec:karlsruhe}
+\section{Wolfsburg-Datensatz} \label{sec:wolfsburg}
+
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/comp-bikesat.png} 
+	\end{minipage}
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/comp-wolfsburg.png} 
+	\end{minipage}
+
+	\caption{Zufällig ausgewählte $512{\times}512$-Pixel-Auschnitte des BikeSat-Datensatzes (links) 
+	und Wolfsburg-Datensatzes (rechts). Die Bilder sind sich optisch sehr ähnlich.}
+	\label{fig:comp-bikesat-wolfsburg}
+\end{figure} 
+
+Um die Generalisierungsfähigkeit und Robustheit der entstehenden Netze besser bewerten zu können, sei an dieser Stelle 
+der Wolfsburg-Datensatz eingeführt, der eine Stadt abbildet, die bisher nicht im BikeSat-Datensatz enthalten ist. 
+Der Wolfsburg-Datensatz wird genau auf die gleiche Weise erstellt, wie 
+der in \autoref{sec:bike-data} beschriebene BikeSat-Datensatz. Es werden ebenfalls Luftaufnahmen aus dersselben Quelle
+aus Niedersachsen verwendet, 
+die von der Optik kaum Unterschiede zu den im BikeSat-Datensatz verwendeten Städten aufweisen, wie 
+\autoref{fig:comp-bikesat-wolfsburg} illustriert. Die beiden Bilder ähneln sich nicht nur in Sättigung, Kontrast,
+Helligkeit, Schatten, Schärfe und Farbtemperatur, sondern auch im Inhalt, wie der Jahreszeit zum Aufnahmezeitpunkt 
+(kahle Bäume), Wetter (sonnig), Sonnenstand (Schattenausdehnung und -winkel) und sogar Farbe des Radweges 
+(dunkleres grau im Kontrast zu dem hellgrauen Gehweg). Da die Bilder sich sehr ähneln, ist der Hauptunterschied 
+das Stadtbild, wodurch isoliert untersucht werden kann, ob dieses einen Unterschied in der Performanz der Netze macht. 
+Das ist vor allem interessant, weil der nachfolgend beschriebene Karlsruhe-Datensatz Bilder mit anderer Optik 
+aufweist und somit eine Bewertung, was eventuell abweichende Performance hervorruft, verkompliziert. \\ 
+Der Wolfsburg-Datensatz besteht aus 442 $512\times 512$-Pixel-Ausschnitten mit Radwegen. 
+
+\section{Karlsruhe-Datensatz} \label{sec:karlsruhe}
 
 
 \begin{figure}[h]
@@ -206,7 +239,7 @@ Der Karlsruhe-Datensatz besteht aus Luftaufnahmen und manuell von Menschen annot
 über eine Stadtfläche von $1433{\times}1433~ m^2$ bzw. ca. $2,054~ km^2$, was im Vergleich zu den 
 $572~ km^2$ des BikeSat-Datensatzes also eher wenig ist. Ein Pixel im Karlsruhe-Datensatz entspricht $0,2~m$, 
 also hat der Datensatz eine GSD von $20 \frac{cm}{px}$.
-Der gesamte Datensatz samt rot annotierter Radstreifen ist in einem 
+Der gesamte Datensatz samt cyanfarben annotierter Radstreifen ist in einem 
 $7168{\times}7168$ Pixel großen Bild in \autoref{fig:karlsruhe-data} zu sehen. Es fällt auf, 
 dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt einen Ausschnitt der Karlsruher Weststadt im März 2022. 
 
@@ -217,6 +250,31 @@ kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen, insb
 im Training noch in der Validation des BikeSat-Datensatzes vorkommt, wodurch es sich um wahrhaftig neue Eingabedaten für die Modedelle handelt. 
 Es ist auch vorteilhaft, dass im Datensatz Radwege eher unterrepräsentiert sind, womit getestet werden kann, 
 ob Straßen allgemein alle Radwege erhalten oder eine echte Unterscheidung der Straßen im Modell stattfindet.
+
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/comp-bikesat.png} 
+	\end{minipage}
+	\begin{minipage}{.45\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{Bilder/comp-karlsruhe.png} 
+	\end{minipage}
+
+	\caption{$512{\times}512$-Pixel-Auschnitte des BikeSat-Datensatzes (links) 
+	und Karlsruhe-Datensatzes (rechts). Die Bilder unterscheiden sich sichtlich.}
+	\label{fig:comp-bikesat-karlsruhe}
+\end{figure} 
+
+Weiter besteht ein starker optischer Unterschied zwischen den Bildern des BikeSat-, bzw. Wolfsburg-Datensatzes 
+und dem Karlsruhe-Datensatz, wie \autoref{fig:comp-bikesat-karlsruhe} zeigt. Die Bilder von Karlsruhe weisen
+eine stärkere Sättigung, höheren Kontrast, dunklere Schatten und höhere Schärfe auf. Inhaltlich sind beide 
+Bilder augenscheinlich bei sonnigem Wetter, ähnlichem Sonnenstand und gleicher Jahreszeit entstanden, jedoch 
+fällt sofort auf, dass der Radweg auf der rechten Straßenseite im Karlsruhe-Bild vom Fußweg lediglich durch 
+einen Strich getrennt ist, jedoch keine andere Farbe wie im BikeSat-Bild aufweist. Auch ist der Radweg auf 
+der linken Straßenseite direkt auf der Straße (gleiche Farbe wie die Straße) und recht breit für einen Radweg.   
+Wegen dieser Unterschiede, ist der Karlsruhe-Datensatz gut geeignet, um die Robustheit der Netze einzuschätzen. 
 
 
 \section{Pre-Processing} \label{sec:pre-processing}
@@ -240,19 +298,6 @@ Selbst in Bildern der Innenstadt haben oft nur größere Straßen dedizierte Rad
 Großteil des Bildes mit Wohngebiet gefüllt ist. 
 Somit ist nur ein verschwindender Anteil aller Pixel des Datensatzes als Radweg markiert. 
 
-\begin{wrapfigure}{r}{0.40\textwidth}
-	\centering
-	\vspace{-30pt} % Manchmal möchte man den oberen Abstand selbst anpassen
-	\includegraphics[width=0.35\textwidth]{Bilder/cut-example.jpg}
-	\vspace{-10pt}
-	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
-	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
-	% im Abbildungsverzeichnis. Der Text darunter wird
-	% tatsächlich angezeigt.
-	\caption[Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz.]{\unskip}
-	Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.
-	\label{fig:cut-example}
-\end{wrapfigure}
 
 Um den Anteil an als Radweg annotierte Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
 die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist ein ganzes 
@@ -271,6 +316,19 @@ Aus diesen Gründen wird als Kompromiss die $512{\times}512$-Größe gewählt. S
 $512 \cdot 0,2m = 102,4m$. Die Zweierpotenz wird gewählt, 
 sodass das Bild nicht zu klein wird in der U-Net-Struktur, bzw. damit eine saubere Teilung der 
 Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren. 
+
+\begin{wrapfigure}{l}{0.40\textwidth}
+	\centering
+	\vspace{-20pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.35\textwidth]{Bilder/cut-example.jpg}
+	% \vspace{-10pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption{Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.}
+	\label{fig:cut-example}
+\end{wrapfigure}
 
 Jedes $10.000{\times}10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
 $\left\lceil{\frac{10.000}{512}}\right\rceil^2 = 400$ Teile geschnitten. 
@@ -303,8 +361,8 @@ zum Beispiel nur in dem Validation- oder Testdatensatz vorkommen.
 
 \autoref{tab:bike-split} zeigt den im Folgenden verwendeten Trainings-Validation-Test-Split. 
 Hierbei sind zwei Dinge zu bemerken, die nicht aus der Tabelle hervorgehen: 
-Zunächst wurde der Testdatensatz abgespalten. Hierzu wurden 15\% vom Hannover-Datensatz und 
-20\% von den jeweiligen Datensätzen der restlichen Städte als Testdatensatz abgespaltet. Da der Hannover-Datensatz so groß ist, wie die Datensätze der
+Zunächst ist der Testdatensatz abgespalten. Hierzu wird 15\% vom Hannover-Datensatz und 
+20\% von den jeweiligen Datensätzen der restlichen Städte als Testpartition abgespaltet. Da der Hannover-Datensatz so groß ist, wie die Datensätze der
 restlichen Städte zusammen, läuft dies auf einen eher unkonventionellen Split von 17,5\% Testdaten hinaus. Diese Verteilung wurde so getroffen, 
 um den Hannover-Datensatz etwas weniger zu gewichten, um im Test die Generalisierungsfähigkeit besser testen zu können
 und den Einfluss der kleineren Städte auf die Generalisierungsfähigkeit zu erhöhen. Der Validation-Teildatensatz wurde danach aus 8\%, 
@@ -851,7 +909,7 @@ Fine-Tuning-Methoden zu einem signifikanten Unterschied in der Performanz führe
 wie aus der Literatur (vgl. \autoref{sec:transfer-learning}) hervorgeht. 
 
 Weiter werden die verschiedenen trainierten Modelle durch die Test-Partition des BikeSat-Datensatzes und durch den Karlsruhe-Datensatz 
-getestet und über die in \autoref{sec:evaluation} ausgewählten Maße bewertet.
+getestet und über die in \autoref{sec:eval} ausgewählten Maße bewertet.
 
 
 % \begin{algorithm}
