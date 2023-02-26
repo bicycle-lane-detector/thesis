@@ -10,8 +10,8 @@ wird eine Übersicht über die benötigte Trainingszeit für die Modelle gegeben
     \item Eine Epoche des Trainings auf dem BikeSat-Datensatz dauert zwischen 10 und 17 Minuten. 
     \item Die Netze konvergieren nach circa 33-57 Epochen auf beiden Datensätzen. 
     \item Das Training wird immer vorzeitig vor dem Ablaufen der 100 Epochen beendet.
-    \item Der zeitliche Mehraufwand durch die Daten-Augmentierung während des Trainings (vgl. \autoref{sec:pre-processing}) 
-    liegt im Schnitt bei 3 min 30s pro Epoche.  
+    \item Der zeitliche Mehraufwand durch die Bild-Augmentierung während des Trainings (vgl. \autoref{sec:pre-processing}) 
+    liegt im Schnitt bei 3 min 30s pro Epoche für beide Augmentierungsmethoden (Basic-Augmentation und Color-Augmentation).  
 \end{itemize}
 
 \section{Pre-Training-Ergebnisse zur Straßenerkennung}
@@ -87,15 +87,97 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
 
         DBUNet$^*$ & 30,76 & 61,78 & 07,14 & 45,97 &  \textbf{32,24} & \textbf{64,77} & 14,64 & 50,02 \\
         DBUNet$^l$ & 31,55 & 62,38 & 17,47 & 55,20 &  29,64 & 60,47 & 14,83 & 51,19 \\
-        DBUNet$^r$ & \textbf{32,12} & \textbf{62,99} & 14,03 & 51,73 &  30,30 & 61,24 & \textbf{17,43} & \textbf{62,28} \\
+        DBUNet$^r$ & \textbf{32,12} & \textbf{62,99} & 14,03 & 51,73 &  30,30 & 61,24 & 17,43 & \textbf{62,28} \\
         
 	\end{tabular}
-	\caption{Ergebnisse der Modelle auf der Testpartition des BikeSat-Datensatzes und dem Karlsruhe-Datensatz. 
+	\caption{Ergebnisse der Modelle auf der Testpartition des BikeSat-Datensatzes und dem Karlsruhe-Datensatz
+	für beide Augmentierungsmethoden. 
     In Prozent.}
 	\label{tab:results}
 \end{table}
 
-\begin{figure}
+\autoref{tab:results} zeigt die Test-Ergebnisse der Modelle nach Training (s. \autoref{sec:training} für Details) auf dem BikeSat-Datensatz 
+(s. \autoref{sec:bike-data}) für jede Augmentierungsmethode (Basic- u. Color-Augmentation) während des Trainings in Prozent. 
+Zusätzlich zeigt die Tabelle die Test-Ergebnisse auf allen 196 $512{\times}512$-Ausschnitten 
+des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. Der Karlsruhe-Datensatz in dieser Tabelle
+enthält auch Ausschnitte, die \textit{keine} Radwege enthalten. \\ 
+Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
+Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.\\
+
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{l|cc|cc|cc}
+        & \multicolumn{2}{c|}{\textcolor{gray}{BikeSat}} & \multicolumn{2}{c|}{\textcolor{gray}{Karlsruhe}} & \multicolumn{2}{c}{Wolfsburg} \\
+		Modell & \textcolor{gray}{\ac{IoU}} & \textcolor{gray}{\ac{BIoU}} & \textcolor{gray}{\ac{IoU}} & \textcolor{gray}{\ac{BIoU}} & \ac{IoU} & \ac{BIoU} \\
+		\midrule
+        BUNet2$^*$ & \textcolor{gray}{27,47} & \textcolor{gray}{55,19} & \textcolor{gray}{12,69} & \textcolor{gray}{47,53} &  28,44 & 57,30 \\
+        BUNet2$^l$ & \textcolor{gray}{28,06} & \textcolor{gray}{57,21} & \textcolor{gray}{08,54} & \textcolor{gray}{39,19} &  29,92 & 59,64 \\
+        BUNet2$^r$ & \textcolor{gray}{25,95} & \textcolor{gray}{53,73} & \textcolor{gray}{04,56} & \textcolor{gray}{25,97} &  28,62 & 57,98 \\
+		\midrule
+
+        BUNet15$^*$ & \textcolor{gray}{30,80} & \textcolor{gray}{59,99} & \textcolor{gray}{06,84} & \textcolor{gray}{33,23} &  30,68 & 61,86 \\
+        BUNet15$^l$ & \textcolor{gray}{30,98} & \textcolor{gray}{60,50} & \textcolor{gray}{07,47} & \textcolor{gray}{30,20} &  31,31 & 61,71 \\
+        BUNet15$^r$ & \textcolor{gray}{29,95} & \textcolor{gray}{59,46} & \textcolor{gray}{08,23} & \textcolor{gray}{26,82} &  30,99 & 60,84 \\
+		\midrule
+
+        VBUNet$^*$ & \textcolor{gray}{\textbf{31,71}} & \textcolor{gray}{\textbf{61,32}} & \textcolor{gray}{09,29} & \textcolor{gray}{31,15} &  \textbf{32,90} & \textbf{66,08} \\
+        VBUNet$^l$ & \textcolor{gray}{21,91} & \textcolor{gray}{45,88} & \textcolor{gray}{03,19} & \textcolor{gray}{23,25} &  22,79 & 50,18 \\
+        VBUNet$^r$ & \textcolor{gray}{25,65} & \textcolor{gray}{51,82} & \textcolor{gray}{10,74} & \textcolor{gray}{32,31} &  27,53 & 56,97 \\
+		\midrule
+
+        RBUNet$^*$ & \textcolor{gray}{\underline{\textbf{33,54}}} & \textcolor{gray}{\underline{\textbf{65,02}}} & \textcolor{gray}{\textbf{23,24}} & \textcolor{gray}{\textbf{65,71}} &  \underline{\textbf{34,42}} & \textbf{67,74} \\
+        RBUNet$^l$ & \textcolor{gray}{29,32} & \textcolor{gray}{59,83} & \textcolor{gray}{09,67} & \textcolor{gray}{53,08} &  30,80 & 63,30 \\
+        RBUNet$^r$ & \textcolor{gray}{29,42} & \textcolor{gray}{59,58} & \textcolor{gray}{\underline{\textbf{34,66}}} & \textcolor{gray}{\underline{\textbf{68,26}}} &  31,17 & 63,47 \\
+		\midrule
+
+        DBUNet$^*$ & \textcolor{gray}{\textbf{32,24}} & \textcolor{gray}{\textbf{64,77}} & \textcolor{gray}{14,64} & \textcolor{gray}{50,02} &  \textbf{33,70} & \underline{\textbf{68,48}} \\
+        DBUNet$^l$ & \textcolor{gray}{29,64} & \textcolor{gray}{60,47} & \textcolor{gray}{14,83} & \textcolor{gray}{51,19} &  31,02 & 63,21 \\
+        DBUNet$^r$ & \textcolor{gray}{30,30} & \textcolor{gray}{61,24} & \textcolor{gray}{\textbf{17,43}} & \textcolor{gray}{\textbf{62,28}} &  31,48 & 64,48 \\
+        
+	\end{tabular}
+	\caption{Ergebnisse der Modelle auf dem Wolfsburg-Datensatz mit farbverändernden Augmentierungen (Color-Aug.). In Prozent.
+	(Die Ergebnisse von BikeSat und Karlsruhe entsprechen \autoref{tab:results} und sind zur einfacheren Vergleichbarkeit erneut aufgeführt.)}
+	\label{tab:results-wolfsburg}
+\end{table}
+
+\autoref{tab:results-wolfsburg} ergänzt \autoref{tab:results} um die Ergebnisse auf dem Wolfsburg-Datensatz für 
+Training mit Color-Augmentation. Zur besseren Übersichtlichkeit sind die Ergebnisse für Basic-Aug. hier ausgespart, 
+da diese weniger interessant sind. 
+\begin{enumerate}
+	\item Es fällt auf, dass sowohl die \ac{IoU} als auch die \ac{BIoU} für alle Modelle
+	auf dem Wolfsburg-Datensatz besser ist, als auf der Testpartition des BikeSat-Datensatzes.  
+	Selbiges gilt für den Vergleich von Wolfsburg mit Karlsruhe, bis auf die Modelle VBUNet$^l$ und 
+	RBUNet$^r$, die auf dem Karlsruhe-Datensatz in IoU sowie BIoU höhere Werte erzielen, als auf dem Wolfsburg-Datensatz.
+	\item Über alle Datensätze performt RBUNet$^*$ am besten. Es liefert über alle sechs Maßzahlen Top-3-Ergebnisse wobei es 
+	in für drei davon am besten performt. 
+	\item Darüber hinaus ist auffällig, wie viel schlechter die vortrainierten Varianten der VBUNet-Architektur performen. 
+	Während VBUNet$^*$ auf dem BikeSat- und Wolfsburg-Datensatz solide Ergebnisse liefert, liegen VBUNet$^l$ und VBUNet$^r$ 
+	weit unterhalb. Bei der IoU 10 Prozentpunkte, bei der BIoU bis zu 16 Prozentpunkte.
+	\item Generell performen die Netze der \ac{BUNet2}-Architektur schlechter als die der \ac{BUNet15}-Architektur.
+	\item Interessanterweise performen die vortrainierten Modelle der Backbone-Architekturen auf dem BikeSat- und 
+	Wolfsburg-Datensatz konstant schlechter als die nicht vortrainierten. Die rechtsseitig vortrainierten zeigen 
+	allerdings bessere Performance auf dem Karlsruhe-Datensatz als die anderen Modelle der jeweiligen Backbone-Archtiektur.\\
+	Für Modelle der BUNet-Architektur sind die Ergebnisse recht ähnlich und es ist keine schlechtere Performance
+	zu beobachten. 
+\end{enumerate}
+
+
+\subsection{Beispiel-Predictions ausgewählter Netze}
+
+\autoref{fig:bikesat-samples-bunet2-s-vbunet-l} zeigt ausgewählte Beispielpredictions des $BUNet2^*$ (a) und 
+des $VBUNet^l$ (b) auf dem BikeSat-Datensatz bei Training mit Basic-Augmentation.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-bikesat}.}
+
+\autoref{fig:ka-samples-rbunet-l-rbunet-s} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
+des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Basic-Augmentation.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-karlsruhe}.}
+
+\autoref{fig:ka-samples-rbunet-l-rbunet-s-color} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
+des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Color-Augmentation.
+
+\autoref{fig:wolfsburg-samples-rbunet-l-rbunet-s-color} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
+des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentation.
+
+\begin{figure}[h]
 	\centering
 	\begin{subfigure}{.4\textwidth}
 		\centering
@@ -111,6 +193,60 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
 	\caption{Beispiel-Predictions des $BUNet2^*$ (a) und $VBUNet^l$ (b) auf dem BikeSat-Datensatz trainiert mit \textit{Basic}-Augmentation.}
 	\label{fig:bikesat-samples-bunet2-s-vbunet-l}
 \end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-l.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-s.png}
+		\caption{}
+	\end{subfigure}
+
+	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz trainiert mit \textit{Basic}-Augmentation.}
+	\label{fig:ka-samples-rbunet-l-rbunet-s}
+\end{figure}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/karlsruhe-color-samples/rbunet-l.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/karlsruhe-color-samples/rbunet-s.png}
+		\caption{}
+	\end{subfigure}
+	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz trainiert mit \textit{Color}-Augmentation.}
+	\label{fig:ka-samples-rbunet-l-rbunet-s-color}
+\end{figure}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/wolfsburg-color-samples/rbunet-l.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/wolfsburg-color-samples/rbunet-s.png}
+		\caption{}
+	\end{subfigure}
+	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz trainiert mit \textit{Color}-Augmentation.}
+	\label{fig:wolfsburg-samples-rbunet-l-rbunet-s-color}
+\end{figure}
+
+
+\subsection{Ergebnisse auf gefiltertem Karlsruhe-Datensatz}
 
 \begin{table}[ht]
 	\centering
@@ -148,109 +284,9 @@ des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-c
 	\label{tab:results-ka-small}
 \end{table}
 
-\begin{figure}
-	\centering
-	\begin{subfigure}{.4\textwidth}
-		\centering
-		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-l.png}
-		\caption{}
-	\end{subfigure}
-	\begin{subfigure}{.4\textwidth}
-		\centering
-		\includegraphics[width=1.\linewidth]{Bilder/Samples-KA/rbunet-s.png}
-		\caption{}
-	\end{subfigure}
-
-	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz trainiert mit \textit{Basic}-Augmentation.}
-	\label{fig:ka-samples-rbunet-l-rbunet-s}
-\end{figure}
-
-
-\begin{figure}
-	\centering
-	\begin{subfigure}{.4\textwidth}
-		\centering
-		\includegraphics[width=1.\textwidth]{Bilder/karlsruhe-color-samples/rbunet-l.png}
-		\caption{}
-	\end{subfigure}
-	\begin{subfigure}{.4\textwidth}
-		\centering
-		\includegraphics[width=1.\textwidth]{Bilder/karlsruhe-color-samples/rbunet-s.png}
-		\caption{}
-	\end{subfigure}
-	\label{fig:ka-samples-rbunet-l-rbunet-s-color}
-	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz trainiert mit \textit{Color}-Augmentation.}
-\end{figure}
-
-
-\begin{figure}
-	\centering
-	\begin{subfigure}{.4\textwidth}
-		\centering
-		\includegraphics[width=1.\textwidth]{Bilder/wolfsburg-color-samples/rbunet-l.png}
-		\caption{}
-	\end{subfigure}
-	\begin{subfigure}{.4\textwidth}
-		\centering
-		\includegraphics[width=1.\textwidth]{Bilder/wolfsburg-color-samples/rbunet-s.png}
-		\caption{}
-	\end{subfigure}
-	\label{fig:wolfsburg-samples-rbunet-l-rbunet-s-color}
-	\caption{Beispiel-Predictions des $RBUNet^l$ (a) und $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz trainiert mit \textit{Color}-Augmentation.}
-\end{figure}
-
-
-\begin{table}[ht]
-	\centering
-	\begin{tabular}{l|cc|cc|cc}
-        & \multicolumn{2}{c|}{\textcolor{gray}{BikeSat}} & \multicolumn{2}{c|}{\textcolor{gray}{Karlsruhe}} & \multicolumn{2}{c}{Wolfsburg} \\
-		Modell & \textcolor{gray}{\ac{IoU}} & \textcolor{gray}{\ac{BIoU}} & \textcolor{gray}{\ac{IoU}} & \textcolor{gray}{\ac{BIoU}} & \ac{IoU} & \ac{BIoU} \\
-		\midrule
-        BUNet2$^*$ & \textcolor{gray}{23,54} & \textcolor{gray}{47,71} & \textcolor{gray}{01,30} & \textcolor{gray}{34,80} &  28,44 & 57,30 \\
-        BUNet2$^l$ & \textcolor{gray}{24,48} & \textcolor{gray}{51,77} & \textcolor{gray}{02,19} & \textcolor{gray}{12,11} &  29,92 & 59,64 \\
-        BUNet2$^r$ & \textcolor{gray}{25,35} & \textcolor{gray}{51,27} & \textcolor{gray}{09,36} & \textcolor{gray}{47,57} &  28,62 & 57,98 \\
-		\midrule
-
-        BUNet15$^*$ & \textcolor{gray}{27,93} & \textcolor{gray}{56,55} & \textcolor{gray}{\textbf{21,52}} & \textcolor{gray}{\textbf{59,25}} &  30,68 & 61,86 \\
-        BUNet15$^l$ & \textcolor{gray}{28,14} & \textcolor{gray}{57,14} & \textcolor{gray}{16,47} & \textcolor{gray}{54,17} &  31,31 & 61,71 \\
-        BUNet15$^r$ & \textcolor{gray}{28,22} & \textcolor{gray}{57,26} & \textcolor{gray}{10,17} & \textcolor{gray}{53,81} &  30,99 & 60,84 \\
-		\midrule
-
-        VBUNet$^*$ & \textcolor{gray}{30,45} & \textcolor{gray}{61,48} & \textcolor{gray}{09,69} & \textcolor{gray}{37,84} &  \textbf{32,90} & \textbf{66,08} \\
-        VBUNet$^l$ & \textcolor{gray}{\underline{\textbf{32,24}}} & \textcolor{gray}{\textbf{62,93}} & \textcolor{gray}{12,85} & \textcolor{gray}{54,91} &  22,79 & 50,18 \\
-        VBUNet$^r$ & \textcolor{gray}{\textbf{31,84}} & \textcolor{gray}{61,51} & \textcolor{gray}{17,53} & \textcolor{gray}{\textbf{61,51}} &  27,53 & 56,97 \\
-		\midrule
-
-        RBUNet$^*$ & \textcolor{gray}{29,11} & \textcolor{gray}{60,53} & \textcolor{gray}{11,74} & \textcolor{gray}{32,80} &  \underline{\textbf{34,42}} & \textbf{67,74} \\
-        RBUNet$^l$ & \textcolor{gray}{30,98} & \textcolor{gray}{60,51} & \textcolor{gray}{\underline{\textbf{24,67}}} & \textcolor{gray}{\underline{\textbf{65,27}}} &  30,80 & 63,30 \\
-        RBUNet$^r$ & \textcolor{gray}{31,31} & \textcolor{gray}{\underline{\textbf{63,55}}} & \textcolor{gray}{\textbf{18,21}} & \textcolor{gray}{55,53} &  31,17 & 63,47 \\
-		\midrule
-
-        DBUNet$^*$ & \textcolor{gray}{30,76} & \textcolor{gray}{61,78} & \textcolor{gray}{07,14} & \textcolor{gray}{45,97} &  \textbf{33,70} & \underline{\textbf{68,48}} \\
-        DBUNet$^l$ & \textcolor{gray}{31,55} & \textcolor{gray}{62,38} & \textcolor{gray}{17,47} & \textcolor{gray}{55,20} &  31,02 & 63,21 \\
-        DBUNet$^r$ & \textcolor{gray}{\textbf{32,12}} & \textcolor{gray}{\textbf{62,99}} & \textcolor{gray}{14,03} & \textcolor{gray}{51,73} &  31,48 & 64,48 \\
-        
-	\end{tabular}
-	\caption{Ergebnisse der Modelle auf dem Wolfsburg-Datensatz mit farbverändernden Augmentierungen. In Prozent.
-	(Die Ergebnisse von BikeSat und Karlsruhe entsprechen \autoref{tab:results} und sind zur einfacheren Vergleichbarkeit erneut aufgeführt.)}
-	\label{tab:results-wolfsburg}
-\end{table}
-
-\autoref{tab:results} zeigt die Test-Ergebnisse der Modelle nach Training (s. \autoref{sec:training} für Details) auf dem BikeSat-Datensatz 
-(s. \autoref{sec:bike-data}) in Prozent. Zusätzlich zeigt die Tabelle die Test-Ergebnisse auf allen 196 $512{\times}512$-Ausschnitten 
-des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. Der Karlsruhe-Datensatz in dieser Tabelle
-enthält Ausschnitte, die keine Radwege enthalten. \\ 
-Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
-Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
-
-\autoref{fig:bikesat-samples-bunet2-s-vbunet-l} zeigt ausgewählte Beispielpredictions des $BUNet2^*$ (links) und 
-des $VBUNet^l$.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-bikesat}.}
-
-\autoref{fig:ka-samples-rbunet-l-rbunet-s} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (links) und 
-des $RBUNet^*$.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-karlsruhe}.}
-
-\autoref{tab:results-ka-small} zeigt die Test-Ergebnisse der Modelle aus \autoref{tab:results} auf allen 49 $512{\times}512$-Ausschnitten, 
-\textit{die Radwegen enthalten}, des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. 
+\autoref{tab:results-ka-small} zeigt die Test-Ergebnisse der Modelle aus \autoref{tab:results} 
+auf allen 49 $512{\times}512$-Ausschnitten des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}), 
+\textit{die Radwegen enthalten}, in Prozent. 
 Ein Ausschnitt enthält einen Radweg, wenn in der zugehörigen Label-Maske mindestens ein Pixel als Radweg annotiert ist. \\
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
 Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.

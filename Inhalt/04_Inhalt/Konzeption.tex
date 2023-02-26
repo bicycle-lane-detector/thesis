@@ -223,7 +223,7 @@ Helligkeit, Schatten, Schärfe und Farbtemperatur, sondern auch im Inhalt, wie d
 das Stadtbild, wodurch isoliert untersucht werden kann, ob dieses einen Unterschied in der Performanz der Netze macht. 
 Das ist vor allem interessant, weil der nachfolgend beschriebene Karlsruhe-Datensatz Bilder mit anderer Optik 
 aufweist und somit eine Bewertung, was eventuell abweichende Performance hervorruft, verkompliziert. \\ 
-Der Wolfsburg-Datensatz besteht aus 442 $512\times 512$-Pixel-Ausschnitten mit Radwegen. 
+Der Wolfsburg-Datensatz besteht aus 442 $512{\times}512$-Pixel-Ausschnitten mit Radwegen. 
 
 \section{Karlsruhe-Datensatz} \label{sec:karlsruhe}
 
@@ -317,17 +317,19 @@ $512 \cdot 0,2m = 102,4m$. Die Zweierpotenz wird gewählt,
 sodass das Bild nicht zu klein wird in der U-Net-Struktur, bzw. damit eine saubere Teilung der 
 Max-Pool-Schichten möglich ist, die die Bildkantenlängen stets halbieren. 
 
-\begin{wrapfigure}{l}{0.40\textwidth}
+\begin{wrapfigure}{r}{0.40\textwidth}
 	\centering
 	\vspace{-20pt} % Manchmal möchte man den oberen Abstand selbst anpassen
 	\includegraphics[width=0.35\textwidth]{Bilder/cut-example.jpg}
-	% \vspace{-10pt}
+	\vspace{-5pt}
 	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
 	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
 	% im Abbildungsverzeichnis. Der Text darunter wird
 	% tatsächlich angezeigt.
-	\caption{Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.}
+	\caption[Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.]{\unskip}
+	Beispiel $512{\times}512$-Ausschnitt aus BikeSat-Datensatz mit roter Maske.
 	\label{fig:cut-example}
+	\vspace{-20pt}
 \end{wrapfigure}
 
 Jedes $10.000{\times}10.000$-Pixel-Bild und die dazugehörige Maske wird -- um den gesamten Bildinhalt zu erhalten -- in \textit{auf}gerundet
@@ -388,7 +390,12 @@ generiert wurde und daher qualitativ eher unvorteilhaft ist, wodurch eine höher
 
 \subsection{Augmentation}
 
-Die Bild-Augmentation wird nicht vor dem Training angewandt, um den Datensatz künstlich zu vergrößern, 
+Die Augmentierungen werden unterteilt in \textit{Basic-Augmentation}, wobei das Bild jeweils nur verschoben wird und 
+\textit{Color-Augmentation}, also farbverändernde Augmentierungen, wobei verschiedene Eigenschaften des Bildes,
+wie Kontrast, Helligkeit, Farbe und Sättigungen verändert werden. Color-Augmentation beinhaltet dabei alle 
+Augmentierungen von Basic-Augmentation, ist also eine echte Obermenge.
+
+Die Augmentierung wird nicht vor dem Training angewandt, um den Datensatz künstlich zu vergrößern, 
 sondern während dem Training pseudo-zufällig mit festem Seed, um die Ergebnisse reproduzieren zu können.
 Somit wird jedes Bild während des Trainings, bevor es in das Netz eingegeben wird zufällig augmentiert 
 und dann eingegeben. Damit erhält ein und dasselbe Bild über die verschiedenen Epochen jedes Mal unterschiedliche 
@@ -433,7 +440,7 @@ da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten 
 		Farb-Jitter
 	\end{subfigure} 
 
-	\caption{Beispielhafte Farb-Augmentierungen eines Beispielbildes mit Originalbild links oben. }
+	\caption{Beispielhafte farbverändernde Augmentierungen (Color-Augmentation) eines Beispielbildes mit Originalbild links oben. }
 	\label{fig:color-aug}
 \end{figure}
 
@@ -908,8 +915,13 @@ Das Fine-Tuning über links- und rechtsseitiges Einfrieren wird genutzt, da dara
 Fine-Tuning-Methoden zu einem signifikanten Unterschied in der Performanz führen, was sehr problemspezifisch ist, 
 wie aus der Literatur (vgl. \autoref{sec:transfer-learning}) hervorgeht. 
 
-Weiter werden die verschiedenen trainierten Modelle durch die Test-Partition des BikeSat-Datensatzes und durch den Karlsruhe-Datensatz 
-getestet und über die in \autoref{sec:eval} ausgewählten Maße bewertet.
+Das komplette zuvor beschriebene und in \autoref{fig:training} dargestellte Training wird jeweils für 
+Basic-Augmentation und Color-Augmentation durchgeführt. Somit ergeben sich insgesamt 30 Modelle, 
+wobei 15 mit Basic-Augmentation und 15 mit Color-Augmentation trainiert sind. 
+
+Weiter werden die verschiedenen trainierten Modelle durch die Test-Partition des BikeSat-Datensatzes und durch den Wolfsburg- und Karlsruhe-Datensatz 
+getestet und über die in \autoref{sec:eval} ausgewählten Maße bewertet. Die Tests werden jeweils für beide Augmentierungsmethoden 
+(Basic-Augmentation und Color-Augmentation) durchgeführt. 
 
 
 % \begin{algorithm}
