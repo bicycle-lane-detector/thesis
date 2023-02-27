@@ -279,7 +279,7 @@ Für ein binäres Klassifikationsproblem lässt sich die $IoU$ ausdrücken durch
 \end{align}
 wobei $tp$, $fp$, $fn$ wie in \autoref{eq:f1} \cite{Fletcher.2018}. 
 
-Auffällig ist die Ähnlichkeit zum Dice- bzw. $F_{1}$-Maß. Es ist allerdings anzumerken, dass bei Dice/$F_1$ die $tp$, also die wahr-positiven, stärker gewichtet werden, als bei der \ac{IoU}. Die augenscheinliche Ähnlichkeit lässt sich durch die Beziehungen
+Auffällig ist die Ähnlichkeit zum Dice- bzw. $F_{1}$-Maß. Es ist allerdings anzumerken, dass bei Dice/$F_1$ die $tp$, also die Wahr-Positiven, stärker gewichtet werden, als bei der \ac{IoU}. Die augenscheinliche Ähnlichkeit lässt sich durch die Beziehungen
 \begin{align}
 	\label{eq:dice-iou} IoU = \frac{D}{2 - D} \\
 	D = \frac{2 \cdot IoU}{1 + IoU} ~,
@@ -488,8 +488,8 @@ Modelle auf sehr großen Datensätzen, wie \textit{ImageNet}, vortrainiert öffe
 
 Bei der semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern, wurden die besten Ergebnisse von einem Dice-Maß-Standpunkt aus, 
 mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches zuerst auf dem \textit{Salient Object}
-Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse von dem Dice-Maß her, wobei allerdings das VGG16-U-Net kleine falsch-positive 
-Regionen erkannte, die weit außerhalb der Ground-Truth lagen. Die falsch-positiven beim Vergleichsnetz, lagen direkt an der Ground-Truth, 
+Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse im Bezug auf das Dice-Maß, wobei allerdings das VGG16-U-Net kleine falsch-positive 
+Regionen erkannte, die weit außerhalb der Ground-Truth lagen. Die Falsch-Positiven beim Vergleichsnetz, lagen direkt an der Ground-Truth, 
 dies lässt auf eine sensitivere Kantenerkennung beim VGG16-U-Net schließen, die manchmal aber auch übersensitiv war \cite{Cheng.05.10.2021}. 
 
 Für das Training des VGG16-U-Nets wurde der Encoder-Teil eingefroren und somit nur der Decoder trainiert. 
@@ -744,7 +744,7 @@ Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verw
 Aus der vorangegangenen Betrachtung des Stands der Technik ergeben sich drei neuartige Probleme, die 
 diese Arbeit untersucht:
 \begin{enumerate}
-	\item Bisher existieren keine wissenschaftlichen Untersuchungen, die versuchen unterschiedliche Straßenelemente,
+	\item Bisher existieren keine wissenschaftlichen Untersuchungen, die versuchen, unterschiedliche Straßenelemente,
 	wie Gehwege, Radwege, Busspuren o.Ä. auf Luftaufnahmen von Straßen zu unterscheiden. Da Straßen als Ganzes 
 	auf Satellitenbildern gut zu erkennen sind, deren unterschiedlichen, sehr heterogenen Bestandteile jedoch weniger, 
 	kann mit dem Beispiel der Radwege überprüft werden, ob die Unterscheidung mit derzeitigen Luftbildqualitäten von circa 20 bis 50 cm \ac{GSD} 
@@ -757,5 +757,8 @@ diese Arbeit untersucht:
 	es auch ein Bewertungsmaß -- die \textit{Quality} (vgl. \autoref{sec:evaluation-metrics:quality}). Für die Quality gibt es allerdings
 	keine Implementation auf Rastern, wie bei einer semantischen Segmentierung, sondern nur auf daraus extrahierten Graphen. 
 	Folglich soll diese Arbeit eine Berechnungsmethode konzipieren, um die Quality auf die Masken der semantischen Segmentierung anzuwenden 
-	(s. \autoref{sec:eval:biou} \textit{BIoU}), also einen Schritt bevor aus der Maske die Graphen extrahiert werden.     
+	(s. \autoref{sec:eval:biou} \textit{BIoU}), also einen Schritt bevor aus der Maske die Graphen extrahiert werden.  
+	\item Da zum Pre-Training Datensätze zum Einsatz kommen, die keine deutschen Städte darstellen, 
+	die Optik der Infrastrukturen sich in unterschiedlichen Ländern aber unterscheidet, kann diese Arbeit 
+	Aufschluss darüber geben, ob Ergebnisse zwischen Städten unterschiedlicher Länder übertragbar sind.     
 \end{enumerate} 

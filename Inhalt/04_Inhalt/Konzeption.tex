@@ -11,21 +11,20 @@ die relevanten Neuerungen und deren Wichtigkeit für das Erfüllen der Ziele zu 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1.\textwidth]{Bilder/overview.drawio.pdf} 
-	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentrale vier Kästen 
-	beschreiben Hauptvorgehen in der Arbeit. Ausgegraute Elemente zeigen 
-	Inhalte des Stands der Technik.}
+	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentral sollen Modelle 
+	ausgewählt werden, die dann auf dem Straßendatensatz vortrainiert werden, um daraufhin 
+	auf dem eigenen Datensatz trainiert zu werden. Abschließen werden die Resultate mit weiteren Datensätzen bewertet.
+	Ausgegraute Elemente zeigen Inhalte des Stands der Technik.}
 	\label{fig:overview-concept}
 \end{figure} 
 
 \autoref{fig:overview-concept} zeigt eine Übersicht über die in diesem Kapitel relevanten Inhalte und wie diese 
-zusammenspielen. Dabei nehmen die zentralen vier Kästen eine besondere Rolle ein: Sie beschreiben das grundsätzliche 
-für diese Arbeit geplante Vorgehen, um zu einem guten Ergebnis für die Radwegerkennung zu gelangen. Das Vorgehen ist 
-\autoref{sec:state-of-the-art-overview} beschrieben, grob sollen aber Modelle verschiedener Architekturen 
+zusammenspielen. Grob sollen Modelle verschiedener Architekturen 
 konzipiert werden, auf den Straßendatensätzen vortrainiert, dann auf einem neu zu erstellenden Datensatz für Radwegerkennung 
-trainiert und schließlich untereinander verglichen werden, um die geeignetste Architektur und Methode des Trainings zu identifizieren. 
+trainiert und schließlich untereinander verglichen werden, um die geeignete Architektur und Methode des Trainings zu identifizieren. 
 Die ausgegrauten Inhalte im Diagramm gehören zum Grundlagenkapitel, sind natürlich aber für die Konzeption relevant. \\ 
 Wie in \autoref{sec:novelty} beschrieben, existiert kein Datensatz zur Erkennung von Radwegen. Daher wird hier 
-der \textit{BikeSat}-Datensatz konzipiert, um zum Training verwendet zu werden. Weiter wird der \textit{Karlsruhe-Datensatz} 
+der BikeSat-Datensatz konzipiert, um zum Training verwendet zu werden. Weiter wird der Karlsruhe-Datensatz 
 erstellt, um die Ergebnisse auf einer anderen Stadt mit Bildern, die sich visuell vom BikeSat-Datensatz unterscheiden, zu testen. \\
 Mit den eigenen Datensätzen kann dann eine geeignete Methode des Pre-Processing konzipiert werden, mit der die Datensätze 
 auf das Training vorbereitet werden können. Wie in \autoref{sec:evaluation-metrics:quality} erwähnt, muss zudem 
@@ -37,14 +36,15 @@ trainierten Modelle im Abschnitt \textit{Training} erörtert werden.
 \section{BikeSat-Datensatz} \label{sec:bike-data}
 
 Da sich die im \autoref{sec:road-detection:roads-data} vorgestellten Datensätze zur Erkennung von Straßen nicht auf die Fahrradwege übertragen lassen, 
-ist es erforderlich einen eigenen Datensatz, den \textit{BikeSat-Datensatz}, zu erstellen.
-Prinzipiell gibt es die Möglichkeiten, die Datensätze manuell zu labeln oder automatisch generieren zu lassen.
+ist es erforderlich einen eigenen Datensatz, den BikeSat-Datensatz, zu erstellen.
+Prinzipiell gibt es die Möglichkeiten, den Datensatz manuell zu labeln oder automatisch generieren zu lassen.
 Manuelles Labeln führt zu einer hohen Genauigkeit.
 Allerdings ist diese Art der Datensatzerstellung entsprechend zeitintensiv und mit hohen Kosten verbunden.
 Gerade lange Labelsessions sorgen für Ungenauigkeiten beim Einzeichnen der Ground Truth. 
 In jedem Bild müssen Fahrradwege händisch erkannt werden, wobei die Wege nicht immer eindeutig als solche identifiziert werden können.\\
 Für die Generierung der Labels müssen entsprechende Koordinaten bekannt sein, an denen sich Fahrradwege befinden.
-Mithilfe dieser Punkte können dann Polygone in eine Maske eingezeichnet werden und erhält das zu einer Satellitenaufnahme zugehörige Bild.
+Mithilfe dieser Punkte können dann Polygone in eine Maske eingezeichnet werden 
+und somit entsteht die zu einer Satellitenaufnahme zugehörige Ground-Truth-Maske.
 Diese Art der Datensatzgenerierung ist deutlich weniger aufwändig als das manuelle Labeln. 
 Ebenso können unter der Beschränkung der gegebenen Koordinaten und Satellitenbilder große Datensets erzeugt werden.
 Abweichende Koordinaten wirken sich jedoch nachteilig auf die Qualität des Datensatzes aus, da keine menschliche Überprüfung im Anschluss erfolgt.
@@ -60,31 +60,81 @@ von \textbf{724} realen Radwegen in der Stichprobe enthalten. Demnach wird der E
 fehlenden Radwegen auf das Training als eher gering eingestuft.   
  
 
-\begin{figure}
-	\centering
-	\includegraphics[width=.6\textwidth]{Bilder/Hannover.png} 
-	\caption{$2000{\times}2000~ m^2$ Luftaufnahmen-Ausschnitt von Hannover.}
-	\label{fig:hannover-data}
-\end{figure} 
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.6\textwidth]{Bilder/Hannover.png} 
+% 	\caption{$2000{\times}2000~ m^2$ Luftaufnahmen-Ausschnitt von Hannover.}
+% 	\label{fig:hannover-data}
+% \end{figure} 
+Im Zusammenhang mit dem BikeSat-Datensatz sind folgende Definitionen notwendig: 
+\begin{itemize}
+	\item \textbf{Radweg:} Ein Radweg ist ein eigenständiger Pfad zur Benutzung durch Fahrräder 
+	und kann unabhängig von sonstiger Infrastruktur existieren, aber auch Spur einer Straße sein. 
+	Koordinaten eines Radwegs beziehen sich in jedem Fall auf die Mittellinie des Radwegs.  
+	\item \textbf{Radstreifen:} Ein Radstreifen ist nicht eigenständig, sondern bezieht sich auf eine Straße. 
+	Koordinaten eines Radstreifens beziehen sich auf die Mittellinie der dazugehörigen Straße. 
+	Radstreifen können links-, rechts- oder beidseitig an einer Straße anliegen. 
+	\item \textbf{Orhtofoto:} 
+	\enquote{[...] Orthofotos [...] sind entzerrte Luftbilder, die die Landschaft lagerichtig abbilden.} \cite{dop27022023}
+\end{itemize}
+Wenn der Unterschied zwischen Radweg und -streifen nicht relevant ist, werden Radwege und Radstreifen
+kollektiv als Radweg bezeichnet.  
 
-Die Erstellung ist in mehreren Schritten vorgenommen worden.
-Zunächst mussten Satellitenbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
-In dem durch die Luftbilder abgedeckten Gebiet sind anschließend offizielle Fahrradwege aus einer API ausgelesen worden.
-Mit den vorhandenen Informationen konnten dann die zugehörigen Masken gezeichnet werden.
-In den nachfolgenden Unterkapiteln werden auf die Einzelschritte detaillierter eingegangen.
+Die Erstellung wird in mehreren Schritten vorgenommen.
+Zunächst müssen Satellitenbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
+In dem durch die Luftbilder abgedeckten Gebiet sind anschließend offizielle Fahrradwege aus einer \ac{OSM} API auszulesen.
+Mit den vorhandenen Informationen können dann die zugehörigen Masken nach \autoref{lst:gen-bikesat} erstellt werden.
+Hierzu werden zunächst die Luftbilder und die Radwege und -streifen geladen. Ein einzelner Radweg/-streifen 
+ist dabei eine Liste von Koordinaten-Tupeln, die den jeweiligen Weg ergeben, 
+wenn die Tupel in Iterationsreihenfolge der Liste verbunden werden.
+Daraufhin wird über alle Bildausschnitte itertiert und für jeden Ausschnitt eine Maske erstellt. 
+Dazu werden zunächst die Wege gefunden, die im derzeitigen Bild $f$ liegen. Dazu werden die Koordinaten der 
+Eckpunkte von $f$ verwendet, die bekannt sind. Dann wird über jeden Weg in $f$ itertiert und dessen 
+Koordinaten von Längen und Breitengrad zu Pixelkoordinaten x und y relativ zu dem Bild $f$ konvertiert. 
+Handelt es sich bei $w$ um einen Radstreifen, so handelt es sich bei den Koordinaten um die Straßenmittellinie 
+und der Radstreifen muss dementsprechend an den Straßenrand verschoben werden. Ist es ein Radweg,
+sind die Koordinaten bereits korrekt. Schließlich wird $w$ in die Maske eingezeichnet, 
+indem die Pixel-Koordinaten mit Strichen der vordefinierten Konstante der Radwegbreite eingezeichnet werden.
+Die Maske wird an eine Liste angehangen und das nächste Foto wird bearbeitet. Den Datensatz bildet 
+dann das Tupel der Listen der Fotos und Masken. Bei dem dargestellten Algorithmus handelt es sich um eine 
+vereinfachte Version.\footnote{\autoref{code:gen-dataset} zeigt eine Implementation des vollständigen Algorithmus.} \\   
+In den nachfolgenden Unterkapiteln wird auf die Einzelschritte detaillierter eingegangen.
 
-\subsection{Satellitenbilder}
+\begin{algorithm}
+	\caption{Vereinfachter Algorithmus zum Erstellen des BikeSat-Datensatzes.}\label{lst:gen-bikesat}
+	\begin{algorithmic}[1]
+		\State $wege: liste[liste[koordinaten]] \gets ladeWegeStreifen()$ \Comment{von Overpass API}
+		\State $orthofotos: liste[foto]\gets ladeOrthofotos()$ \Comment{Ausschnitte aus Niedersachsen}
+		\State $masken: liste[foto]$
+		\For{$f \in orthofotos$}
+			\State $m \gets leereMaske(f.dimension)$
+			\State $inF \gets wegeInBereich(wege, f.koordinaten)$
+			\For{$w: liste[koordinaten] \in inF$}
+				\State $w: liste[pixelkoordinaten] \gets inPixelKoordinaten(f, w)$
+				\If{$w.typ = Radstreifen$} \Comment{$w.typ \ne Radweg$}
+					\State $w \gets korrigiereStreifen(w)$
+				\EndIf
+				\State $m.zeichne(w, RADWEGBREITE)$
+			\EndFor
+			\State $masken.anhängen(m)$
+		\EndFor
+		\State $BikeSat \gets (orthofotos, masken)$
+	\end{algorithmic}
+\end{algorithm}
 
-Für die zu Satellitenbilder wird eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
+\subsection{Luftbilder}
+
+Für die zu Luftbilder wird eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
 Aufgrund der aufwändigen Gewinnung und Aufbereitung der Orthofotos, sind diese meist nur kostenpflichtig zu erlangen.
 Das Landesamt für Geoinformation und Landesvermessung Niedersachsen jedoch stellt Orthofotos in der benötigten Qualität kostenfrei zum Download zur Verfügung.
 Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von 3 Jahren.
 Für die Datenset-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
 Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2{\times}2 ~km^2$-Kacheln ($10.000{\times}10.000{\times}3$ Bilder)\cite{.26.10.2022}.
-\autoref{fig:hannover-data} zeigt ein solches Bild. 
-Für eine bessere Generalisierung des neuronalen Netzes, sind mehrere Städte verwendet worden.
-Die jeweilige Anzahl der Aufnahmen pro Stadt lässt sich \autoref{tab:city-distribution} entnehmen.
-Die Gesamtsumme beträgt 143 Satellitenbilder, also 572 $km^2$ Fläche.
+% \autoref{fig:hannover-data} zeigt ein solches Bild. 
+Für eine bessere Generalisierung des neuronalen Netzes, werden mehrere Städte verwendet. Die Robustheit des Netzes 
+bei unterschiedlichen Städten wird später getestet.
+Die jeweilige Anzahl der Aufnahmen pro Stadt lässt sich aus \autoref{tab:city-distribution} entnehmen.
+Die Gesamtsumme beträgt 143 Luftbilder, also 572 $km^2$ Fläche.
 Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3,05 GB$.
 
 \begin{table}
@@ -101,23 +151,50 @@ Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3,05 GB$.
 
 Auch bei der Stadt Karlsruhe können Luftaufnahmen von Karlsruhe in benötigter Qualität für Lehre und Forschung kostenfrei beantragt werden.
 Der Richtwert für die zu beantragende Größe beträgt $1km^2$.
-Da in diesem kleinen Ausschnitt nicht genügend Fahrradwege enthalten sind, um ein neuronales Netz trainieren zu können, dienen diese Daten als Testdatensatz.
-Mehr dazu in \autoref{sec:karlsruhe} \cite{.04.12.2022}.
+Um die Generalisierungsfähigkeit und Robustheit der Netze für eine völlig neuen Stadt zu testen, 
+die nicht bereits während des Trainings vom Netz gesehen wurde,  
+dienen diese Daten ausschließlich als Testdaten \cite{.04.12.2022}.
 
 \subsection{Auslesen der Fahrradwege} \label{subsec:overpass-api}
 
 Eingetragene Radwege können über die Overpass API von \ac{OSM} ausgelesen werden \cites{.05.10.2021}{OpenStreetMapcontributors.2017}.
 Innerhalb der Anfrage kann zwischen einer Vielzahl von Attributen unterschieden werden.
 Alle Radwege und Fahrradstreifen innerhalb der angegebenen Zone sollen zurückgeliefert werden.
-Auch einseitige Radwege werden ausgegeben. 
-Die jeweiligen Attribute geben Aufschluss darüber, ob es sich um einen links- oder rechtsseitigen Weg handelt.
+Auch einseitige Radstreifen werden ausgegeben. 
+Die jeweiligen Attribute geben Aufschluss darüber, ob es sich um einen links-, rechts- oder beidseitigen Radstreifen handelt.
 Der mitgegebene Bereich entspricht genau der Abdeckung durch die Satellitenbilder.
-Die ausgelesenen Daten können als GeoJSON exportiert werden.
-Bei Straßen werden Fahrradstreifen zentriert, statt seitlich an der korrekten Position zurückgegeben.
-Dies muss nachher bei der Maskenerstellung entsprechend berücksichtigt werden. Die Anzahl der vorhandenen Fahrstreifen der Straße lässt sich ebenfalls aus den gelieferten Daten entnehmen.
+Die ausgelesenen Daten können als das Dateiformat GeoJSON exportiert werden. \\
+Alle Wege werden von der API als Listen von Koordinaten zurückgegeben. Jede Liste ist mit den zusätzlichen angefragten 
+Attributen ausgestattet. Die Overpass-API-Query zum Erhalten der Radwege des gewünschten Kartenausschnitts ist in 
+\autoref{code:osm-query-short} gekürzt dargestellt.\footnote{\autoref{code:osm-query} zeigt die vollständige Query.} 
+Die Konstanten geben dabei die Koordinaten des Kartenausschnitts an. 
+
+\lstinputlisting[
+	label=code:osm-query-short,    % Label; genutzt für Referenzen auf dieses Code-Beispiel
+	caption=Gekürzte Query zum Erhalten der benötigten OSM-Daten über die Overpass API.,
+	captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
+	% style=EigenerPythonStyle,   % Eigener Style der vor dem Dokument festgelegt wurde
+	% firstline=1,                % Zeilennummer im Dokument welche als erste angezeigt wird
+	% lastline=50                 % Letzte Zeile welche ins LaTeX Dokument übernommen wird
+]{Quellcode/query-short.osm}
+
+\autoref{code:geojson} zeigt einen beispielhaften Ausschnitt aus der GeoJSON, die durch die Overpass API 
+zurückgeliefert wird. Es handelt sich dabei um einen Radweg, der aus drei Koordinaten besteht. 
+
+\lstinputlisting[
+	label=code:geojson,    % Label; genutzt für Referenzen auf dieses Code-Beispiel
+	caption={Auschnitt aus der GeoJSON, die die Overpass API zurückliefert. Es ist ein Radweg abebildet.},
+	captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
+	% style=EigenerPythonStyle,   % Eigener Style der vor dem Dokument festgelegt wurde
+	% firstline=1,                % Zeilennummer im Dokument welche als erste angezeigt wird
+	% lastline=50                 % Letzte Zeile welche ins LaTeX Dokument übernommen wird
+]{Quellcode/hannover.json}
+
+Bei Fahrradstreifen werden die Koordinaten der Straße zentriert, statt seitlich an der korrekten Position, zurückgegeben.
+Dies muss bei der Maskenerstellung berücksichtigt werden. Die Anzahl der vorhandenen Fahrspuren der Straße lässt sich ebenfalls aus den gelieferten Daten entnehmen.
 Außerdem werden die Koordinaten für die Fahrradwege beispielsweise bei Kreuzungen oder Brücken durchgehend zurückgegeben. 
-Hier lassen sich aus Satellitensicht keine Wege erkennen, was später zu Kosten für das Netz führt, obwohl sich keine Radwege erkennen lassen.
-Über manuelles Labeln können diese Bereiche ausgespart werden können, was zu einer besseren Ground Truth führt, bzw. dem, was sich vom neuronalen Netz erwarten lässt.
+Hier lassen sich aus der Vogelperspektive keine Wege erkennen, da diese durch die Brücke überdeckt sind, trotzdem sind diese eingetragen.
+Über manuelles Labeln können diese Bereiche ausgespart werden können, was zu einer besseren Ground-Truth führt, bzw. dem, was sich vom neuronalen Netz erwarten lässt.
 
 \begin{figure}
 	\centering
@@ -138,22 +215,60 @@ Hier lassen sich aus Satellitensicht keine Wege erkennen, was später zu Kosten 
 \subsection{Maskenerstellung}
 
 Mit den vorhandenen Orthofotos und den Koordinaten der Radwege können nun die Masken generiert 
-und deren Güte abgeschätzt (s. Ende des Unterabschnittes) werden.
-Dafür werden zunächst die einzelnen Wege in zwei Klassen aufgeteilt, \textit{Fahrradwege} und \textit{Fahrradstreifen}.
+und deren Güte abgeschätzt werden.
+Dafür sind die einzelnen Wege wie bereits beschrieben in die zwei Klassen Fahrradwege und Fahrradstreifen aufgeteilt.
 Die zugehörigen Koordinaten werden als Liste mit Breiten- und Längengraden übergeben.
 Für die in \autoref{subsec:overpass-api} erwähnte Verschiebung werden zusätzlich die Anzahl der Fahrspuren sowie die Existenz eines links- oder rechtsseitigen Weges berücksichtigt.
-Die Berechnung wird heuristisch über die Anzahl an Autospuren durchgeführt.
+Die Berechnung wird als Schätzung über die Anzahl an Autospuren durchgeführt.
 Je mehr Spuren vorhanden sind, desto weiter muss der Fahrradstreifen verschoben werden.
-Es wird die durchschnittliche Breite einer Fahrbahn von, also eine Verschiebung um, $17.625px$ angenommen.
+Es wird die durchschnittliche Breite einer Fahrbahn von, also eine Verschiebung um, $17.625px$ angenommen. 
+Dazu wurden 50 Straßen zufällig als Stichproben gewählt und deren Pixelbreiten manuell ausgemessen. 
 Fahrradwege werden hingegen nicht verschoben, da diese passend von Menschen annotiert sind.\\
 Für jedes Satellitenbild wird zunächst eine leere Maske erstellt.
-Mithilfe der Koordinaten, die bei den einzelnen Klassen gespeichert sind, können die Linien eingezeichnet werden.
-Dafür werden die Koordinaten auf die korrespondierenden Pixelkoordinaten transformiert.
+Mithilfe der Koordinaten, die zu den einzelnen Klassen gespeichert sind, können die Linien eingezeichnet werden.
+Dafür werden die Koordinaten in die korrespondierenden Pixelkoordinaten transformiert.
 Die Breite der einzuzeichnenden Linien orientiert sich an dem Durchschnitt verschiedener Radwege, welcher sich auf $11,8125px$ beläuft.
+Dieser Wert wurde analog zur durchschnittlichen Breite einer Fahrbahn über 50 zufällige Stichproben ermittelt. \\
+\autoref{lst:move-strip} zeigt den vereinfachten Algorithmus zum Verschieben eines Radstreifens,
+sodass dieser sich an der geschätzten, richtigen Stelle befindet. Für bessere Übersichtlichkeit 
+zeigt der Algorithmus nur den Fall für einen rechtsseitigen Streifen. 
+Zunächst wird paarweise über alle Stützvektoren des Streifens iteriert. Die Differenz $d$ des Paares 
+wird berechnet, normiert, um 90° nach rechts rotiert und um die Hälfte der geschätzten Straßenbreite skaliert. 
+Schließlich werden die Stützpunkte um diesen Vektor verschoben. 
+
+
+\begin{algorithm}
+	\caption{Algorithmus zum Verschieben von rechtsseitigen Fahrradstreifen.}\label{lst:move-strip}
+	\begin{algorithmic}[1]
+		\Procedure{korrigiereStreifen}{$w$} \Comment{$w.typ = Radstreifen \land w.seite = rechts$}
+			\State{$verschStützpunkte: liste$}
+			\For{$i < |w.stützpunkte|$}
+				\State{$v_i, v_{i+1} \in w.stützpunkte$}
+				\State{$d \gets v_{i+1} - v_i$}
+				\State{$e \gets \frac{1}{|d|}d$}
+				\State{$r \gets \begin{pmatrix} 
+					0 & 1  \\ 
+					-1 & 0  
+					\end{pmatrix} e$}
+				\State{$r_s \gets \frac{1}{2} \cdot w.spurenAnzahl \cdot SPURENBREITE \cdot r$}
+				\State{$verschStützpunkte.anhängen(v_i + r_s, v_{i+1} + r_s)$}
+			\EndFor
+			\State{$w.stützpunkte \gets verschStützpunkte$}
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
 \autoref{fig:good-mask} zeigt einen Luftbildausschnitt (links) zusammen mit der dafür automatisch generierten Maske (rechts),
 wobei die automatische Annotation sehr gut funktioniert. 
 
 \subsubsection{Güteabschätzung der Masken}
+
+Die Schätzung beim Einzeichnen der Maske führt dazu, dass manchmal Radwege in Grünstreifen oder auf Straßen eingezeichnet werden, da sie ungenau verschoben worden sind.
+\autoref{fig:bad-mask} zeigt ein solches Negativbeispiel: Großteil der Annotationen (über Schätzung generiert) trifft den eigentlichen Radweg nicht. 
+In der Straßenmitte befindliche Schienen für Straßenbahnen werden ebenfalls nicht berücksichtigt.
+Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschweren, durchgängige Linien einzuzeichnen.
+Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, wegen geringerer Varianz in den Stichproben, 
+die zur Ermittlung erhoben sind.
 
 \begin{wrapfigure}{r}{0.40\textwidth}
 	\centering
@@ -169,25 +284,27 @@ wobei die automatische Annotation sehr gut funktioniert.
 	\label{fig:bad-mask}
 \end{wrapfigure}
 
-Die Heuristik beim Einzeichnen der Maske führt dazu, dass manchmal Radweg in Grünstreifen oder auf Straßen eingezeichnet werden, da sie falsch verschoben worden sind.
-\autoref{fig:bad-mask} zeigt ein solches Negativbeispiel: Großteil der Annotationen (heuristisch generiert) trifft den eigentlichen Radweg nicht. 
-In der Straßenmitte befindliche Schienen für Straßenbahnen werden ebenfalls nicht berücksichtigt.
-Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschweren, durchgängige Linien einzuzeichnen.
-Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, wegen geringerer Varianz in den Stichproben, 
-die zur Ermittlung erhoben sind.
-
 Das Problem bei den generierten Masken sind nicht die Fahrrad\textit{wege}, denn diese sind von Menschen manuell annotiert und damit passend im Satellitenbild, 
-sondern die Fahrrad\textit{streifen}, denn diese sind durch die Heuristik ggf. daneben oder enthalten die beschriebenen Sprünge. \\
-Der Anteil an manuell annotierten Fahrradwegen und heuristisch annotierten Fahrradstreifen kann Aufschluss über die Güte geben. 
-Dieser Anteil trifft aber noch keine Aussage über die Länge der jeweiligen Wege. Um dies zu berücksichtigen, werden stattdessen die Kanten die zu 
+sondern die Fahrrad\textit{streifen}, denn diese sind durch die Schätzung ggf. daneben oder enthalten die beschriebenen Sprünge. \\
+Der Anteil an manuell annotierten Fahrradwegen und über Schätzung annotierten Fahrradstreifen kann Aufschluss über die Güte geben. 
+Dieser Anteil trifft aber noch keine Aussage über die Länge der jeweiligen Wege. Um dies zu berücksichtigen, werden stattdessen die Kanten, die zu 
 entweder Fahrradwegen oder Fahrradstreifen gehört gezählt. Hier liegt die Annahme zugrunde, dass Kanten im Schnitt ähnlich lang sind.\\
-Im Datensatz gibt es $129205$ Kanten die zu manuell annotierten Fahrradwegen gehören und $53256$ Kanten die zu heuristisch annotierten Fahrradstreifen gehören. 
-Demzufolge sind ungefähr $70,8\%$ der Daten manuell und circa $29,2\%$ der Daten heuristisch annotiert. 
-Aus Stichproben der heuristisch annotierten Fahrradstreifen lässt sich abschätzen, dass circa $30\%$ der Fahrradstreifen falsch liegen 
-(kaum bis wenig Überschneidung mit dem Fahrradweg; $<30\%$ Überschneidung), circa $50\%$ grob richtig liegen (ungefähr $50\%$ Überschneidung)
-und $20\%$ komplett richtig ($>80$ Überschneidung) liegen. Wird für grobe Richtigkeit ein Faktor von $\frac{1}{2}$ angenommen, so sind insgesamt
+Im Datensatz gibt es $129205$ Kanten, die zu manuell annotierten Fahrradwegen gehören und $53256$ Kanten, die zu über Schätzung annotierten Fahrradstreifen gehören. 
+Demzufolge sind ungefähr $70,8\%$ der Daten manuell und circa $29,2\%$ der Daten über Schätzung annotiert. 
+Aus Stichproben der über Schätzung annotierten Fahrradstreifen lässt sich abschätzen, dass circa $30\%$ der Fahrradstreifen falsch 
+positioniert sind 
+(kaum bis wenig Überschneidung mit dem Fahrradweg; $<30\%$ Überschneidung), circa $50\%$ grob richtig eingezeichnet sind (ungefähr $50\%$ Überschneidung)
+und $20\%$ komplett richtig ($>80$ Überschneidung) positioniert sind. Wird für grobe Richtigkeit ein Faktor von $\frac{1}{2}$ angenommen, so sind insgesamt
 als Gütemaß $0,292 \cdot (0,3 + \frac{1}{2} \cdot 0,5) = 0,1606$ also $16,06\%$ der Annotationen falsch, bzw. 
 \textbf{83,94\%} des Datensatzes auf dem Niveau einer manuellen Annotation. 
+
+Eine Möglichkeit, um das Problem der ungenauen Annotationen zu umgehen, könnte sein, die komplette Straße zu annotieren, 
+wenn diese einen Radweg enthält. Dadurch kann aber nicht differenziert werden, ob ein Fahrradstreifen in beide 
+Richtungen existiert oder nur eine. Um dies zu beheben, könnte jeweils die Seite nur rechts oder links von der Straßenmittellinie
+annotiert werden, um zu signalisieren, in welche Richtung ein Fahrradstreifen existiert. 
+Das Problem hierbei ist, dass sehr große Teile der Straße annotiert werden müssen, die nichts mit dem Radweg zu tun haben.
+Außerdem ist dadurch nicht möglich zu erkennen, ob bei einer Kreuzung ein separater Streifen für linksabbiegende 
+Fahrradfahrer existiert. Um diese Information zu erhalten, wird weiter der bisherige Ansatz verfolgt.  
    
 % dafür kannst du natürlich viele Bilder in das Kapitel ballern
 % der datensatz-code hat jetzt auch die möglichkeit den ganzen karren mit rotem overlay von radwegen zu generieren
@@ -606,8 +723,8 @@ Dies erlaubt eine Verschiebung des Radwegs um eine volle Breite zzgl. einer Tole
 nicht aber um die Breite einer Straßenfahrbahn. Hiermit soll ein realistisches Bild der Performanz des Netzes 
 bezgülich der qualitativen Erkennung der Radwege gezeichnet werden und wird ergänzend zur \ac{IoU}-Metrik 
 als Bewertungsfunktion eingesetzt. \\
-Als Verlustfunktion ist die \ac{BIoU} allerdings ungeeignet, da wie bei der \ac{IoU} die wahr-positiven $tp$ nicht 
-stärker gewichtet werden, sodass das Netz nicht bevorzugt die wahr-positiven lernt. Des Weiteren ist die \ac{BIoU} aufgrund der 
+Als Verlustfunktion ist die \ac{BIoU} allerdings ungeeignet, da wie bei der \ac{IoU} die Wahr-Positiven $tp$ nicht 
+stärker gewichtet werden, sodass das Netz nicht bevorzugt die Wahr-Positiven lernt. Des Weiteren ist die \ac{BIoU} aufgrund der 
 in \autoref{eq:dilate} beschriebenen Dilate-Funktion nicht bekannt differenzierbar, was für die Verlustfunktion nötig ist. 
 Gegebenenfalls kann eine Ableitung für die \ac{BIoU} gefunden werden, 
 die Untersuchung dessen geht allerdings über den Umfang dieser Arbeit hinaus. 

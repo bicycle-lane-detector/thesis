@@ -1,0 +1,31 @@
+{
+    "type": "Feature",
+    "properties": {
+        "@id": "way/4258912",
+        "bicycle": "designated",
+        "foot": "designated",
+        "highway": "path",
+        "lit": "yes",
+        "name": "Doris-Krammling-Jöhrens-Weg",
+        "segregated": "yes",
+        "surface": "asphalt"
+    },
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [
+        [
+            9.7100021,
+            52.379044
+        ],
+        [
+            9.7099892,
+            52.3790256
+        ],
+        [
+            9.7099826,
+            52.3790102
+        ]
+        ]
+    },
+    "id": "way/4258912"
+}

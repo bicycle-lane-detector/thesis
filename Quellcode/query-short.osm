@@ -1,0 +1,16 @@
+[out:json];
+(
+  LOWER_LEFT_LAT = 52.409500
+  LOWER_LEFT_LON = 10.734874
+  UPPER_RIGHT_LAT = 52.444120
+  UPPER_RIGHT_LON = 10.824291
+
+  way[highway=cycleway](LOWER_LEFT_LAT, LOWER_LEFT_LON, UPPER_RIGHT_LAT,UPPER_RIGHT_LON);
+  way[highway=path][bicycle=designated](LOWER_LEFT_LAT, LOWER_LEFT_LON, UPPER_RIGHT_LAT,UPPER_RIGHT_LON);
+  ...
+  way["cycleway:both"=track](LOWER_LEFT_LAT, LOWER_LEFT_LON, UPPER_RIGHT_LAT,UPPER_RIGHT_LON);
+  way[cycleway=opposite_lane](LOWER_LEFT_LAT, LOWER_LEFT_LON, UPPER_RIGHT_LAT,UPPER_RIGHT_LON);
+);
+out body;
+>;
+out skel qt;
