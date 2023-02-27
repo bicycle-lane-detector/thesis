@@ -113,7 +113,7 @@ Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:bio
 \begin{enumerate}
 	\item Die Modelle performen stärker auf der Testpartition des BikeSat-Datensatzes, mit ein paar Ausnahmen, wie z.B. dem RBUNet$^r$ auf Color-Augmentation trainiert, 
 	als auf dem Karlsruhe-Datensatz. 
-	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, als bei dem Karlsruhe-Datensatz.
+	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, weisen also eine geringere Streuung auf, als bei dem Karlsruhe-Datensatz.
 	\item Die \ac{IoU} und \ac{BIoU} unterscheiden sich teilweise markant innerhalb eines Modells auf dem Karlsruhe Datensatz (s. z.B. BUNet2$^*$ auf Basic-Augmentation).
 	\item Die Netze, die mit Color-Augmentation trainiert sind, erzielen insgesamt höhere Spitzenwerte auf beiden Datensätzen. 
 	\item Bei den Backbone-Netzen ist im Schnitt keine Verbesserung von Basic-Augmentation zu Color-Augmentation zu beobachten. 
@@ -324,6 +324,12 @@ Ein Ausschnitt enthält einen Radweg, wenn in der zugehörigen Label-Maske minde
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
 Außerdem sind pro Spalte das arithmetische Mittel $\bar{x}$ und die Standardabweichung s angegeben. 
 Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
+\begin{enumerate}
+	\item Der gefilterte Karlsruhe-Datensatz weist generell schlechtere Ergebnisse, sowohl in den Spitzen, als auch im Mittel auf, 
+	als der Ungefilterte aus \autoref{tab:results}.
+	\item Auf dem gefilterten Datensatz performt das VBUNet$^*$ am besten, wobei das RBUNet$^*$ nur leicht schlechter ist auf allen Maßzahlen.
+	\item Für die mit Color-Augmentation trainierten Modelle weist der gefilterte Datensatz eine kleinere Streuung auf. 
+\end{enumerate}
 
 \subsection{Ergebnisse bei fehlender Annotation}
 
