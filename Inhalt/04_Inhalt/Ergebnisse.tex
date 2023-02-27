@@ -51,10 +51,19 @@ wird eine Übersicht über die benötigte Trainingszeit für die Modelle gegeben
 (vgl. \autoref{sec:pre-training-roads}) in Prozent. Pro Spalte ist das höchste Ergebnis hervorgehoben. 
 \ac{BUNet2} und \ac{BUNet15} sind von Grund auf trainiert, während \ac{VBUNet}, \ac{RBUNet} und \ac{DBUNet} einen auf 
 ImageNet vortrainierten Encoder aufweisen. Die \ac{BIoU} verwendet wie bei der Radwegerkennung und wie in \autoref{sec:eval:biou} 
-festgelegt eine Puffergröße von 15 Pixeln. 
+festgelegt eine Puffergröße von 15 Pixeln. \\ 
+BUNet2 schneidet am schlechtesten ab, während VBUNet die höchsten Werte für IoU und BIoU aufweist. 
+Generell sind alle Netze mit vortrainiertem Backbone besser, als die nicht vortrainierten Netze 
+der BUNet-Archtiektur. 
 
 \autoref{fig:combined-samples-bune2-vbunet} zeigt ausgewählte Beispielpredictions des \ac{BUNet2} (links) und 
-des \ac{VBUNet}.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-combined}.}
+des \ac{VBUNet} (rechts).\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-combined}.} \\
+Es ist zu erkennen, dass beide Netze die Straßen größtenteils richtig erkennen. 
+BUNet2 zeichnet dabei etwas unschärfere Linien, wie aus Bild zwei (gepunktet) und aus Bild vier 
+(keine schwarze Linie zwischen der breiten Straße) hervorgeht. Im dritten Bild von unten 
+auf der rechten Seite ist rechts oben ein Gebäude zu erkennen, welches über den Highway geht. 
+In der Maske ist dort an der Stelle des Gebäudes die Straße weiter annotiert. 
+In der Prediction von VBUNet ist dieser Teil jedoch ausgespart.  
 
 \section{Ergebnisse der Radwegerkennung}
 
@@ -194,17 +203,49 @@ da diese weniger interessant sind.
 
 \autoref{fig:bikesat-samples-bunet2-s-vbunet-l} zeigt ausgewählte Beispielpredictions des $BUNet2^*$ (a) und 
 des $VBUNet^l$ (b) auf dem BikeSat-Datensatz bei Training mit Basic-Augmentation.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-bikesat}.}
+\begin{itemize}
+	\item Es fällt auf, dass einige der Predictions sehr akkurat sind und eine hohe Kongruenz zur Maske aufweisen,
+	wie zum Beispiel das zweite Bild von oben zeigt. Andere Predictions deuten allerdings nur qualitativ den Radweg an, 
+	wie zum Beispiel die gepunktete Prediction aus Bild vier von oben links zeigt.
+	\item Es werden Wege, die von der Beschaffenheit Radwege sein könnten als solche erkannt, 
+	obwohl es sich um keine handelt, wie links das sechste Bild von oben zeigt. Auch haben beide Netze 
+	auf den Bildern zwei und drei von unten auf beiden Straßenseiten Radwege erkannt, obwohl nur auf einer tatsächlich einer ist.
+	Bei Bild vier von unten zeigen sich sehr gute Predictions durch beide Netze, da hier korrekterweise nur eine Straßenseite 
+	mit Radweg versehen ist. 
+	\item Generell geht die quantitativ gemessene bessere Performance von VBUNet$^l$ empirisch aus den Bildern hervor.
+\end{itemize}
 
 \autoref{fig:ka-samples-rbunet-l-rbunet-s} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
 des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Basic-Augmentation.\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-karlsruhe}.}
+\begin{itemize}
+	\item Es ist zu sehen, dass insgesamt die Predictions unschärfer sind im Vergleich zu den Predictions auf dem 
+	BikeSat-Datensatz. So gibt es kaum mit den Masken kongruente Bereiche und die Radwege sind oft nur 
+	qualitativ durch unterbrochene oder gepunktete Linien angedeutet. 
+	\item RBUNet$^*$ kann die ersten sieben Bilder qualitativ recht gut predicten, erkennt aber auf den letzten 
+	drei Bildern auch eher Radwege wo keine sind - viele Falsch-Positive also. 
+	Das Modell weist eine eher relativ hohe Sensitivität auf. \\
+	RBUNet$^l$ hingegen erkennt generell kaum Radwege, aber weist auch keine Falsch-Positiven auf, 
+	was kein Radweg ist, wird auch zuverlässig als negativ eingestuft. Dieses Modell hat also eine hohe Spezifität.     
+\end{itemize}
 
 \autoref{fig:ka-samples-rbunet-l-rbunet-s-color} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
-des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Color-Augmentation.
+des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Color-Augmentation. \\
+ Durch das veränderte Training mit Color-Augmentation hat sich die Art, wie die Modelle predicten, 
+	im Gegensatz zu \autoref{fig:ka-samples-rbunet-l-rbunet-s}, geändert. RBUNet$^l$ weist nun ein paar 
+	Falsch-Positive aber auch mehr Wahr-Positive auf. RBUNet$^*$ zeichnet dünnere Linien und erzeugt 
+	weniger Wahr-Positive, aber auch weniger Falsch-Positive. Generell scheinen die beiden Netze ähnlicher zu predicten. 
 
 \autoref{fig:wolfsburg-samples-rbunet-l-rbunet-s-color} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
-des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentation.
+des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentation. \\
+Die Predicitions auf dem Wolfsburg-Datensatz sind von der Qualität ähnlich zu den Predictions auf dem BikeSat-Datensatz.
+Bis auf in Bild sechs sind so gut wie alle Radwege, die in der Maske existieren, predicted worden. 
+Beide Modelle zeigen also eine hohe Sensitivität. In den Predictions beider Netzen 
+sind überwiegend dieselben Falsch-Positiven vorhanden.
+Weiter sind die Predictions größtenteils sehr scharf, bis auf die erste Prediction links oben. 
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}{.4\textwidth}
 		\centering
@@ -221,7 +262,7 @@ des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentati
 	\label{fig:bikesat-samples-bunet2-s-vbunet-l}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}{.4\textwidth}
 		\centering
@@ -239,7 +280,7 @@ des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentati
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}{.4\textwidth}
 		\centering
@@ -256,7 +297,7 @@ des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentati
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}{.4\textwidth}
 		\centering
@@ -272,6 +313,7 @@ des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentati
 	\label{fig:wolfsburg-samples-rbunet-l-rbunet-s-color}
 \end{figure}
 
+\pagebreak
 
 \subsection{Ergebnisse auf gefiltertem Karlsruhe-Datensatz}
 
