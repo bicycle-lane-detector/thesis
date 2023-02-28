@@ -363,8 +363,8 @@ dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt ein
 
 Aufgrund der geringen Größe des Datensatzes wird dieser lediglich zum Testen der trainierten Modelle verwendet. 
 Da es sich um eine andere Stadt handelt und die Bilder visuell anders geartet sind, als aus dem BikeSat-Datensatz 
-kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen, insbesondere, da der Datensatz weder 
-im Training noch in der Validation des BikeSat-Datensatzes vorkommt, wodurch es sich um wahrhaftig neue Eingabedaten für die Modedelle handelt. 
+kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen, zusammen mit dem Wolfsburg-Datensatz 
+können auch Aussagen darüber gemacht werden, ob es sich um die Stadt oder die Art der Bilder handelt. 
 Es ist auch vorteilhaft, dass im Datensatz Radwege eher unterrepräsentiert sind, womit getestet werden kann, 
 ob Straßen allgemein alle Radwege erhalten oder eine echte Unterscheidung der Straßen im Modell stattfindet.
 
@@ -416,7 +416,7 @@ Großteil des Bildes mit Wohngebiet gefüllt ist.
 Somit ist nur ein verschwindender Anteil aller Pixel des Datensatzes als Radweg markiert. 
 
 
-Um den Anteil an als Radweg annotierte Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
+Um den Anteil an als Radweg annotierten Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
 die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist ein ganzes 
 $10.000{\times}10.000$-Pixel-Bild einzugeben, sollen die Bilder in kleinere Stücke zerteilt werden. 
 Dies ist auch bei den Modellen zur Straßenerkennung aus \autoref{sec:state-of-the-art-roads} die Praxis. 
@@ -468,10 +468,11 @@ bei der gewählten Ausschnittgröße weiterhin gut zu erkennen ist.
 
 \subsection{Training-Validation-Test-Split}
 
-Zunächst werden die zerschnittenen Bilder aller Städte gemischt. Dann werden diese Ausschnitte disjunkt in 
+Zunächst werden die zerschnittenen Bilder aller Städte aus dem BikeSat-Datensatz 
+(Hannover, Braunschweig, Oldenburg, Osnabrück) gemischt. Dann werden diese Ausschnitte disjunkt in 
 Training-, Validation- und Test-Daten aufgeteilt. 
-Damit sollten die unterschiedlichen Städte gleichermaßen in allen Teil-Datensätzen auftauchen, 
-sodass der Test- und Validationdatensatz gut die Generalisierungsfähigkeit des Netzes überprüft. 
+Damit sollten die unterschiedlichen Städte gleichermaßen in allen Partitionen auftauchen, 
+sodass die Test- und Validationspartition gut die Generalisierungsfähigkeit des Netzes überprüfen. 
 Durch die bereits höhere Zahl an Bildausschnitten (10.181 Stück) ist es eher unwahrscheinlich, 
 dass eine ungleiche Verteilung der Städte vorkommt. Außerdem ist das Mischen wichtig, 
 damit die Randausschnitte, die große schwarze Flächen beinhalten, anteilig gleich in 
@@ -480,13 +481,13 @@ zum Beispiel nur in dem Validation- oder Testdatensatz vorkommen.
 
 \autoref{tab:bike-split} zeigt den im Folgenden verwendeten Trainings-Validation-Test-Split. 
 Hierbei sind zwei Dinge zu bemerken, die nicht aus der Tabelle hervorgehen: 
-Zunächst ist der Testdatensatz abgespalten. Hierzu wird 15\% vom Hannover-Datensatz und 
-20\% von den jeweiligen Datensätzen der restlichen Städte als Testpartition abgespaltet. Da der Hannover-Datensatz so groß ist, wie die Datensätze der
+Zunächst wir die Testpartition abgespalten. Hierzu wird 15\% von Hannover und 
+20\% von den jeweiligen restlichen Städte als Testpartition verwendet. Da der Hannover-Teil so groß ist, wie die Teile der
 restlichen Städte zusammen, läuft dies auf einen eher unkonventionellen Split von 17,5\% Testdaten hinaus. Diese Verteilung wurde so getroffen, 
-um den Hannover-Datensatz etwas weniger zu gewichten, um im Test die Generalisierungsfähigkeit besser testen zu können
-und den Einfluss der kleineren Städte auf die Generalisierungsfähigkeit zu erhöhen. Der Validation-Teildatensatz wurde danach aus 8\%, 
+um den Hannover-Teil etwas weniger zu gewichten, um im Test auf dem BikeSat-Datensatz die Generalisierungsfähigkeit besser testen zu können
+und den Einfluss der kleineren Städte auf die Generalisierungsfähigkeit zu erhöhen. Die Validationspartition wird danach aus 8\%, 
 bzw. der Trainingsdatensatz aus 92\% vom Rest gebildet. \\
-Der Trainingsdatensatz ist mit ca. 75\% der gesamten Daten eher groß gewählt, während der Validation-Datensatz eher klein gewählt ist. 
+Die Trainingspartition ist mit ca. 75\% der gesamten Daten eher groß gewählt, während der Validation-Datensatz eher klein gewählt ist. 
 Nun kann ein größerer Validation-Datensatz dazu beitragen, die Hyperparameter besser zu optimieren. Das soll allerdings nicht Fokus der Arbeit sein.
 Diese Entscheidung des großen Trainingsdatensatzes wurde getroffen,
 um möglichst viele und unterschiedliche Bilder zum Training zu verwenden, da der Datensatz mit automatischer Synthese 
@@ -505,7 +506,7 @@ generiert wurde und daher qualitativ eher unvorteilhaft ist, wodurch eine höher
 \end{table}
 
 
-\subsection{Augmentation}
+\subsection{Augmentierung}
 
 Die Augmentierungen werden unterteilt in \textit{Basic-Augmentation}, wobei das Bild jeweils nur verschoben wird und 
 \textit{Color-Augmentation}, also farbverändernde Augmentierungen, wobei verschiedene Eigenschaften des Bildes,
@@ -513,7 +514,9 @@ wie Kontrast, Helligkeit, Farbe und Sättigungen verändert werden. Color-Augmen
 Augmentierungen von Basic-Augmentation, ist also eine echte Obermenge.
 
 Die Augmentierung wird nicht vor dem Training angewandt, um den Datensatz künstlich zu vergrößern, 
-sondern während dem Training pseudo-zufällig mit festem Seed, um die Ergebnisse reproduzieren zu können.
+sondern während dem Training pseudo-zufällig mit festem Seed, 
+also per Zufallsgenerator, der auf Basis des Startwertes (Seed) eine feste, 
+deterministische Sequenz an Zufallszahlen zurückgibt, um die Ergebnisse reproduzieren zu können.
 Somit wird jedes Bild während des Trainings, bevor es in das Netz eingegeben wird zufällig augmentiert 
 und dann eingegeben. Damit erhält ein und dasselbe Bild über die verschiedenen Epochen jedes Mal unterschiedliche 
 Anpassungen auf Basis des Zufallsgenerators. Dies erhöht die Generalisierungsfähigkeit bzw. 
@@ -564,7 +567,7 @@ da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten 
 Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation} und \autoref{fig:color-aug}, 
 werden in ihrem Wertebereich pseudo-zufällig angewandt. 
 Sollte es die Veränderung erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
-schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei mit nichts Neuem konfrontiert ist. 
+schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei keine neue Eigenschaft lernen muss. 
 \begin{enumerate}
 	\item Rotation im Intervall von $[-90^\circ ; 90^\circ ]$. Eine Gradzahl wird für jedes Bild zufällig ausgewählt und angewandt. 
 	Die dabei entstehenden leeren Bildbereiche werden mit Schwarz ($RGB = (0,0,0)$) gefüllt. 
@@ -573,7 +576,7 @@ schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei mit nichts Neuem
 	\item Horizontale Spiegelung. Es wird zufällig entschieden, ob ein Bild an der vertikalen Spiegelachse gespiegelt wird. 
 	Diese Augmentation ist ebenfalls realistisch und hat gegenüber der Rotation den Vorteil keine schwarzen Flächen 
 	einzuführen aber den Nachteil, nicht so viele neue Bilder erzeugen zu können. 
-	\item Vertikale Spiegelung. Funktioniert wie die horizontale Spiegelung, allerdings wird an der horizontalen Achse gespiegelt. 
+	\item Vertikale Spiegelung. Diese funktioniert wie die horizontale Spiegelung, allerdings wird an der horizontalen Achse gespiegelt. 
 	Beide Spiegelungen können simultan auftreten, es gibt also vier Spiegelungs-Permutationen, 
 	die mit gleicher Wahrscheinlichkeit auftreten.
 	\item Horizontale Verschiebung im Intervall von $[-0,1 \cdot w; 0,1 \cdot w]$ Pixel entlang der horizontalen Achse,
@@ -598,11 +601,12 @@ Die Randbereiche, wofür aufgrund der Verschiebung und Rotation keine Daten vorh
 
 Die angewandten Augmentationen sind so gewählt, dass eine maximale Generalisierungsfähigkeit erreicht werden kann. 
 Insbesondere die Farbveränderungen sollen ermöglichen, dass Städte mit unterschiedlichen Farben von Fahrradweg-Untergründen 
-zuverlässig generalisiert werden. Wie gut das funktioniert, kann der Karlsruhe-Datensats zeigen: Im BikeSat-Datensatz 
+zuverlässig generalisiert werden. Wie gut das funktioniert, kann der Karlsruhe-Datensatz zeigen: Im BikeSat-Datensatz 
 besteht der Untergrund von Fahrradwegen häufig aus leicht rötlichen Pflastersteinen, während in Karlsruhe der Untergrund zumeist 
 aus Asphalt ist.   
 Auch sonst unterscheidet sich der Karlsruhe-Datensatz stark im Erscheinungsbild vom BikeSat-Datensatz. 
-Ein Vergleich der Ergebnisse auf den beiden Datensätzen im Ergebnis-Kapitel zeigt, ob die Augmentierungen effektiv sind. 
+Ein Vergleich der Ergebnisse auf den beiden Datensätzen, 
+ergänzt durch Tests auf dem Wolfsburg-Datensatz, im Ergebnis-Kapitel zeigt, ob die Augmentierungen effektiv sind. 
 
 \begin{figure}
 	\centering
@@ -654,7 +658,7 @@ Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w{\times}h} \mapsto \{0,1\}^
 \end{align}
 Die Funktion $dilate_B$ bildet eine Matrix auf eine weitere derselben Ordnung ab, 
 sodass alle Einträge gleich eins sind, die in der Eingabematrix eins sind. Zusätzlich sind alle Einträge eins, 
-die im Umkreis von $B$ Pixel um eine Eins in der Eingabematrix liegen. Somit werden die positiven (Wert = 1)
+die im Umkreis von $B$ Pixeln um eine Eins in der Eingabematrix liegen. Somit werden die positiven (Wert = 1)
 Pixel der Eingabematrix um die Bufferzone erweitert.  \\
 \autoref{eq:dilate_example} zeigt den Funktionswert von $dilate_B$ für eine Beispieleingabe 
 bei Puffergröße $B=1$.
@@ -804,8 +808,7 @@ erläutern und begründen, warum ein Backbone gewählt wurde:
 \autoref{fig:bike-unet-2} zeigt die verwendete Architektur für das \textit{\ac{BUNet2}}. 
 Hierfür wurde das in \autoref{fig:u-net-architecture} 
 dargestellte originale U-Net auf den vorliegenden Anwendungsfall angepasst.
-Diese Anpassungen sind in der nachfolgenden Liste \textit{begründet}. Dabei wird die Architektur auf einer 
-hohen Flughöhe \textit{erläutert}. 
+Diese Anpassungen sind in der nachfolgenden Liste \textit{begründet}. Dabei wird die Architektur grob und übersichtlich \textit{erläutert}. 
 Eine genaue \textit{Beschreibung} der Architektur in ihrer konkreten Umsetzung 
 ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.  
 
@@ -816,7 +819,9 @@ ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.
 	um eine intuitivere Bewertung zu ermöglichen. 
 	\item Im Gegensatz zum originalen U-Net (vgl. \autoref{sec:architekturkomponenten:unet}) soll der 
 	Output dieselbe Bild-Dimension erhalten, wie der Input, um die Lokalisierung der semantischen Segmentierung zu verbessern.
-	Das ist auch bei in \autoref{sec:state-of-the-art-roads} beschriebenen Netzen gewöhnlich und bewährt.
+	Beim originalen U-Net ist das Ergebnisbild leicht kleiner aufgrund nicht-gepufferter Convolutions.
+	Auch bei in \autoref{sec:state-of-the-art-roads} beschriebenen Netzen ist gewöhnlich und bewährt, 
+	die Bilder so zu puffern, dass der Input und der Output die gleiche Dimension haben.
 	\item 
 	Das Bike-U-Net-2 soll eher geringere parametrische Komplexität aufweisen. 
 	Die Zahl an Parametern ist somit weitaus geringer als im Original-U-Net (vgl. \autoref{sec:architekturkomponenten:unet}) angesetzt. 
@@ -838,14 +843,26 @@ ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.
 	oder überhaupt nicht, nötig.
 	\item Die Aktivierungsfunktion trägt zu der Lernfähigkeit des Netzes bei (Robustheit gegen das Vanishing-Gradient-Problem), 
 	es sind alle Netzteile möglichst beteiligt, um die Komplexität zu nutzen (Resistenz gegen das Dying-Neuron-Problem) und
-	numerisch zu große Aktivieriungen sind vermieden. 
+	numerisch zu große Aktivieriungen sind vermieden. Hierzu wird \ac{ELU} verwendet.\footnote{Eine genauere Beschreibung liegt im Implementationskapitel vor.}
 	\item Für das Ouptut-Layer soll eine probabilistische Aktivierungsfunktion verwendet werden, 
 	um die Ergebnisse leichter zu interpretieren.
 \end{itemize}
 
 \begin{figure}
-	\centering
-	\includegraphics[width=1.\textwidth]{Bilder/own-unet-2mil.pdf} 
+	\begin{minipage}{.49\textwidth}
+		\flushleft
+		\includegraphics[width=.25\textwidth]{Bilder/good-cut-ex.png} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.49\textwidth}
+		\flushright
+		\includegraphics[width=.25\textwidth]{Bilder/good-cut-ex-mask.png} 
+		\hspace*{2mm}
+	\end{minipage}
+	\begin{minipage}{1.\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/own-unet-2mil.pdf} 
+	\end{minipage}
 	\caption{Bike-U-Net-2 mit 1,946 Mio. Parametern.}
 	\label{fig:bike-unet-2}
 \end{figure} 
@@ -893,7 +910,7 @@ Architektur getestet, was eine Vielfalt an Architekturen abbildet.
 \subsubsection{Batch-Size:}
 
 Der Vorteil einer kleineren Batch-Size ist, dass das Netz besser lernt die Feinheiten der Daten abzubilden. 
-Der Vorteil einer görßeren Batch-Size ist, dass das Netz schneller trainiert. 
+Der Vorteil einer größeren Batch-Size ist, dass das Netz schneller trainiert. 
 Da allerdings Batch-Norm (vgl. \autoref{sec:architecture}) angewandt wird, würde eine Batch-Size von 1 (wie im originellen U-Net) keinen 
 Sinn ergeben, da die Daten im Pre-Processing nicht normalisiert werden (vgl. \autoref{sec:pre-processing}), wodurch Batch-Norm alle 
 Normalisierung übernimmt. Wenn das allerdings auf nur ein Bild angewandt wird, ist keine gute Normalisierung über den ganzen Datensatz zu erwarten. 
@@ -910,7 +927,9 @@ Das soll eine hohe Dropout-Rate im Mittelteil des Netzes ermöglichen, während 
 Dies ist erwünscht, damit in den äußeren Schichten, möglichst alle Inputs eingefangen werden bzw. die Outputs richtig lokalisiert werden. 
 In den äußeren Schichten mit eher weniger Filtern und damit weniger Parametern stellt Overfitting ein geringeres Problem dar. 
 Für die mittleren Layer mit ausgeprägten Feature-Maps, vielen Filtern und Parametern jedoch ein größeres Problem, weswegen hier ein eher größerer
-Dropout erwünscht ist.     
+Dropout erwünscht ist. Die Werte zum Dropout in \autoref{tab:dropout} 
+sind als Erfahrungswerte gewählt. Eine Untersuchung auf die Optimierung 
+der Hyperparameter wird nicht vorgenommen.    
 
 \begin{table}[ht]
 	\centering
@@ -926,13 +945,12 @@ Dropout erwünscht ist.
 \subsubsection{Learning-Rate:}
 
 Als Learning-Rate wird ein Faktor von $0,0001$ angesetzt. Dieser Wert wird in einigen verwandten Problemen mit U-Nets genutzt, 
-weswegen der Wert auch hier zu Beginn verwendet wird. Falls das Training damit sehr langsam ist oder nicht konvergiert, 
-kann der Wert angepasst werden. Durch einen Scheduler wird während des Trainings die Learning-Rate bei stagnierendem Fortschritt 
+weswegen der Wert auch hier zu Beginn verwendet wird. Durch einen Scheduler wird während des Trainings die Learning-Rate bei stagnierendem Fortschritt 
 herabgesetzt, was in \autoref{sec:training} genauer erläutert ist. 
 
-\section{Pre-Training auf Straßendatensätzen} \label{sec:pre-training-roads}
+\section{Transfer-Learning auf Straßendatensätzen} \label{sec:pre-training-roads}
 
-Für das Pre-Training auf Straßendatensätzen werden die Datensätze \textit{DeepGlobe} und \textit{Massachusetts} 
+Für das Vortrainieren auf Straßendatensätzen werden die Datensätze \textit{DeepGlobe} und \textit{Massachusetts} 
 (vgl. \autoref{sec:road-detection:roads-data}) zu dem \textit{Combined}-Datensatz zusammengefasst. 
 Dabei sind die Vorteile eines heterogenen Pre-Trainings genutzt: Es sind sowohl homogene amerikanische Städte (Massachusetts), 
 als auch sehr heterogene weltweite städtische und ländliche Straßen (DeepGlobe) enthalten, wodurch 
@@ -946,15 +964,19 @@ darauf nicht zugänglich sind.
 
 Der DeepGlobe-Datensatz kann ohne weiteres übernommen werden und nach den Regeln in \autoref{sec:pre-processing} vorverarbeitet werden. \\ 
 Für den Massachusetts-Datensatz wird eine weitere Vorverarbeitung vorgenommen. Der Massachusetts-Datensatz 
-besteht aus einem Ausschnitt von Massachusetts in Form eines unregelmäßigen Polygon. Viele der $512{\times}512$-Zuschnitte enthalten 
+besteht aus einem Ausschnitt von Massachusetts in Form eines unregelmäßigen Polygons. Viele der $512{\times}512$-Zuschnitte enthalten 
 also große, weiße Flächen ohne Bild. Der BikeSat-Datensatz enthält ebenfalls Zuschnitte mit schwarzen Flächen, 
 doch im Gegensatz zum BikeSat-Datensatz hat der Massachusetts-Datensatz das Problem, dass die Masken nicht von einem 
 unregelmäßigen Massachusetts-Ausschnitt genommen sind, sondern von einem quadratischen, sodass in den weißen Flächen 
 der Bilder in der dazugehörigen Maske an dießen Stellen Straßen eingezeichnet sind, wie \autoref{fig:problem-mass} illustriert. 
 Dadurch sieht das Netz also willkürlich 
-im weißen (RGB = (255, 255, 255)) Bereich als Straßen annotierte weiße Pixel. Um diese Verwirrung aufzulösen, werden 
-für den Combined-Datensatz alle Bild-Ausschnitte mit über 10\% weißer Fläche entfernt. 
-Ansonsten unterliegt es dem gleichen Pre-Processing wie die sonstigen Datensätze (vgl. \autoref{sec:pre-processing}). 
+im weißen (RGB = (255, 255, 255)) Bereich als Straßen annotierte weiße Pixel. \\
+Um diese Verwirrung aufzulösen, werden 
+für den Combined-Datensatz alle Bild-Ausschnitte so transformiert, dass weiße, zusammenhängende Flächen, 
+die mehr als 1\% der Pixel ausmachen, in schwarze Flächen ($RGB = (0,0,0)$) konvertiert werden und die dazugehörigen
+Masken an den gleichen Stellen geschwärzt werden. Die 1\%-Schwelle wird gewählt, um einzelne, kleine, regulär komplett weiße 
+Flächen zu schwärzen. \\
+Ansonsten unterliegen die Bilder dem gleichen Pre-Processing wie die sonstigen Datensätze (vgl. \autoref{sec:pre-processing}). 
 
 Schließlich werden beide Datensätze gemischt und in einen Training-Validation-Test-Split unterteilt und diese Splits werden zum 
 Combined-Datensatz vereinigt, wofür der Split in \autoref{tab:combined-split} abgebildet ist. 
@@ -992,7 +1014,7 @@ zuvor gestoppt wird, wie in \autoref{sec:training} detailliert.
 
 \section{Training} \label{sec:training}
 
-Zunächst Allgemeines zum Training:
+Zunächst folgt Allgemeines zum Training:
 Der Validation-Datensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
 Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
 Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 

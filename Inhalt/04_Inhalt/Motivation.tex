@@ -27,12 +27,17 @@ kann, mit dem ein Computer-Vision-Modell trainiert werden kann.
 
 
 Das Ziel der Studienarbeit liegt in der Erkennung von Fahrradwegen mithilfe von Computer Vision.
+Die Erkennung soll auch beinhalten, wo der Radweg grob verläuft, also z.B. auf welcher Straßenseite.
 Hierfür werden Satellitenaufnahmen mit einer Bodenauflösung von $20 cm$ verwendet.
 Da es für die Erkennung von Fahrradwege keine vorliegenden Datensets gibt, muss dieses selbst erstellt werden.
-Für die Umsetzung sollen unterschiedliche Architekturen von Neuronalen Netzen und unterschiedliche Methoden 
-zum Training verglichen werden, um herauszufinden, was sich am besten eigent. 
+Für die Umsetzung sollen unterschiedliche Architekturen von neuronalen Netzen und unterschiedliche Methoden 
+zum Training verglichen werden, um herauszufinden, was sich am besten eignet. 
 Im ersten Schritt erfolgt eine reine Klassifikation in Fahrradweg bzw. Nicht-Fahrradweg.
-
+Zum Testen der Netze wird eine neue Maßzahl entwickelt, die möglich macht, 
+die Performance des Netzes zu bewerten, wenn die Fahrradwege qualitativ richtig 
+erkannt werden, aber nicht an genau der Position, wie es die Maske vorgibt -- 
+was nicht genau die Position in der Realität sein muss.
+Diese Maßzahl wird \ac{BIoU} genannt.
 
 
 Zu Beginn der Arbeit wird auf den aktuellen Stand der Technik eingegangen.
