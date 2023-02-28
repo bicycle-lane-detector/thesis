@@ -275,7 +275,10 @@ Die \textit{\acf{IoU}-} bzw. \textit{Jaccard-Ähnlichkeitsmetrik} ist ein weit v
 \end{align} 
 Für ein binäres Klassifikationsproblem lässt sich die $IoU$ ausdrücken durch 
 \begin{align}
-	\label{eq:iou-binary} IoU = \frac{tp}{tp + fp + fn}~,
+	\label{eq:iou-binary} IoU = \begin{cases}
+		1 & tp + fp + fn = 0 \\ 
+		\frac{tp}{tp + fp + fn} & else \\
+	\end{cases}~,
 \end{align}
 wobei $tp$, $fp$, $fn$ wie in \autoref{eq:f1} \cite{Fletcher.2018}. 
 

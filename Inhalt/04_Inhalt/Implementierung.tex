@@ -19,19 +19,27 @@ bewertet. Wenn ein Fahrradweg, der nur wenige Pixel breit ist, um die Hälfte de
 aber ansonsten komplett dem Radweg entspricht, würde die \ac{IoU} bereits von 1 auf 0,5 sinken, obwohl \textit{qualitativ} 
 der Weg exakt erkannt wurde. Diese Intoleranz gegenüber leichter lokaler Verschiebung ist insbesondere in dem 
 in dieser Arbeit vorgestellten BikeSat-Datensatz aus \autoref{sec:bike-data} problematisch, 
-da dieser über \ac{OSM} annotiert ist und für viele Straßen die Lage des zugehörigen Radwegs heuristisch über 
+da dieser über \ac{OSM} annotiert ist und für viele Straßen die Lage des zugehörigen Radwegs geschätzt über 
 die Spuranzahl ermittelt wird. \\
+Das Problem lässt sich nicht umgehen, wenn dilatierte Bilder (vgl. \autoref{sec:eval:biou} \textit{BIoU}) verwendet werden.
+Werden die Bilder dilatiert, ist die IoU auf diesen dilatierten Bildern gleich oder größer als auf den originalen Bildern. 
+Diese neue dilatierte IoU erhöht aber auch die Anzahl an absolut Falsch-Positiven, was bei der BIoU nicht geschieht, 
+weswegen gilt: $IoU \leq IoU_{dilatiert} \leq BIoU$. Allerdings ist die dilatierte IoU sehr schwierig zu interpretieren.
+Während die IoU die strikte Überdeckung von Prediction zu Ground-Truth misst und die BIoU die gepufferte, also 
+die Frage, ob die Prediction grob in der Nähe der Ground-Truth positioniert ist, beantwortet, misst die dilatierte IoU die strikte 
+Überdeckung, falls die Prediction und Ground-Truth umfangreicher, also die Radwege breiter, wären. 
+Diese Information ist neben der IoU und BIoU aber nicht sonderlich hilfreich, weswegen darauf verzichtet wird. \\ 
 Aufgrund der genannten Einschränkungen ist die \ac{IoU} ungeeignet als Verlustfunktion, kann jedoch als ein Maß 
 in die Bewertung der Modellperformanz mit einfließen. 
 
 Dice gewichtet die $tp$ mehr als die \ac{IoU}. Damit wird das Ungleichgewichtsproblem vermindert und Dice ist 
 besser geeignet als Verlustfunktion gegenüber der \ac{IoU}. Wie die \ac{IoU} hat Dice allerdings keine Toleranz 
-ggü. leichter Verschiebung der Radwege. Auf einem handannotierten Datensatz funktioniert Dice besser. 
+gegenüber leichter Verschiebung der Radwege. Auf einem handannotierten Datensatz funktioniert Dice besser. 
 Aufgrund der Beliebtheit von Dice in der semantsichen Segmentierung 
 wird ein guter Vergleich mit anderen Modellen ermöglicht. 
 Aus diesen Gründen wird Dice für die Radwegerkennung als Verlustfunktion herangezogen.
 
-BCE wird für das originelle U-Net eingesetzt, ist aber in neueren U-Nets durch Dice abgelöst. 
+\acf{BCE} wird für das originelle U-Net eingesetzt, ist aber in neueren U-Nets durch Dice abgelöst. 
 Auch für das Problem der Radwegerkennung wird BCE nicht eingesetzt, da wie im originellen U-Net eine Weight-Map erstellt werden müsste, 
 um das Klassenimbalanceproblem der BCE auszugleichen, was aber einen zu hohen Implementationsaufwand bedeuten würde, im Gegensatz zu 
 Dice, welches ohne weiteren Aufwand funktioniert. 
@@ -45,8 +53,8 @@ Nachfolgende Auflistung beschreibt detailliert, wie die \acp{BUNet} \ac{BUNet2} 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=1.\textwidth]{Bilder/own-unet-15mil.pdf} 
-	\caption{Bike-U-Net-15 mit 15,165 Mio. Parametern.}
+	\includegraphics[width=1.\textwidth]{Bilder/own-unet-15mil-marked.pdf} 
+	\caption{Bike-U-Net-15 mit 15,165 Mio. Parametern. Die geänderten Convolution-Filteranzahlen sind mit roten Kasten markiert.}
 	\label{fig:bike-unet-15}
 \end{figure} 
 
@@ -58,7 +66,7 @@ Nachfolgende Auflistung beschreibt detailliert, wie die \acp{BUNet} \ac{BUNet2} 
 	In der Abbildung ist exemplarisch $512 \times 512 \times 3$ gewählt. \\
 	Der Output verwendet lediglich ein Output-Neuron pro Input-Pixel, wobei keine Aktivierung einen Hintergrundpixel 
 	und eine Aktivieriung ein Radweg-Pixel impliziert, wie in \autoref{sec:state-of-the-art-roads} beschrieben. 
-	\item Im Gegensatz zum originalen U-Net (vgl. \autoref{sec:architekturkomponenten:unet}), wird bei den Convolutional-Layern Padding eingesetzt,
+	\item Bei den Convolutional-Layern wird Padding eingesetzt,
 	um die Dimensionen der Feature-Maps nicht nach und nach zu verkleinern und so einen exakt symmetrischen Aufbau zu gewährleisten.
 	Ebenso wurde bei den Up-Convolutions Padding eingefügt, um auch hier eine Verkleinerung der Feature-Maps zu verhindern.
 	Diese Anpassung wurde eingesetzt, um kein Zuschneiden bei den Skip-Connections zu benötigen, was die Lokalisierung verbessern soll,
@@ -95,13 +103,13 @@ Nachfolgende Auflistung beschreibt detailliert, wie die \acp{BUNet} \ac{BUNet2} 
 mit auf ImageNet vortrainierten Gewichten als Backbone. \\
 Hierzu werden die drei Fully-Connected-Layer 
 (und Soft-Max-Aktivierung) am Ende entfernt und mit drei neuen \textit{conv3-512}-Schichten ersetzt. 
-Diese bilden den mittleren (\enquote{untersten}) Block im U-Net. Darauf folgt eine direkte Spieglung 
+Diese bilden den mittleren (\enquote{untersten}) Block im U-Net. Darauf folgt eine direkte Spiegelung 
 von VGG16 als Decoder mit abschließender $1\times 1$-Convolution. Im Gegensatz zum Bike-U-Net (s. \autoref{sec:architecture:bike-u-net}) 
 und ursprünglichen U-Net (s. \autoref{sec:architekturkomponenten:unet}) werden allerdings keine 
 \textit{up-conv3}-Layer mit trainierbaren Gewichten zum Upsampling genutzt, sondern 2D-Upsampling-Layer, 
 ohne trainierbare Parameter. Diese Entscheidung wird getroffen, um VGG16 besser nachzuempfinden, 
 da hier Maxpool-Schichten zum Downsampling verwendet werden, die ebenfalls keine trainierbaren Parameter enthalten.
-Weiter sind nach jeder nicht-vortrainierten Convolution-Schicht, also nach jeder, die nicht zu VGG16 gehören, 
+Weiterhin sind nach jeder nicht-vortrainierten Convolution-Schicht, also nach jeder, die nicht zu VGG16 gehören, 
 Batch-Normalization-Layer eingezogen, aus den in \autoref{sec:architecture:bike-u-net} und \autoref{sec:architekturkomponenten:batchnorm}
 genannten Gründen wie schnellerem Training, leichter Glättung und fehlender sonstiger Standardisierung und Normalisierung.
 Die für U-Net charakteristischen Skip-Connections werden vor jeder Maxpool-Schicht außer der ersten eingesetzt 

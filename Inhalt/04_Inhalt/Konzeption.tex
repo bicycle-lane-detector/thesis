@@ -567,7 +567,7 @@ da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten 
 Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation} und \autoref{fig:color-aug}, 
 werden in ihrem Wertebereich pseudo-zufällig angewandt. 
 Sollte es die Veränderung erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
-schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei keine neue Eigenschaft lernen muss. 
+schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei kein neues Merkmal lernen muss. 
 \begin{enumerate}
 	\item Rotation im Intervall von $[-90^\circ ; 90^\circ ]$. Eine Gradzahl wird für jedes Bild zufällig ausgewählt und angewandt. 
 	Die dabei entstehenden leeren Bildbereiche werden mit Schwarz ($RGB = (0,0,0)$) gefüllt. 
@@ -692,7 +692,10 @@ Schließlich wird mit der $1,1$-Höldernorm für Matritzen die Anzahl an Einsen 
 Die Formel für die \ac{BIoU} pro Ausgabe ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten 
 Variablen:\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}
 \begin{align}
-	\label{eq:quality} BIoU = \frac{tp_B}{tp_B + fp_B + fn_B} ~.
+	\label{eq:quality} BIoU = \begin{cases}
+		 1 & tp_B + fp_B + fn_B = 0 \\ 
+		 \frac{tp_B}{tp_B + fp_B + fn_B} & else \\
+	\end{cases} ~.
 \end{align}
 Für einen \ac{BIoU}-Wert über einen Batch können die individuellen Werte pro Ausgabe gemittelt werden.
 
@@ -1011,6 +1014,17 @@ Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert. Der Encoder ist f�
 während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 10 verringert, der Encoder 
 auf trainierbar gestellt und das Training fortgesetzt bis entweder 100 Epochen verstrichen sind oder das Training 
 zuvor gestoppt wird, wie in \autoref{sec:training} detailliert.    
+
+Generell ist es auch möglich unüberwachtes Lernen auf die Straßendatensätze (bzw. irgendwelche 
+Luftbilder von Städten) anzuwenden, um die Merkmale von Infrastruktur in Städten zu lernen. 
+Hierfür könnten konkret die Netzarchitekturen als Auto-Encoder eingesetzt werden, wobei der Input das 
+Luftbild darstellt und das Label, also der gewünschte Output, ebenfalls das Eingabeluftbild. 
+So lernt das Netz das Eingabebild aus einer komprimierten Darstellung in der Mitte des Netzes wiederherzustellen. 
+Dabei werden die Merkmale des Bildes gelernt. Allerdings liegt hierbei der Fokus nicht unbedingt auf den für 
+den Straßenverkehr relevanten Merkmale, sondern irgendwelchen, die am besten ermöglichen das Bild zu rekonstruieren. 
+Durch die Annotation der Straßen soll der Fokus stärker auf die Merkmale gelenkt werden, die für Straßen und 
+Wege relevant sind, wie die Farbe, die Straßenmarkierungen, die Breite im Verhältnis zur Länge usw. 
+
 
 \section{Training} \label{sec:training}
 
