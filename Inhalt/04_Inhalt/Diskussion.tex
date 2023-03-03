@@ -73,7 +73,7 @@ Damit beweist sich die BIoU, als ein Maß, welches im Falle der Straßenerkennun
 dass eine zu schmal oder zu breit gezeichnete Predicition mit rauen Kanten als (qualitativ) korrekt in 
 die Bewertung einfließt.  
 
-\section{Radwegerkennung}
+\section{Radwegerkennung} \label{sec:disc:recog}
 
 Die Ergebnisse für die Radwegerkennung (vgl. \autoref{tab:results}) zeigen, dass die Ergebnisse der 
 Radwegerkennung statistisch signifikant\footnote{
@@ -148,15 +148,29 @@ da der Unterschied in IoU keine statistische Signifikanz erreicht.
 % color augmentation nicht viel grebracht -> liegt wohl an stadtbild
 % netze eher konservativ wie karlsrueh prediction zeigt
 % warum gefilterter schlechter?
+% effizienz des pretraining 
+% warum wenig unterschiede zwischen den netzen
 
-effizienz des pretraining 
-warum wenig unterschiede zwischen den netzen
+\subsection{Effektivität des Pre-Trainings}
 
-\subsection{Effektivität des Fine-Tunings}
-
-
-
-\subsection{BIoU für Radwegerkennung}
+In dieser Arbeit wird zweimal Pre-Training angewandt: Zunächst sind die Backbone-Netze (VBUNet, RBUNet, DBUNet) 
+auf dem ImageNet-Datensatz vortrainiert, während das die BUNet-Netze nicht sind. Dann sind die Netze 
+mit \{B,VB,RB,DB\}UNet$^{\{l,r\}}$ auf dem Combined-Datensatz der Straßenerkennung fine-tuned bzw. für die 
+Radwegerkennung vortrainiert. Zunächst lässt sich sagen, dass das links- bzw. rechtsseitige Fine-Tuning 
+keinen generellen Effekt hat und eher ein Hyperparameter darstellt, welcher pro Modell optimiert werden muss. 
+Allgemein erzielt das Pre-Training auf dem Straßendatensatz nur für Basic-Aug. einen positiven Effekt, 
+während es für Color-Aug. unterschiedliche Effekte, von destruktiv bis konstruktiv, hat. 
+Das scheint zu zeigen, dass durch das Pre-Training im Basic-Aug.-Fall vermutlich die Farbe von Straßen als 
+grau (Asphalt) gelernt wird, was bei der Radwegerkennung ohne farbverändernde Augmentierungen hilfreich ist.  
+Möglicherweise ist dann die Performance von vortrainierten Modellen mit Color-Aug. schlechter, 
+da der Datensatz zu klein ist, um die Struktur anstelle der Farbe ausreichend zu gut zu lernen. \\ 
+Bezüglich des Vortrainings auf dem ImageNet-Datensatz lässt sich nicht folgern, 
+ob diese Vortrainings-Methode effektiv ist, da es ohne ein Vortraining der BUNet-Modelle auf dem ImageNet-Datensatz 
+nicht möglich ist festzustellen, ob die bessere Performance der Backbone-Modelle an dem Pre-Training oder 
+besserer Archtiektur liegt. In weiteren Experimenten kann BUNet2 und BUNet15 auf ImageNet vortrainiert werden, 
+für eine vergleichbare Gegenüberstellung mit den Backbone-Netzen. \\
+Insgesamt spielt das Pre-Training aber eine eher geringe Rolle und kann eher zur Optimierung genutzt werden. 
+Davor sollte aber der Datensatz oder die grundlegende Funktionsweise der Radwegerkennung verbessert werden (vgl. \autoref{sec:disc:recog}). 
 
 \subsection{Gefilterter Straßendatensatz}
 
@@ -197,3 +211,5 @@ also ein gutes Ergebnis verzeichnen, dass die Modelle nicht jegliche Straßen mi
 korrekt gelernt haben, was keine Radwege sind, obwohl die Modelle während des Trainings mit dem BikeSat-Datensatz 
 nur Beispiele eingegeben bekommen haben, die Radwege enthalten. Es folgt, dass die Modelle eher hesitent sind,
 Pixel als Radwege zu annotieren.  
+
+% \subsection{BIoU für Radwegerkennung}
