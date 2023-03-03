@@ -170,7 +170,10 @@ nicht möglich ist festzustellen, ob die bessere Performance der Backbone-Modell
 besserer Archtiektur liegt. In weiteren Experimenten kann BUNet2 und BUNet15 auf ImageNet vortrainiert werden, 
 für eine vergleichbare Gegenüberstellung mit den Backbone-Netzen. \\
 Insgesamt spielt das Pre-Training aber eine eher geringe Rolle und kann eher zur Optimierung genutzt werden. 
-Davor sollte aber der Datensatz oder die grundlegende Funktionsweise der Radwegerkennung verbessert werden (vgl. \autoref{sec:disc:recog}). 
+Davor sollte aber der Datensatz oder die grundlegende Funktionsweise der Radwegerkennung verbessert werden (vgl. \autoref{sec:disc:recog}). \\
+Insbesondere mit Hinsicht auf den Performanceabfall bei unbekannten Städten, kann ein Pre-Training 
+als unüberwachtes Lernen durchgeführt werden, um die Merkmale von unterschiedlichen Städten zu lernen, 
+ohne dafür einen Datensatz annotieren zu müssen. 
 
 \subsection{Gefilterter Straßendatensatz}
 

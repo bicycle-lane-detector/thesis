@@ -1,19 +1,27 @@
 \chapter{Fazit}
 
-In diesem Kapitel wird das Vorgehen in dieser Arbeit zusammengefasst, eine kritische Reflexion vorgenommen, in der unter Anderem die Schwierigkeiten des Projekts aufgeführt werden, sowie eine Aussicht auf die Zukunft des Projekts gegeben. 
+Abschließend lässt sich zusammenfassen, dass die Radwegerkennung auf dem BikeSat und Wolfsburg-Datensatz 
+ausreichend gut funktioniert hat, aber auf Städten anderer Infrastruktur, wie Karlsruhe, eher mangelhaft.
+Die Übertragbarkeit von Ergebnissen zwischen unterschiedlichen Städten und Ländern ist daher, zumindest 
+für den Fall der Radwegerkennung, eher schwierig. Mit dem BikeSat-, Wolfsburg- und Karlsruhe-Datensatz 
+sind allerdings Datensätze geschaffen, die weiter für die Radwegerkennung aus Luftbildern verwendet 
+werden können, um z.B. andere Herangehensweisen zu untersuchen. Die Datensätze sind dabei vom Umfang 
+vergleichbar mit Benchmark-Datensätzen der Straßenerkennung. \\
+Außerdem zeigt die Arbeit, dass Erkennung von feineren Strukturen der Infrastruktur von Städten, als Straßen 
+möglich ist. Für die bessere und intuitivere Einordnung von Ergebnissen der semantischen Segmentierung, 
+bei denen die exakte Position weniger relevant ist, zeigt sich die in dieser Arbeit aus der Quality entwickelte \ac{BIoU} 
+als nützliches Werkzeug und Bewertungsmaß, welches im praktischen Einsatz die Erwartungen erfüllt. \\
+Das überwachte Pre-Training auf Straßendatensätzen und unterschiedliche Modellarchitekturen 
+erzeugen keine signifikanten Unterschiede in der Performance. 
 
-\section{Zusammenfassung}
-
-
-\section{Kritische Reflexion}
-
-
-\section{Ausblick}
-
-An dieser Stelle sei jedoch gesagt, dass insbesondere die Zoom-Augmentation sehr nützlich sein könnte, 
-sollte das Modell für Fotos mit unterschiedlicher \ac{GSD} generalisiert werden. 
-Hyperparameter schrubben
-menschlich annotierter Datensatz
-Gehwege
-direkt graphen extrahieren und darauf ML machen
-Pretraining auf gaaaanz vielen Luftbildern von Städten
+Als Zukunftsausblick können auf Basis dieser Arbeit andere Infrastruktur-Elemente in Städten erkannt werden, 
+wie Busspuren, Gehwege, Parkplätze am Straßenrand oder sonstiges. 
+Möglicherweise kann mit dem direkten Extrahieren der Graphen von z.B. Radwegen einige Probleme mit dem automatischen 
+Annotieren der Datensätze umgangen werden und somit bessere Ergebnisse erzielt werden. 
+Auch könnte ein unüberwachtes Pre-Training auf einem sehr großen Datensatz mit sehr vielen unterschiedlichen 
+Städten einen Vorteil bringen. Außerdem kann untersucht werden, wie viel Einfluss die unterschiedliche 
+Infrastruktur hat, und inwiefern diese die Ergebnisse verschlechtert. 
+Des Weiteren sollte beachtet werden, dass die Datensätze zur Radwegerkennung in dieser Arbeit 
+eine \ac{GSD} von 20 $\frac{cm}{Pixel}$ aufweisen, weswegen auf Zoom-Augmentierung verzichtet wird. 
+Sollten unterschiedliche \acp{GSD} in zukünftigen Arbeiten verwendet werden, sollte diese Augmentierung 
+untersucht werden. 
