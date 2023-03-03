@@ -72,3 +72,28 @@ dass nur circa 60\% der Straßen richtig erkannt worden sind, sondern eher im Be
 Damit beweist sich die BIoU, als ein Maß, welches im Falle der Straßenerkennung lediglich die IoU so anhebt, 
 dass eine zu schmal oder zu breit gezeichnete Predicition mit rauen Kanten als (qualitativ) korrekt in 
 die Bewertung einfließt.  
+
+\section{Radwegerkennung}
+
+Die Ergebnisse für die Radwegerkennung (vgl. \autoref{tab:results}) zeigen, dass die Ergebnisse der 
+Radwegerkennung statistisch signifikant\footnote{
+	$p = 1,887\cdot 10^{-8}$ für IoU und $p = 3,77\cdot 10^{-7}$ für BIoU
+	des einseitigen Zweistichproben-Welch-Test zwischen der Straßenerkennung 
+	und der Radwegerkennung für Basic-Aug. 
+} schlechter sind, als die der Straßenerkennung.
+
+schlechtere Ergebnisse als Straßenkennung, was probleme ? 
+warum karslrueh so viel schlechter
+warum wolfsburg besser ? 
+Wolfsburg doch eher ungeeignet weil zu ähnlich 
+experimente mit anderen städten
+color augmentation nicht viel grebracht -> liegt wohl an stadtbild
+netze eher konservativ wie karlsrueh prediction zeigt
+Kreuzvalidierung ? Ergebnisse schlecht genug, dass nicht nötig
+
+\section{BIoU für Radwegerkennung}
+
+\subsection{Gefilterter Straßendatensatz}
+
+
+

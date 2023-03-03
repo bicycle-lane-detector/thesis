@@ -120,10 +120,18 @@ Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unt
 Außerdem sind pro Spalte das arithmetische Mittel $\bar{x}$ und die Standardabweichung s angegeben. 
 Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
 \begin{enumerate}
-	\item Die Modelle performen stärker auf der Testpartition des BikeSat-Datensatzes, mit ein paar Ausnahmen, wie z.B. dem RBUNet$^r$ auf Color-Augmentation trainiert, 
+	\item Die Modelle performen statistisch signifikant\footnote{
+		$p = 2,143\cdot 10^{-8}$ für die IoU und $p = 0,00639$ für die BIoU für Basic-Aug. und 
+		$p = 2,937\cdot 10^{-7}$ für die IoU und $p = 7,06 \cdot 10^{-4}$ für die BIoU für Color-Aug.
+		des einseitigen Zweistichproben-Welch-Tests zwischen BikeSat und Karlsruhe. 
+	} stärker auf der Testpartition des BikeSat-Datensatzes, mit ein paar Ausnahmen, wie z.B. dem RBUNet$^r$ auf Color-Augmentation trainiert, 
 	als auf dem Karlsruhe-Datensatz. 
-	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, weisen also eine geringere Streuung auf, als bei dem Karlsruhe-Datensatz.
-	\item Die \ac{IoU} und \ac{BIoU} unterscheiden sich teilweise markant innerhalb eines Modells auf dem Karlsruhe Datensatz (s. z.B. BUNet2$^*$ auf Basic-Augmentation).
+	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, weisen also eine signifikant \footnote{
+		$p = 0,0035$ für die IoU und $p = 4,38\cdot 10^{-4}$ für die BIoU für Basic-Aug. und 
+		$p = 6,21\cdot 10^{-4}$ für die IoU und $p = 1,72 \cdot 10^{-4}$ für die BIoU für Color-Aug.
+		des F-Tests zwischen BikeSat und Karlsruhe. 
+	} geringere Streuung auf, als auf dem Karlsruhe-Datensatz.
+	\item Die \ac{IoU} und \ac{BIoU} unterscheiden sich teilweise stark innerhalb eines Modells auf dem Karlsruhe Datensatz (s. z.B. BUNet2$^*$ auf Basic-Augmentation).
 	\item Die Netze, die mit Color-Augmentation trainiert sind, erzielen insgesamt höhere Spitzenwerte auf beiden Datensätzen. 
 	\item Bei den Backbone-Netzen ist im Schnitt keine Verbesserung von Basic-Augmentation zu Color-Augmentation zu beobachten. 
 	\item Für die Netze der BUNet-Architektur führte die Color-Augmentation allgemein zu einer besseren Performance auf dem BikeSat-Datensatz, nicht jedoch auf dem Karlsruhe-Datensatz.
@@ -182,9 +190,14 @@ Training mit Color-Augmentation. Zur besseren Übersichtlichkeit sind die Ergebn
 da diese weniger interessant sind. 
 \begin{enumerate}
 	\item Es fällt auf, dass sowohl die \ac{IoU} als auch die \ac{BIoU} für alle Modelle
-	auf dem Wolfsburg-Datensatz besser ist, als auf der Testpartition des BikeSat-Datensatzes.  
+	auf dem Wolfsburg-Datensatz besser ist, als auf der Testpartition des BikeSat-Datensatzes 
+	(mit Ausnahme der IoU von $BUNet15^*$).  \\
 	Selbiges gilt für den Vergleich von Wolfsburg mit Karlsruhe, bis auf die Modelle VBUNet$^l$ und 
-	RBUNet$^r$, die auf dem Karlsruhe-Datensatz in IoU sowie BIoU höhere Werte erzielen, als auf dem Wolfsburg-Datensatz.
+	RBUNet$^r$, die auf dem Karlsruhe-Datensatz in IoU sowie BIoU höhere Werte erzielen, als auf dem Wolfsburg-Datensatz. \\
+	Statistisch signifikante Unterschiede erzielen die BIoU von BikeSat zur BIoU von Wolfsburg ($p = 0,043$), 
+	sowie die IoU und BIoU von Karlsruhe zu Wolfsburg ($p = 1,14 \cdot 10^{-7}$, bzw. $1,36 \cdot 10^{-4}$). 
+	Die Differenz von IoU des BikeSat-Datensatzes zur IoU des Wolfsburg-Datensatzes verfehlt die statistische Signifikanz 
+	mit $p = 0,122$.\footnote{Alle Tests als einseitige Zweistichproben-Welch-Tests.}  
 	\item Über alle Datensätze performt RBUNet$^*$ am besten. Es liefert über alle sechs Maßzahlen Top-3-Ergebnisse wobei es 
 	in für drei davon am besten performt. 
 	\item Darüber hinaus ist auffällig, wie viel schlechter die vortrainierten Varianten der VBUNet-Architektur performen. 
@@ -193,7 +206,7 @@ da diese weniger interessant sind.
 	\item Generell performen die Netze der \ac{BUNet2}-Architektur schlechter als die der \ac{BUNet15}-Architektur.
 	\item Interessanterweise performen die vortrainierten Modelle der Backbone-Architekturen auf dem BikeSat- und 
 	Wolfsburg-Datensatz konstant schlechter als die nicht vortrainierten. Die rechtsseitig vortrainierten zeigen 
-	allerdings bessere Performance auf dem Karlsruhe-Datensatz als die anderen Modelle der jeweiligen Backbone-Archtiektur.\\
+	allerdings bessere Performance auf dem Karlsruhe-Datensatz, als die anderen Modelle der jeweiligen Backbone-Archtiektur.\\
 	Für Modelle der BUNet-Architektur sind die Ergebnisse recht ähnlich und es ist keine schlechtere Performance
 	zu beobachten. 
 \end{enumerate}
@@ -367,11 +380,42 @@ Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unt
 Außerdem sind pro Spalte das arithmetische Mittel $\bar{x}$ und die Standardabweichung s angegeben. 
 Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:biou} festgelegt.
 \begin{enumerate}
-	\item Der gefilterte Karlsruhe-Datensatz weist generell schlechtere Ergebnisse, sowohl in den Spitzen, als auch im Mittel auf, 
-	als der Ungefilterte aus \autoref{tab:results}.
-	\item Auf dem gefilterten Datensatz performt das VBUNet$^*$ am besten, wobei das RBUNet$^*$ nur leicht schlechter ist auf allen Maßzahlen.
+	\item Der gefilterte Karlsruhe-Datensatz weist schlechtere Ergebnisse in den Spitzen auf, 
+	als der ungefilterte aus \autoref{tab:results}. \\
+	Im Mittel ist der gefilterte Karlsruhe-Datensatz für sowohl Basic-Aug., als auch Color-Aug. in der BIoU  
+	signifikant schlechter, als das ungefilterte Gegenstück ($p = 5,53 \cdot 10^{-5}$, bzw. $p = 0,0012$). 
+	Für die IoU ist dies nicht nachweisbar ($p = 0,268$, bzw. $p = 0,353$).\footnote{Alle Tests als einseitige Zweistichproben-Welch-Tests.}    
+	\item Auf dem gefilterten Datensatz performt das VBUNet$^*$ am besten, wobei das RBUNet$^*$ nur leicht schlechter ist in allen Maßzahlen.
 	\item Für die mit Color-Augmentation trainierten Modelle weist der gefilterte Datensatz eine kleinere Streuung auf. 
 \end{enumerate}
+
+\subsection{Korrelation von IoU und BIoU}
+
+\begin{wrapfigure}{r}{0.70\textwidth}
+	\centering
+	\vspace{-20pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.65\textwidth]{Bilder/iou-biou-correlation-karlsruhe.pdf}
+	\vspace{-5pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[BIoU der Modelle der Radwegerkennung auf dem Karlsruhe-Datensatz aufgetragen über deren IoU.]{\unskip}
+	BIoU über IoU in Prozent für beide Augmentierungsmethoden und gefilterten und ungefilterten Karlsruhe-Datensatz 
+	mit jeweils Korrelationskoeffizient. 
+	\label{fig:iou-biou-corr-ka}
+	% \vspace{-20pt}
+\end{wrapfigure}
+
+\autoref{fig:iou-biou-corr-ka} zeigt für den Karlsruhe-Datensatz in 
+gefilterter und ungefilterter Variante und für beide Augmentierungsmethoden im Training für jedes Modell die BIoU aufgetragen 
+über der IoU. Zusätzlich sind die ausschließlich positiven Korrelationskoeffizienten der jeweiligen Datenreihen angegeben. 
+Zwischen IoU und BIoU des gefilterten Datensatzes herrscht eine sehr starke positive Korrelation ($r$ jeweils ~$0,96$), 
+während der ungefilterte Datensatz eine schwächere positive Korrelation aufweist ($r_{basic} \approx 0,83$, 
+$r_{color}\approx 0,8$). Das Diagramm veranschaulicht, dass, wie zuvor beschrieben, die BIoU auf 
+dem gefilterten Datensatz signifikant niedriger ist als auf dem ungefilterten, während das für die IoU 
+nicht zu beobachten ist. Auch ist die geringere Streuung auf den mit Color-Aug. trainierten Modellen auf dem 
+gefilterten Karlsruhe-Datensatz durch die kürzere gelbe Strecke zu erkennen.  
 
 \subsection{Ergebnisse bei fehlender Annotation}
 
