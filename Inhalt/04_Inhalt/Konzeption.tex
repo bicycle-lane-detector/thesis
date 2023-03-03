@@ -230,30 +230,31 @@ Dafür werden die Koordinaten in die korrespondierenden Pixelkoordinaten transfo
 Die Breite der einzuzeichnenden Linien orientiert sich an dem Durchschnitt verschiedener Radwege, welcher sich auf $11,8125px$ beläuft.
 Dieser Wert wurde analog zur durchschnittlichen Breite einer Fahrbahn über 50 zufällige Stichproben ermittelt. \\
 \autoref{lst:move-strip} zeigt den vereinfachten Algorithmus zum Verschieben eines Radstreifens,
-sodass dieser sich an der geschätzten, richtigen Stelle befindet. Für bessere Übersichtlichkeit 
+sodass dieser sich an der geschätzt richtigen Stelle befindet. Für bessere Übersichtlichkeit 
 zeigt der Algorithmus nur den Fall für einen rechtsseitigen Streifen. 
 Zunächst wird paarweise über alle Stützvektoren des Streifens iteriert. Die Differenz $d$ des Paares 
 wird berechnet, normiert, um 90° nach rechts rotiert und um die Hälfte der geschätzten Straßenbreite skaliert. 
 Schließlich werden die Stützpunkte um diesen Vektor verschoben. 
 
-
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \begin{algorithm}
-	\caption{Algorithmus zum Verschieben von rechtsseitigen Fahrradstreifen.}\label{lst:move-strip}
+	\caption{Algorithmus zum Verschieben von \underline{rechts}seitigen Fahrradstreifen.}\label{lst:move-strip}
 	\begin{algorithmic}[1]
 		\Procedure{korrigiereStreifen}{$w$} \Comment{$w.typ = Radstreifen \land w.seite = rechts$}
-			\State{$verschStützpunkte: liste$}
+			\State{$neueStützpunkte: liste$}
 			\For{$i < |w.stützpunkte|$}
 				\State{$v_i, v_{i+1} \in w.stützpunkte$}
-				\State{$d \gets v_{i+1} - v_i$}
-				\State{$e \gets \frac{1}{|d|}d$}
+				\State{$\Delta v \gets v_{i+1} - v_i$}
+				\State{$e \gets \frac{1}{\norm{ \Delta v}_2} \Delta v$}
 				\State{$r \gets \begin{pmatrix} 
 					0 & 1  \\ 
 					-1 & 0  
-					\end{pmatrix} e$}
+					\end{pmatrix} e$} \Comment{Rotiere $e$ um 90° nach rechts}
 				\State{$r_s \gets \frac{1}{2} \cdot w.spurenAnzahl \cdot SPURENBREITE \cdot r$}
-				\State{$verschStützpunkte.anhängen(v_i + r_s, v_{i+1} + r_s)$}
+				\State{$neueStützpunkte.anhängen(v_i + r_s)$}
+				\State{$neueStützpunkte.anhängen(v_{i+1} + r_s)$}
 			\EndFor
-			\State{$w.stützpunkte \gets verschStützpunkte$}
+			\State{$w.stützpunkte \gets neueStützpunkte$}
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
@@ -261,7 +262,7 @@ Schließlich werden die Stützpunkte um diesen Vektor verschoben.
 \autoref{fig:good-mask} zeigt einen Luftbildausschnitt (links) zusammen mit der dafür automatisch generierten Maske (rechts),
 wobei die automatische Annotation sehr gut funktioniert. 
 
-\subsubsection{Güteabschätzung der Masken}
+\subsubsection{Güteabschätzung der Masken} \label{sec:quality-of-masks}
 
 Die Schätzung beim Einzeichnen der Maske führt dazu, dass manchmal Radwege in Grünstreifen oder auf Straßen eingezeichnet werden, da sie ungenau verschoben worden sind.
 \autoref{fig:bad-mask} zeigt ein solches Negativbeispiel: Großteil der Annotationen (über Schätzung generiert) trifft den eigentlichen Radweg nicht. 
@@ -648,7 +649,6 @@ $B$ sei die Puffergröße in Pixeln. \\
 Die folgenden Formeln beziehen sich auf die Bestimmung der \ac{BIoU} \textit{einer} Prediction $P$ zu \textit{einer} Ground-Truth-Maske $Y$. 
 Über einen Batch lassen sich die einzelnen \ac{BIoU}-Werte mitteln. 
 Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w{\times}h} \mapsto \{0,1\}^{w{\times}h}$ definiert als 
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \begin{align}
 	\label{eq:dilate} dilate_B(A) = \left( \begin{cases} 
 		1 & \exists a_{kl} \in A: a_{kl} = 1 \land \norm{

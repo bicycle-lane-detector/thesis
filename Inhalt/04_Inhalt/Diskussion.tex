@@ -80,20 +80,120 @@ Radwegerkennung statistisch signifikant\footnote{
 	$p = 1,887\cdot 10^{-8}$ für IoU und $p = 3,77\cdot 10^{-7}$ für BIoU
 	des einseitigen Zweistichproben-Welch-Test zwischen der Straßenerkennung 
 	und der Radwegerkennung für Basic-Aug. 
-} schlechter sind, als die der Straßenerkennung.
+} schlechter sind, als die der Straßenerkennung. Hierfür gibt es folgende Gründe:
+\begin{enumerate}
+	\item Das Problem der Radwegerkennung ist schwerer. Für die Radwegerkennung fällt es selbst Menschen schwer 
+	diese auf Satellitenbildern zu erkennen. Für Fahrradstreifen am Straßenrand ist das noch gut möglich, 
+	aber für oft überdeckte und überschattete Fahrradwege neben der Straße, die zum Beispiel durch einen Grünstreifen 
+	von der Straße getrennt sind und mit dem Fußweg verbunden sind, ist schwierig festzustellen, ob ein Radweg 
+	vorhanden ist, oder ob es sich nur um einen Gehweg handelt. Außerdem weisen Radwege weitaus 
+	heterogenere Beläge auf, als städtische Straßen. Für Radwege kommen Asphalt, unterschiedlich farbene Pflastersteine,
+	Schotter, rot oder grün gefärbter Asphalt und andere Untergründe zum Einsatz, 
+	während die allermeisten Straßen in der Stadt aus Asphalt bestehen.
+	Weiterhin gibt es viel weniger Radwege als Straßen, wodurch in den Trainingsdaten eine große Imabalance 
+	und generell weniger Beispiele vorhanden sind, als in einem ähnlich großen Datensatz für die Straßenerkennung. 
+	Auch unterscheiden sich Radwege zwischen Ländern und selbst Städten eines Landes weitaus stärker, als Straßen.
+	\item Die automatisch generierten Annotationen sind überwiegend (ca. zu 83\%; vgl. \autoref{sec:quality-of-masks})
+	auf dem Niveau einer Annotation durch Menschen, allerdings könnte der Anteil der Annotationen, die schlichtweg
+	falsch sind, die Ergebnisse stark beeinträchtigen. Um diese Hypothese zu verifizieren sind weitere 
+	Experimente mit einem besser annotierten Datensatz notwendig. Ein durch Menschen annotierter Datensatz 
+	muss dafür klar definieren, was die Labelnden als Radweg anerkennen, da bei Radwegen auf Luftbildern 
+	nicht unbedingt ein allgemeiner Konsens besteht, was als Radweg zu markieren zählt. Durch menschliche Annotation 
+	kann aber zumindest ausgeschlossen werden, dass Pixel als Radweg annotiert sind, die eine Wiese oder ein Gebäude zeigen.
+	\item Möglicherweise ist die semantische Segmentierung zum Erkennen der Radwege eine zu detaillierte Methode. 
+	Um die Forschungsfrage dieser Arbeit -- existiert ein Radweg an dieser Straße und wenn ja, in welche Richtung -- 
+	zu beantworten, ist die semantische Segmentierung der Radwege übermäßig. Die semantische Segmentierung 
+	schafft mehr Informationen, als benötigt werden. Das bietet zwar auch Vorteile, dass zum Beispiel der Radweg 
+	auf einem Luftbild als solcher eingefärbt werden kann, aber verlangt auch weitaus genauere Annotationen. \\
+	Eine Alternative Herangehensweise kann sein, das Problem so zu modellieren, dass die Modelle direkt einen Graphen
+	an Radwegen extrahieren, anstatt zuerst die zum Radweg gehörigen Pixel zu annotieren und die Graphenextraktion 
+	in einem externen Schritt vorzunehmen. Dabei können als Label direkt die Graphen aus \ac{OSM} verwendet werden 
+	und die Rad\textit{streifen} müssen nicht verschoben werden. Das Problem hierbei ist, zu Kodieren, ob 
+	ein Radweg rechtsseitig oder linksseitig vorliegt, da die Definition von rechts- und linksseitig abhängt  
+	von dem von \ac{OSM} willkürlich gewählten Verlauf der Straße. Hierfür könnte der Begriff von links- und 
+	rechtsseitig transformiert werden in östlich und nördlich, bzw. in westlich und südlich von der Straße.    
+\end{enumerate}
+Obwohl die Radwegerkennung nicht so gute Ergebnisse liefert, wie die Straßenerkennung, und die Ergebnisse 
+für die Radwegerkennung durchaus Verbesserungspotential bieten, lässt sich aus der Arbeit 
+schließen, dass es möglich ist, andere Strukturen der städtischen Infrastruktur aus Luftbildern zu erkennen, 
+als Straßen. 
 
-schlechtere Ergebnisse als Straßenkennung, was probleme ? 
-warum karslrueh so viel schlechter
-warum wolfsburg besser ? 
-Wolfsburg doch eher ungeeignet weil zu ähnlich 
-experimente mit anderen städten
-color augmentation nicht viel grebracht -> liegt wohl an stadtbild
-netze eher konservativ wie karlsrueh prediction zeigt
-Kreuzvalidierung ? Ergebnisse schlecht genug, dass nicht nötig
+\subsection{Ergebnisse auf Karlsruhe gegenüber BikeSat und Wolfsburg}
 
-\section{BIoU für Radwegerkennung}
+Aus allen Experimenten geht hervor, dass die Performance auf dem (ungefilterten und gefilterten) Karlsruhe-Datensatz deutlich schlechter ist, 
+als auf dem BikeSat- und Wolfsburg-Datensatz. Außerdem hat die Color-Aug. keine Verbesserung gegenüber 
+Basic-Aug. hervorgerufen. Auch ist der Wolfsburg-Datensatz, der eine andere Stadt, bei gleicher Optik der Bilder, 
+zeigt, als der BikeSat-Datensatz, gleich auf mit dem BikeSat-Datensatz. Wolfsburg weist aber eine sehr ähnliche 
+Infrastruktur zu den anderen Städten aus Niedersachsen (BikeSat) auf. Daraus lässt sich schließen, 
+dass für die schlechte Performance auf dem Karlsruhe-Datensatz wahrscheinlich nicht die Optik der Bilder verantwortlich 
+ist, sondern die sehr unterschiedliche Infrastruktur der Fahrradwege oder das allgemeine Stadtbild. 
+So hat Karlsruhe beispielsweise deutlich mehr Fahrradstreifen am Straßenrand als die niedersächsischen Städte. 
+Diese Beobachtung beantwortet die Forschungsfrage, ob Ergebnisse auf Städten unterschiedlicher Infrastrukturen 
+übertragbar sind. So ist eine Übertragung bedingt möglich, aber es liegt nahe, dass mit Performance-Einbußen zu rechnen ist, 
+die die Stärke des Unterschieds der Infrastrukturen widerspiegeln. 
+Um diese These zu belegen, bedarf es jedoch weiterer Experimente mit mehr Städten. Eventuell ist dann 
+auch eine Proportionalität zwischen Performance-Einbußen auf für das Modell unbekannten Städten und der Stärke 
+des Unterschieds der Städte erkennbar. Insofern eine Quantifizierung des Unterschieds der Städte gelingt. 
+
+Die signifikant bessere BIoU von Wolfsburg im Gegensatz zu BikeSat wird darauf zurückgeführt, dass 
+Wolfsburg eine sehr ähnliche Fahrrad-Infrastruktur aufweist, wie der BikeSat-Datensatz, aber weniger 
+Samples beinhaltet, die schwierig als Radweg zu erkennen sind. Außerdem ist der Unterschied nur gering, 
+da der Unterschied in IoU keine statistische Signifikanz erreicht. 
+
+% schlechtere Ergebnisse als Straßenkennung, was probleme ? 
+% warum karslrueh so viel schlechterbiou
+% warum wolfsburg besser ? 
+% Wolfsburg doch eher ungeeignet weil zu ähnlich 
+% experimente mit anderen städten
+% color augmentation nicht viel grebracht -> liegt wohl an stadtbild
+% netze eher konservativ wie karlsrueh prediction zeigt
+% warum gefilterter schlechter?
+
+effizienz des pretraining 
+warum wenig unterschiede zwischen den netzen
+
+\subsection{Effektivität des Fine-Tunings}
+
+
+
+\subsection{BIoU für Radwegerkennung}
 
 \subsection{Gefilterter Straßendatensatz}
 
+\newcommand{\overbar}[1]{\mkern 8mu\overline{\mkern-8mu#1\mkern-8mu}\mkern 8mu}
 
-
+Sei $K_{fil} \subset K_{unfil}$ mit $|K_{fil}| = 49; ~|K_{unfil}| = 196$ der gefilterte Kalrsruhe-Datensatz 
+als Teilmenge vom ungefilterten Karlsruhe-Datensatz $K_{unfil}$. Wobei gefiltert bedeutet, dass 
+keine leere Ground-Truth-Maske existiert, alle Bilder also einen Radweg enthalten.
+Die Ergebnisse aus \autoref{tab:results} und \autoref{tab:results-ka-small} mit der Visualisierung aus 
+\autoref{fig:iou-biou-corr-ka} zeigen, dass die BIoU auf dem gefilterten Datensatz $K_{fil}$ signifikant 
+schlechter ist, als auf dem ungefilterten. Da die BIoU als aritmethisches Mittel der BIoU-Werte der einzelnen Bilder 
+berechnet wird und die Predictions auf den Bildern von $K_{fil} \cap K_{unfil} = K_{fil}$ gleich ausfallen, 
+lässt sich aus den durchschnittlichen Ergebnissen den beiden Datensätze die durchschnittliche BIoU auf den leeren Bildern 
+$K_{leer} := K_{unfil} \setminus K_{fil};~ |K_{leer}| = |K_{unfil}| - |K_{fil}| = 147$ über   
+\begin{align}
+	\overbar{BIoU_{K_{unfil}}} = \frac{|K_{fil}| \cdot \overbar{BIoU_{K_{fil}}} + |K_{leer}| \cdot \overbar{BIoU_{K_{leer}}}}{|K_{unfil}|} \nonumber \\
+	\label{eq:ka-empty}  \implies \overbar{BIoU_{K_{leer}}} = \frac{|K_{unfil}| \cdot \overbar{BIoU_{K_{unfil}}} - |K_{fil}| \cdot \overbar{BIoU_{K_{fil}}}}{|K_{leer}|} \\ 
+	= \frac{196 \cdot \overbar{BIoU_{K_{unfil}}} - 49 \cdot \overbar{BIoU_{K_{fil}}}}{147} \nonumber
+\end{align}
+berechnen. Das ergibt \\ 
+$\overbar{BIoU_{K_{leer}, basic}} = 56,36\%$ und \\ 
+$\overbar{BIoU_{K_{leer}, color}} = 45,19\%$
+für Basic-Aug. bzw. Color-Aug. Verglichen mit \\ 
+$\overbar{BIoU_{K_{fil}, basic}} = 48,16\%; ~\overbar{BIoU_{K_{unfil}, basic}} = 23,58\%$ und \\
+$\overbar{BIoU_{K_{fil}, color}} = 42,68\%; ~\overbar{BIoU_{K_{unfil}, color}} = 35,14\%$
+sind die Werte also höher. Weiterhin gilt $\forall (x, y) \in K_{leer}: BIoU(Prediction_m(x), y) \in \{0; 1\}$ für alle Modelle $m$. 
+Das liegt daran, dass die Ground-Truth $y$ per Definition von $K_{leer}$ stets leer ist, woraus folgt, dass die Kardinalität der 
+Schnittmenge mit der Prediction für einen Input $x$ immer $0$ ist. Das heißt, die BIoU ist immer $0$, es sei denn 
+das Modell $m$ annotiert keine Pixel als Radwege, dann ist die Kardinalität der Vereinigungsmenge auch $0$ und 
+die BIoU per Definition gleich $1$. Selbige Schlussfolgerung gilt analog für die IoU. \\ 
+Aus den Werten für $BIoU_{K_{leer}}$ folgt, dass in circa der Hälfte der Fälle die Modelle keinen einzigen Pixel 
+(fälschlicherweise) als Radweg annotieren. Zusammen mit den Beispiel-Predictions aus \autoref{sec:example-preds} 
+liegt die Vermutung sehr nahe, dass in der anderen Hälfte der Fälle nur sehr wenige Pixel von den Modellen 
+fälschlicherweise als Radweg erkannt wurden. Daraus lässt sich eine sehr gute True-Negative-Rate und 
+geringe False-Positive-Rate schließen, 
+für deren Bewertung die ausgewählten Maßzahlen IoU und BIoU äußerst ungeeignet sind. Insofern lässt sich 
+also ein gutes Ergebnis verzeichnen, dass die Modelle nicht jegliche Straßen mit Radwegen versehen und 
+korrekt gelernt haben, was keine Radwege sind, obwohl die Modelle während des Trainings mit dem BikeSat-Datensatz 
+nur Beispiele eingegeben bekommen haben, die Radwege enthalten. Es folgt, dass die Modelle eher hesitent sind,
+Pixel als Radwege zu annotieren.  
