@@ -9,7 +9,17 @@
 
 \vspace{0.25cm}
 
-PLATZHALTER
+Diese Arbeit vergleicht einige U-Net-basierte Architekturen und unterschiedlichen
+Pre-Training-, Fine-Tuning- und Augmentierungs-Methoden zum Erkennen 
+und semantisch Segmentieren von städtischen Radwegen. 
+Dafür werden mehrere Datensätze erstellt und mittels eines eigens entwickelten Algorithmus 
+und OpenStreetMap-Daten automatisch annotiert. Um die Ergebnisse zu bewerten, 
+wird eine gepufferte Form der  \textit{\acf{IoU}}, genannt \textit{\acf{BIoU}}, 
+welche eine rasterisierte Version des \textit{Quality}-Maßes darstellt, entwickelt. \\
+Die Ergebnisse zeigen mittelmäßigen Erfolg beim Erkennen von Fahrradwegen, insbesondere dann, 
+wenn Städte mit abweichender Infrastruktur, die nicht während des Trainings verwendet wurden, getestet werden.
+Die unterschiedlichen Architekturen und Trainingsmethoden zeigen keine konsequenten 
+Verbesserungen der Performanz und werden als nicht signifikant erachtet. 
 
 \end{addmargin}
 \end{abstract}
