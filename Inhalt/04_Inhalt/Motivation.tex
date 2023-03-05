@@ -4,18 +4,18 @@ Die Navigation über Apps wie beispielsweise Google Maps ist inzwischen aus dem 
 Auch für das Zurücklegen einer Strecke mit dem Fahrrad werden entsprechende Routen vorgeschlagen.
 Allerdings liegen diese häufig neben großen Straßen und berücksichtigen als vorrangiges Ziel die schnellste Strecke zum Zielpunkt.
 Touren müssen eigenständig über das Hinzufügen weiterer Wegpunkte angepasst werden, wenn entspannter ans Ziel gelangt werden möchte.
-Um dieses Umplanen zu erleichtern, soll im Rahmen dieser Studienarbeit untersucht werden, ob es möglich ist 
+Um dieses Umplanen zu erleichtern, soll im Rahmen dieser Studienarbeit untersucht werden, ob es möglich ist, 
 städtische Radwege über Luftaufnahmen zu erkennen.
 
 Die Extraktion von Straßen aus Luftaufnahmen ist bereits
 ein gut untersuchtes Teilgebiet der Computer-Vision, wozu es eine Vielzahl an wissenschaftlichen Publikationen gibt
 und praxistaugliche Resultate erzielt werden konnten. \\
-Allerdings gibt es keinerlei Untersuchungen oder Datensätze zur Erkennung, geschweige denn Extraktion, 
+Allerdings gibt es keinerlei Untersuchungen oder Datensätze zur Erkennung, geschweige denn Extraktion,
 von Radwegen aus Luftbildern. Hierzu ist es nötig, neben dem Erkennen eines befestigten Weges  
 diesen auch von Straßen oder Gehwegen abzugrenzen. Selbst für 
-Menschen stellt das Erkennen eines Radwegs auf deinem Satellitenbild oft ein schwieriges Unterfangen dar, 
+Menschen stellt das Erkennen eines Radwegs auf einem Luftbild oft ein schwieriges Unterfangen dar, 
 aufgrund der für das Problem notwendigen hohen Qualität, bzw. geringen \ac{GSD}, wobei selbst bei modernen 
-Aufnahmen ein Radweg nur wenige Pixel breit ist (1 Pixel entspricht 0,20 bis 0,50 Meter), oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
+Aufnahmen ein Radweg nur wenige Pixel breit ist (1 Pixel entspricht 0,20 bis 0,50 Metern), oder ein Radweg von Vegetation wie Bäumen oder von Schatten verdeckt wird.
 Diese Arbeit kann also darüber Aufschluss geben, inwiefern eine Abgrenzung zwischen unterschiedlichen Straßentypen oder -bestandteilen mithilfe von Computer Vision
 grundsätzlich möglich ist und ob in diesem Anwendungsfall eine Maschine eventuell sogar übermenschliche Performanz 
 erreichen kann, um so zum Beispiel auch sehr dunkle, überschattete oder überwachsene Wege zu erkennen. 
@@ -28,12 +28,12 @@ kann, mit dem ein Computer-Vision-Modell trainiert werden kann.
 
 Das Ziel der Studienarbeit liegt in der Erkennung von Fahrradwegen mithilfe von Computer Vision.
 Die Erkennung soll auch beinhalten, wo der Radweg grob verläuft, also z.B. auf welcher Straßenseite.
-Hierfür werden Satellitenaufnahmen mit einer Bodenauflösung von $20 cm$ verwendet.
-Da es für die Erkennung von Fahrradwege keine vorliegenden Datensets gibt, muss dieses selbst erstellt werden.
+Hierfür werden Luftaufnahmen mit einer Bodenauflösung von $20 cm$ verwendet.
+Da es für die Erkennung von Fahrradwegen keine vorliegenden Datensets gibt, muss dieses selbst erstellt werden.
 Für die Umsetzung sollen unterschiedliche Architekturen von neuronalen Netzen und unterschiedliche Methoden 
 zum Training verglichen werden, um herauszufinden, was sich am besten eignet. 
 Im ersten Schritt erfolgt eine reine Klassifikation in Fahrradweg bzw. Nicht-Fahrradweg.
-Zum Testen der Netze wird eine neue Maßzahl entwickelt, die möglich macht, 
+Zum Testen der Netze wird eine neue Maßzahl entwickelt, die es möglich macht, 
 die Performance des Netzes zu bewerten, wenn die Fahrradwege qualitativ richtig 
 erkannt werden, aber nicht an genau der Position, wie es die Maske vorgibt -- 
 was nicht genau die Position in der Realität sein muss.
@@ -41,7 +41,7 @@ Diese Maßzahl wird \ac{BIoU} genannt.
 
 
 Zu Beginn der Arbeit wird auf den aktuellen Stand der Technik eingegangen.
-Der Fokus liegt hierbei auf Sachverhalten, die Bestandteil der Studienarbeit oder wichtig für das Verständnis sind.
+Der Fokus liegt hierbei auf Sachverhalten, die Bestandteile der Studienarbeit oder wichtig für das Verständnis sind.
 So werden zunächst verschiedene Arten von Bilderkennung aufgegriffen.
 Im späteren Verlauf verwendete Metriken werden vorgestellt.
 Die Struktur und Architektur eines U-Nets wird beschrieben. Außerdem werden verschieden weitere Architekturen 
@@ -49,7 +49,7 @@ vorgestellt, die zum Erweitern der U-Net-Architektur genutzt werden können.
 Da es bereits Datensätze und Implementierungen zum Segmentieren von Straßen gibt, folgt eine Erläuterung des Transfer-Learning-Ansatzes.
 Die Datensätze werden ebenfalls kurz vorgestellt und auf die Unterschiede zwischen ihnen eingegangen.
 
-Bei der Konzeption wird ein Fine-Tuning mithilfe der Straßen-Datensätze durchgeführt.
+Bei der Konzeption wird ein Fine-Tuning mithilfe der Straßendatensätze durchgeführt.
 Im Anschluss erfolgt die Erstellung eines eigenen Datensatzes für Fahrradwege.
 Die Architekturen der zu implementierenden Netze werden mit ihren Hyperparametern erläutert.
 Zu messende Werte zum Einschätzen der Güte werden festgelegt.
