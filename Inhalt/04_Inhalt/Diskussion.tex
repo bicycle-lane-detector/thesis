@@ -82,12 +82,12 @@ Radwegerkennung statistisch signifikant\footnote{
 	und der Radwegerkennung für Basic-Aug. 
 } schlechter sind, als die der Straßenerkennung. Hierfür gibt es folgende Gründe:
 \begin{enumerate}
-	\item Das Problem der Radwegerkennung ist schwerer. Für die Radwegerkennung fällt es selbst Menschen schwer 
-	diese auf Satellitenbildern zu erkennen. Für Fahrradstreifen am Straßenrand ist das noch gut möglich, 
+	\item Das Problem der Radwegerkennung ist schwerer. Für die Radwegerkennung fällt es selbst Menschen schwer, 
+	diese auf Luftbildern zu erkennen. Für Fahrradstreifen am Straßenrand ist das noch gut möglich, 
 	aber für oft überdeckte und überschattete Fahrradwege neben der Straße, die zum Beispiel durch einen Grünstreifen 
 	von der Straße getrennt sind und mit dem Fußweg verbunden sind, ist schwierig festzustellen, ob ein Radweg 
 	vorhanden ist, oder ob es sich nur um einen Gehweg handelt. Außerdem weisen Radwege weitaus 
-	heterogenere Beläge auf, als städtische Straßen. Für Radwege kommen Asphalt, unterschiedlich farbene Pflastersteine,
+	heterogenere Beläge auf, als städtische Straßen. Für Radwege kommen Asphalt, unterschiedlich farbige Pflastersteine,
 	Schotter, rot oder grün gefärbter Asphalt und andere Untergründe zum Einsatz, 
 	während die allermeisten Straßen in der Stadt aus Asphalt bestehen.
 	Weiterhin gibt es viel weniger Radwege als Straßen, wodurch in den Trainingsdaten eine große Imabalance 
@@ -95,7 +95,7 @@ Radwegerkennung statistisch signifikant\footnote{
 	Auch unterscheiden sich Radwege zwischen Ländern und selbst Städten eines Landes weitaus stärker, als Straßen.
 	\item Die automatisch generierten Annotationen sind überwiegend (ca. zu 83\%; vgl. \autoref{sec:quality-of-masks})
 	auf dem Niveau einer Annotation durch Menschen, allerdings könnte der Anteil der Annotationen, die schlichtweg
-	falsch sind, die Ergebnisse stark beeinträchtigen. Um diese Hypothese zu verifizieren sind weitere 
+	falsch sind, die Ergebnisse stark beeinträchtigen. Um diese Hypothese zu verifizieren, sind weitere 
 	Experimente mit einem besser annotierten Datensatz notwendig. Ein durch Menschen annotierter Datensatz 
 	muss dafür klar definieren, was die Labelnden als Radweg anerkennen, da bei Radwegen auf Luftbildern 
 	nicht unbedingt ein allgemeiner Konsens besteht, was als Radweg zu markieren zählt. Durch menschliche Annotation 
@@ -105,10 +105,10 @@ Radwegerkennung statistisch signifikant\footnote{
 	zu beantworten, ist die semantische Segmentierung der Radwege übermäßig. Die semantische Segmentierung 
 	schafft mehr Informationen, als benötigt werden. Das bietet zwar auch Vorteile, dass zum Beispiel der Radweg 
 	auf einem Luftbild als solcher eingefärbt werden kann, aber verlangt auch weitaus genauere Annotationen. \\
-	Eine Alternative Herangehensweise kann sein, das Problem so zu modellieren, dass die Modelle direkt einen Graphen
+	Eine alternative Herangehensweise kann sein, das Problem so zu modellieren, dass die Modelle direkt einen Graphen
 	an Radwegen extrahieren, anstatt zuerst die zum Radweg gehörigen Pixel zu annotieren und die Graphenextraktion 
 	in einem externen Schritt vorzunehmen. Dabei können als Label direkt die Graphen aus \ac{OSM} verwendet werden 
-	und die Rad\textit{streifen} müssen nicht verschoben werden. Das Problem hierbei ist, zu Kodieren, ob 
+	und die Rad\textit{streifen} müssen nicht verschoben werden. Das Problem hierbei ist, zu kodieren, ob 
 	ein Radweg rechtsseitig oder linksseitig vorliegt, da die Definition von rechts- und linksseitig abhängt  
 	von dem von \ac{OSM} willkürlich gewählten Verlauf der Straße. Hierfür könnte der Begriff von links- und 
 	rechtsseitig transformiert werden in östlich und nördlich, bzw. in westlich und südlich von der Straße.    
@@ -184,7 +184,7 @@ als Teilmenge vom ungefilterten Karlsruhe-Datensatz $K_{unfil}$. Wobei gefiltert
 keine leere Ground-Truth-Maske existiert, alle Bilder also einen Radweg enthalten.
 Die Ergebnisse aus \autoref{tab:results} und \autoref{tab:results-ka-small} mit der Visualisierung aus 
 \autoref{fig:iou-biou-corr-ka} zeigen, dass die BIoU auf dem gefilterten Datensatz $K_{fil}$ signifikant 
-schlechter ist, als auf dem ungefilterten. Da die BIoU als aritmethisches Mittel der BIoU-Werte der einzelnen Bilder 
+schlechter ist, als auf dem ungefilterten. Da die BIoU als arithmetisches Mittel der BIoU-Werte der einzelnen Bilder 
 berechnet wird und die Predictions auf den Bildern von $K_{fil} \cap K_{unfil} = K_{fil}$ gleich ausfallen, 
 lässt sich aus den durchschnittlichen Ergebnissen den beiden Datensätze die durchschnittliche BIoU auf den leeren Bildern 
 $K_{leer} := K_{unfil} \setminus K_{fil};~ |K_{leer}| = |K_{unfil}| - |K_{fil}| = 147$ über   
@@ -203,7 +203,7 @@ sind die Werte also höher. Weiterhin gilt $\forall (x, y) \in K_{leer}: BIoU(Pr
 Das liegt daran, dass die Ground-Truth $y$ per Definition von $K_{leer}$ stets leer ist, woraus folgt, dass die Kardinalität der 
 Schnittmenge mit der Prediction für einen Input $x$ immer $0$ ist. Das heißt, die BIoU ist immer $0$, es sei denn 
 das Modell $m$ annotiert keine Pixel als Radwege, dann ist die Kardinalität der Vereinigungsmenge auch $0$ und 
-die BIoU per Definition gleich $1$. Selbige Schlussfolgerung gilt analog für die IoU. \\ 
+die BIoU definitionsgemäß gleich $1$. Selbige Schlussfolgerung gilt analog für die IoU. \\ 
 Aus den Werten für $BIoU_{K_{leer}}$ folgt, dass in circa der Hälfte der Fälle die Modelle keinen einzigen Pixel 
 (fälschlicherweise) als Radweg annotieren. Zusammen mit den Beispiel-Predictions aus \autoref{sec:example-preds} 
 liegt die Vermutung sehr nahe, dass in der anderen Hälfte der Fälle nur sehr wenige Pixel von den Modellen 

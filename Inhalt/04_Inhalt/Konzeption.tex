@@ -25,7 +25,7 @@ trainiert und schließlich untereinander verglichen werden, um die geeignete Arc
 Die ausgegrauten Inhalte im Diagramm gehören zum Grundlagenkapitel, sind natürlich aber für die Konzeption relevant. \\ 
 Wie in \autoref{sec:novelty} beschrieben, existiert kein Datensatz zur Erkennung von Radwegen. Daher wird hier 
 der BikeSat-Datensatz konzipiert, um zum Training verwendet zu werden. Weiter wird der Karlsruhe-Datensatz 
-erstellt, um die Ergebnisse auf einer anderen Stadt mit Bildern, die sich visuell vom BikeSat-Datensatz unterscheiden, zu testen. \\
+erstellt, um die Ergebnisse auf einer anderen Stadt, mit Bildern, die sich visuell vom BikeSat-Datensatz unterscheiden, zu testen. \\
 Mit den eigenen Datensätzen kann dann eine geeignete Methode des Pre-Processing konzipiert werden, mit der die Datensätze 
 auf das Training vorbereitet werden können. Wie in \autoref{sec:evaluation-metrics:quality} erwähnt, muss zudem 
 eine geeignete Bewertungsfunktion für die Quantifizierung der Ergebnisse entwickelt werden, was in \autoref{sec:eval:biou} 
@@ -40,13 +40,13 @@ ist es erforderlich einen eigenen Datensatz, den BikeSat-Datensatz, zu erstellen
 Prinzipiell gibt es die Möglichkeiten, den Datensatz manuell zu labeln oder automatisch generieren zu lassen.
 Manuelles Labeln führt zu einer hohen Genauigkeit.
 Allerdings ist diese Art der Datensatzerstellung entsprechend zeitintensiv und mit hohen Kosten verbunden.
-Gerade lange Labelsessions sorgen für Ungenauigkeiten beim Einzeichnen der Ground Truth. 
+Gerade lange Labelsessions sorgen für Ungenauigkeiten beim Einzeichnen der Ground-Truth. 
 In jedem Bild müssen Fahrradwege händisch erkannt werden, wobei die Wege nicht immer eindeutig als solche identifiziert werden können.\\
 Für die Generierung der Labels müssen entsprechende Koordinaten bekannt sein, an denen sich Fahrradwege befinden.
 Mithilfe dieser Punkte können dann Polygone in eine Maske eingezeichnet werden 
 und somit entsteht die zu einer Satellitenaufnahme zugehörige Ground-Truth-Maske.
 Diese Art der Datensatzgenerierung ist deutlich weniger aufwändig als das manuelle Labeln. 
-Ebenso können unter der Beschränkung der gegebenen Koordinaten und Satellitenbilder große Datensets erzeugt werden.
+Ebenso können unter der Beschränkung der gegebenen Koordinaten und Luftbilder große Datensätze erzeugt werden.
 Abweichende Koordinaten wirken sich jedoch nachteilig auf die Qualität des Datensatzes aus, da keine menschliche Überprüfung im Anschluss erfolgt.
 Aufgrund der Vielfältigkeit der Radwege, der damit verbundenen Größe des benötigten Datensatzes und dem geringeren Arbeitsaufwand, ist eine Entscheidung zugunsten der automatischen Datengenerierung gefallen.
 Eine schlechtere Datenqualität des Labels wird hingenommen. \\
@@ -74,27 +74,27 @@ Im Zusammenhang mit dem BikeSat-Datensatz sind folgende Definitionen notwendig:
 	\item \textbf{Radstreifen:} Ein Radstreifen ist nicht eigenständig, sondern bezieht sich auf eine Straße. 
 	Koordinaten eines Radstreifens beziehen sich auf die Mittellinie der dazugehörigen Straße. 
 	Radstreifen können links-, rechts- oder beidseitig an einer Straße anliegen. 
-	\item \textbf{Orhtofoto:} 
-	\enquote{[...] Orthofotos [...] sind entzerrte Luftbilder, die die Landschaft lagerichtig abbilden.} \cite{dop27022023}
+	\item \textbf{Orthofoto:} 
+	\enquote{[...] Orthofotos [...] sind entzerrte Luftbilder, die die Landschaft lagerichtig abbilden} \cite{dop27022023}.
 \end{itemize}
 Wenn der Unterschied zwischen Radweg und -streifen nicht relevant ist, werden Radwege und Radstreifen
 kollektiv als Radweg bezeichnet.  
 
 Die Erstellung wird in mehreren Schritten vorgenommen.
-Zunächst müssen Satellitenbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
+Zunächst müssen Luftbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
 In dem durch die Luftbilder abgedeckten Gebiet sind anschließend offizielle Fahrradwege aus einer \ac{OSM} API auszulesen.
 Mit den vorhandenen Informationen können dann die zugehörigen Masken nach \autoref{lst:gen-bikesat} erstellt werden.
 Hierzu werden zunächst die Luftbilder und die Radwege und -streifen geladen. Ein einzelner Radweg/-streifen 
 ist dabei eine Liste von Koordinaten-Tupeln, die den jeweiligen Weg ergeben, 
 wenn die Tupel in Iterationsreihenfolge der Liste verbunden werden.
-Daraufhin wird über alle Bildausschnitte itertiert und für jeden Ausschnitt eine Maske erstellt. 
+Daraufhin wird über alle Bildausschnitte iteriert und für jeden Ausschnitt eine Maske erstellt. 
 Dazu werden zunächst die Wege gefunden, die im derzeitigen Bild $f$ liegen. Dazu werden die Koordinaten der 
-Eckpunkte von $f$ verwendet, die bekannt sind. Dann wird über jeden Weg in $f$ itertiert und dessen 
+Eckpunkte von $f$ verwendet, die bekannt sind. Dann wird über jeden Weg in $f$ iteriert und dessen 
 Koordinaten von Längen und Breitengrad zu Pixelkoordinaten x und y relativ zu dem Bild $f$ konvertiert. 
 Handelt es sich bei $w$ um einen Radstreifen, so handelt es sich bei den Koordinaten um die Straßenmittellinie 
 und der Radstreifen muss dementsprechend an den Straßenrand verschoben werden. Ist es ein Radweg,
 sind die Koordinaten bereits korrekt. Schließlich wird $w$ in die Maske eingezeichnet, 
-indem die Pixel-Koordinaten mit Strichen der vordefinierten Konstante der Radwegbreite eingezeichnet werden.
+indem die Pixelkoordinaten mit Strichen der vordefinierten Konstante der Radwegbreite eingezeichnet werden.
 Die Maske wird an eine Liste angehangen und das nächste Foto wird bearbeitet. Den Datensatz bildet 
 dann das Tupel der Listen der Fotos und Masken. Bei dem dargestellten Algorithmus handelt es sich um eine 
 vereinfachte Version.\footnote{\autoref{code:gen-dataset} zeigt eine Implementation des vollständigen Algorithmus.} \\   
@@ -124,11 +124,11 @@ In den nachfolgenden Unterkapiteln wird auf die Einzelschritte detaillierter ein
 
 \subsection{Luftbilder}
 
-Für die zu Luftbilder wird eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
+Für die Luftbilder wird eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
 Aufgrund der aufwändigen Gewinnung und Aufbereitung der Orthofotos, sind diese meist nur kostenpflichtig zu erlangen.
 Das Landesamt für Geoinformation und Landesvermessung Niedersachsen jedoch stellt Orthofotos in der benötigten Qualität kostenfrei zum Download zur Verfügung.
 Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von 3 Jahren.
-Für die Datenset-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
+Für die Datensatz-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
 Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2{\times}2 ~km^2$-Kacheln ($10.000{\times}10.000{\times}3$ Bilder)\cite{.26.10.2022}.
 % \autoref{fig:hannover-data} zeigt ein solches Bild. 
 Für eine bessere Generalisierung des neuronalen Netzes, werden mehrere Städte verwendet. Die Robustheit des Netzes 
@@ -162,7 +162,7 @@ Innerhalb der Anfrage kann zwischen einer Vielzahl von Attributen unterschieden 
 Alle Radwege und Fahrradstreifen innerhalb der angegebenen Zone sollen zurückgeliefert werden.
 Auch einseitige Radstreifen werden ausgegeben. 
 Die jeweiligen Attribute geben Aufschluss darüber, ob es sich um einen links-, rechts- oder beidseitigen Radstreifen handelt.
-Der mitgegebene Bereich entspricht genau der Abdeckung durch die Satellitenbilder.
+Der mitgegebene Bereich entspricht genau der Abdeckung durch die Luftbilder.
 Die ausgelesenen Daten können als das Dateiformat GeoJSON exportiert werden. \\
 Alle Wege werden von der API als Listen von Koordinaten zurückgegeben. Jede Liste ist mit den zusätzlichen angefragten 
 Attributen ausgestattet. Die Overpass-API-Query zum Erhalten der Radwege des gewünschten Kartenausschnitts ist in 
@@ -224,7 +224,7 @@ Je mehr Spuren vorhanden sind, desto weiter muss der Fahrradstreifen verschoben 
 Es wird die durchschnittliche Breite einer Fahrbahn von, also eine Verschiebung um, $17.625px$ angenommen. 
 Dazu wurden 50 Straßen zufällig als Stichproben gewählt und deren Pixelbreiten manuell ausgemessen. 
 Fahrradwege werden hingegen nicht verschoben, da diese passend von Menschen annotiert sind.\\
-Für jedes Satellitenbild wird zunächst eine leere Maske erstellt.
+Für jedes Luftbild wird zunächst eine leere Maske erstellt.
 Mithilfe der Koordinaten, die zu den einzelnen Klassen gespeichert sind, können die Linien eingezeichnet werden.
 Dafür werden die Koordinaten in die korrespondierenden Pixelkoordinaten transformiert.
 Die Breite der einzuzeichnenden Linien orientiert sich an dem Durchschnitt verschiedener Radwege, welcher sich auf $11,8125px$ beläuft.
@@ -285,7 +285,7 @@ die zur Ermittlung erhoben sind.
 	\label{fig:bad-mask}
 \end{wrapfigure}
 
-Das Problem bei den generierten Masken sind nicht die Fahrrad\textit{wege}, denn diese sind von Menschen manuell annotiert und damit passend im Satellitenbild, 
+Das Problem bei den generierten Masken sind nicht die Fahrrad\textit{wege}, denn diese sind von Menschen manuell annotiert und damit passend im Luftbild, 
 sondern die Fahrrad\textit{streifen}, denn diese sind durch die Schätzung ggf. daneben oder enthalten die beschriebenen Sprünge. \\
 Der Anteil an manuell annotierten Fahrradwegen und über Schätzung annotierten Fahrradstreifen kann Aufschluss über die Güte geben. 
 Dieser Anteil trifft aber noch keine Aussage über die Länge der jeweiligen Wege. Um dies zu berücksichtigen, werden stattdessen die Kanten, die zu 
@@ -331,7 +331,7 @@ Fahrradfahrer existiert. Um diese Information zu erhalten, wird weiter der bishe
 Um die Generalisierungsfähigkeit und Robustheit der entstehenden Netze besser bewerten zu können, sei an dieser Stelle 
 der Wolfsburg-Datensatz eingeführt, der eine Stadt abbildet, die bisher nicht im BikeSat-Datensatz enthalten ist. 
 Der Wolfsburg-Datensatz wird genau auf die gleiche Weise erstellt, wie 
-der in \autoref{sec:bike-data} beschriebene BikeSat-Datensatz. Es werden ebenfalls Luftaufnahmen aus dersselben Quelle
+der in \autoref{sec:bike-data} beschriebene BikeSat-Datensatz. Es werden ebenfalls Luftaufnahmen aus derselben Quelle
 aus Niedersachsen verwendet, 
 die von der Optik kaum Unterschiede zu den im BikeSat-Datensatz verwendeten Städten aufweisen, wie 
 \autoref{fig:comp-bikesat-wolfsburg} illustriert. Die beiden Bilder ähneln sich nicht nur in Sättigung, Kontrast,
@@ -418,7 +418,7 @@ Somit ist nur ein verschwindender Anteil aller Pixel des Datensatzes als Radweg 
 
 
 Um den Anteil an als Radweg annotierten Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
-die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist ein ganzes 
+die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist, ein ganzes 
 $10.000{\times}10.000$-Pixel-Bild einzugeben, sollen die Bilder in kleinere Stücke zerteilt werden. 
 Dies ist auch bei den Modellen zur Straßenerkennung aus \autoref{sec:state-of-the-art-roads} die Praxis. 
 Vorgeschlagene Ausschnittsgrößen können hierbei $256{\times}256$, $512{\times}512$ und $1024{\times}1024$ sein. 
@@ -462,7 +462,7 @@ dieser Anteil entspricht ca. 17,7\%. Dieser Schritt wird für den Karlsruhe-Date
 Bildausschnitte erhalten.
  
 \autoref{fig:cut-example} zeigt beispielhaft ein auf $512{\times}512$ Pixel zugeschnittenes Bild aus dem BikeSat-Datensatz 
-mit der dazugehörigen Maske, die mit 50\% Transparenz in rot überlagert ist. Es ist zu erkennen, 
+mit der dazugehörigen Maske, die mit 50\% Transparenz in Rot überlagert ist. Es ist zu erkennen, 
 dass die Klassenimbalance noch recht stark ist, allerdings deutlich geringer, als in den ursprünglichen Bildern,
 und dass auch trotzdem genügend Straßen ohne Radwege vorhanden sind und die Struktur und der Verlauf des Radweges 
 bei der gewählten Ausschnittgröße weiterhin gut zu erkennen ist. 
@@ -482,7 +482,7 @@ zum Beispiel nur in dem Validation- oder Testdatensatz vorkommen.
 
 \autoref{tab:bike-split} zeigt den im Folgenden verwendeten Trainings-Validation-Test-Split. 
 Hierbei sind zwei Dinge zu bemerken, die nicht aus der Tabelle hervorgehen: 
-Zunächst wir die Testpartition abgespalten. Hierzu wird 15\% von Hannover und 
+Zunächst wird die Testpartition abgespalten. Hierzu wird 15\% von Hannover und 
 20\% von den jeweiligen restlichen Städte als Testpartition verwendet. Da der Hannover-Teil so groß ist, wie die Teile der
 restlichen Städte zusammen, läuft dies auf einen eher unkonventionellen Split von 17,5\% Testdaten hinaus. Diese Verteilung wurde so getroffen, 
 um den Hannover-Teil etwas weniger zu gewichten, um im Test auf dem BikeSat-Datensatz die Generalisierungsfähigkeit besser testen zu können
@@ -515,7 +515,7 @@ wie Kontrast, Helligkeit, Farbe und Sättigungen verändert werden. Color-Augmen
 Augmentierungen von Basic-Augmentation, ist also eine echte Obermenge.
 
 Die Augmentierung wird nicht vor dem Training angewandt, um den Datensatz künstlich zu vergrößern, 
-sondern während dem Training pseudo-zufällig mit festem Seed, 
+sondern während dem Training pseudozufällig, mit festem Seed, 
 also per Zufallsgenerator, der auf Basis des Startwertes (Seed) eine feste, 
 deterministische Sequenz an Zufallszahlen zurückgibt, um die Ergebnisse reproduzieren zu können.
 Somit wird jedes Bild während des Trainings, bevor es in das Netz eingegeben wird zufällig augmentiert 
@@ -528,7 +528,7 @@ dieselben Augmentationen (da gleicher Seed) erneut vorgenommen werden müssen. D
 durch eine Vorausberechnung der aufeinanderfolgenden Augmentationen behoben werden, worauf allerdings verzichtet wird,
 da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten sind im Ergebniskapitel zu finden. 
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\begin{subfigure}{.32\textwidth}
 		\centering
@@ -566,7 +566,7 @@ da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten 
 \end{figure}
 
 Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation} und \autoref{fig:color-aug}, 
-werden in ihrem Wertebereich pseudo-zufällig angewandt. 
+werden in ihrem Wertebereich pseudozufällig angewandt. 
 Sollte es die Veränderung erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
 schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei kein neues Merkmal lernen muss. 
 \begin{enumerate}
@@ -576,7 +576,7 @@ schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei kein neues Merkm
 	eine natürliche Orientierung bei Bildern aus der Vogelperspektive nicht besteht.
 	\item Horizontale Spiegelung. Es wird zufällig entschieden, ob ein Bild an der vertikalen Spiegelachse gespiegelt wird. 
 	Diese Augmentation ist ebenfalls realistisch und hat gegenüber der Rotation den Vorteil keine schwarzen Flächen 
-	einzuführen aber den Nachteil, nicht so viele neue Bilder erzeugen zu können. 
+	einzuführen, aber den Nachteil, nicht so viele neue Bilder erzeugen zu können. 
 	\item Vertikale Spiegelung. Diese funktioniert wie die horizontale Spiegelung, allerdings wird an der horizontalen Achse gespiegelt. 
 	Beide Spiegelungen können simultan auftreten, es gibt also vier Spiegelungs-Permutationen, 
 	die mit gleicher Wahrscheinlichkeit auftreten.
@@ -683,12 +683,12 @@ falsch-negativ $fn_B$ Werte berechnen:
 Beispielhaft und intuitiv dargestellt für $tp_B$: Es sollen auch alle Eins-Pixel als wahr-positiv aufgefasst werden,
 die leicht von der Ground-Truth abweichen, also sich noch in der Pufferzone befinden. 
 Hierfür wird die Pufferzone um die Ground-Truth $Y$ gelegt und das Hadamard-Produkt mit der Predicition $P$ gebildet.
-Da alle Matritzen als Einträge nur 0 oder 1 enthalten, findet durch das Hadamard-Produkt eine Art Verundung statt, 
-sodass im Produkt nur Einträge eins sind, die in beiden Matritzen eins sind. Der Rest ist null. 
+Da alle Matrizen als Einträge nur 0 oder 1 enthalten, findet durch das Hadamard-Produkt eine Art Verundung statt, 
+sodass im Produkt nur Einträge eins sind, die in beiden Matrizen eins sind. Der Rest ist null. 
 Durch die zuvor durchgeführte Pufferung mit $dilate_B$ sind allerdings auch Einträge gleich eins, die in $Y$ 
 zuvor null waren. Hierdurch besitzt das Hadamard-Produkt mehr Einträge mit eins, als bei der Berechnung der \ac{IoU}.
 Diese Zahl ist genau um die Anzahl an positiven Pixeln aus $P$ größer, die in der Pufferzone liegen. 
-Schließlich wird mit der $1,1$-Höldernorm für Matritzen die Anzahl an Einsen gezählt, was dann $tp_B$ ergibt. \\
+Schließlich wird mit der $1,1$-Höldernorm für Matrizen die Anzahl an Einsen gezählt, was dann $tp_B$ ergibt. \\
 Die Formel für die \ac{BIoU} pro Ausgabe ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten 
 Variablen:\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}
 \begin{align}
@@ -722,13 +722,13 @@ Für einen \ac{BIoU}-Wert über einen Batch können die individuellen Werte pro 
 	\label{fig:biou-showcase}
 \end{figure}
 
-Die \ac{BIoU} adressiert das Verschiebungs-Problem der \ac{IoU} mit einem Puffer zur relaxierteren Ermittlung der 
+Die \ac{BIoU} adressiert das Verschiebungsproblem der \ac{IoU} mit einem Puffer zur relaxierten Ermittlung der 
 $tp$, $fp$ und $fn$. Hierbei ist allerdings die Puffergröße in Pixeln eine wichtige Stellschraube.  
 Da ein Radweg im Mittel ca. 11,8 Pixel und eine Straßenfahrbahn ca. 17,6 Pixel breit ist (s. \autoref{sec:bike-data}), 
 wird der Buffer als ganze Zahl auf das arithmetische Mittel $\frac{11,8 + 17,6}{2} = 14,7 \approx 15$ festgelegt. 
 Dies erlaubt eine Verschiebung des Radwegs um eine volle Breite zzgl. einer Toleranz für die leicht variierende Radwegbreite, 
 nicht aber um die Breite einer Straßenfahrbahn. Hiermit soll ein realistisches Bild der Performanz des Netzes 
-bezgülich der qualitativen Erkennung der Radwege gezeichnet werden und wird ergänzend zur \ac{IoU}-Metrik 
+bezüglich der qualitativen Erkennung der Radwege gezeichnet werden und wird ergänzend zur \ac{IoU}-Metrik 
 als Bewertungsfunktion eingesetzt. \\
 Als Verlustfunktion ist die \ac{BIoU} allerdings ungeeignet, da wie bei der \ac{IoU} die Wahr-Positiven $tp$ nicht 
 stärker gewichtet werden, sodass das Netz nicht bevorzugt die Wahr-Positiven lernt. Des Weiteren ist die \ac{BIoU} aufgrund der 
@@ -741,7 +741,7 @@ Hyperparameter - die Puffergröße - einführen, was weiter die Komplexität des
 \autoref{fig:biou-showcase} zeigt anhand von drei Beispielen, wie die BIoU ausfällt. Hierfür wird 
 der Buffer von den oben genannten 15 Pixeln genutzt. 
 Die blaue Maske ist die Ground-Truth und die rote die Prediction. In (a) ist kaum 
-tatsächliche Überschneidung, was sich in der IoU wiederspiegelt (0,63\%), es kann allerdings trotzdem 
+tatsächliche Überschneidung, was sich in der IoU widerspiegelt (0,63\%), es kann allerdings trotzdem 
 klar erkannt werden, auf welcher Straßenseite sich der obere rote Radweg befindet. Die BIoU 
 bestätigt diese menschliche Intuition mit einem Wert von 39,18\%. In (c) wird der Radweg perfekt getroffen
 (BIoU = 100\&), die IoU beträgt allerdings nur 61,56\%, was in der Auswertung die tatsächliche Performanz 
@@ -767,7 +767,7 @@ ob ein Bild einen Radweg enthält oder nicht ebenfalls keinen Sinn.
 Auf der anderen Seite würde Instanz-Segmentierung keine weiteren relevanten Informationen hinzufügen, 
 wonach semantische Segmentierung ausreicht, um das Problem zu lösen. \\
 Wie bereits in \autoref{sec:state-of-the-art-roads} dargelegt, sind alle relevanten Modelle zur 
-Straßenerkennung über \ac{ML} basierend auf der U-Net-Archtiektur (vgl. \ref{sec:architekturkomponenten:unet}).
+Straßenerkennung über \ac{ML} basierend auf der U-Net-Architektur (vgl. \ref{sec:architekturkomponenten:unet}).
 Folglich sollen die hier betrachteten Modelle ebenfalls als angepasste U-Nets entworfen werden. 
 Insbesondere ermöglicht dies auch die Modelle zur Fahrradwegerkennung auf den verschiedenen 
 in \autoref{sec:road-detection:roads-data} vorgestellten Datensätzen zur Straßenerkennung vorzutrainieren, 
@@ -801,8 +801,8 @@ erläutern und begründen, warum ein Backbone gewählt wurde:
 	\item Backbone-U-Nets
 	\begin{enumerate}
 		\item \textit{\acf{VBUNet}}: Baseline-Netz mit Baseline-Backbone.
-		\item \textit{\acf{RBUNet}}: Hoch-performant bei Straßenerkennung.
-		\item \textit{\acf{DBUNet}}: Hoch-performant bei Straßenerkennung.
+		\item \textit{\acf{RBUNet}}: Hochperformant bei Straßenerkennung.
+		\item \textit{\acf{DBUNet}}: Hochperformant bei Straßenerkennung.
 	\end{enumerate}
 \end{enumerate} 
 
@@ -814,6 +814,25 @@ dargestellte originale U-Net auf den vorliegenden Anwendungsfall angepasst.
 Diese Anpassungen sind in der nachfolgenden Liste \textit{begründet}. Dabei wird die Architektur grob und übersichtlich \textit{erläutert}. 
 Eine genaue \textit{Beschreibung} der Architektur in ihrer konkreten Umsetzung 
 ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.  
+
+\begin{figure}[h]
+	\begin{minipage}{.49\textwidth}
+		\flushleft
+		\includegraphics[width=.25\textwidth]{Bilder/good-cut-ex.png} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.49\textwidth}
+		\flushright
+		\includegraphics[width=.25\textwidth]{Bilder/good-cut-ex-mask.png} 
+		\hspace*{2mm}
+	\end{minipage}
+	\begin{minipage}{1.\textwidth}
+		\centering
+		\includegraphics[width=1.\textwidth]{Bilder/own-unet-2mil.pdf} 
+	\end{minipage}
+	\caption{Bike-U-Net-2 mit 1,946 Mio. Parametern.}
+	\label{fig:bike-unet-2}
+\end{figure} 
 
 \begin{itemize}
 	\item Der Output verwendet keine explizite One-Hot-Kodierung für Fahrradweg und Hintergrund, 
@@ -846,29 +865,10 @@ ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.
 	oder überhaupt nicht, nötig.
 	\item Die Aktivierungsfunktion trägt zu der Lernfähigkeit des Netzes bei (Robustheit gegen das Vanishing-Gradient-Problem), 
 	es sind alle Netzteile möglichst beteiligt, um die Komplexität zu nutzen (Resistenz gegen das Dying-Neuron-Problem) und
-	numerisch zu große Aktivieriungen sind vermieden. Hierzu wird \ac{ELU} verwendet.\footnote{Eine genauere Beschreibung liegt im Implementationskapitel vor.}
+	numerisch zu große Aktivierungen sind vermieden. Hierzu wird \ac{ELU} verwendet.\footnote{Eine genauere Beschreibung liegt im Implementationskapitel vor.}
 	\item Für das Ouptut-Layer soll eine probabilistische Aktivierungsfunktion verwendet werden, 
 	um die Ergebnisse leichter zu interpretieren.
 \end{itemize}
-
-\begin{figure}
-	\begin{minipage}{.49\textwidth}
-		\flushleft
-		\includegraphics[width=.25\textwidth]{Bilder/good-cut-ex.png} 
-	\end{minipage}
-	\hfill
-	\begin{minipage}{.49\textwidth}
-		\flushright
-		\includegraphics[width=.25\textwidth]{Bilder/good-cut-ex-mask.png} 
-		\hspace*{2mm}
-	\end{minipage}
-	\begin{minipage}{1.\textwidth}
-		\centering
-		\includegraphics[width=1.\textwidth]{Bilder/own-unet-2mil.pdf} 
-	\end{minipage}
-	\caption{Bike-U-Net-2 mit 1,946 Mio. Parametern.}
-	\label{fig:bike-unet-2}
-\end{figure} 
 
 % HE INITIALIZATION
 
@@ -889,7 +889,7 @@ für den konkreten Anwendungsfall der Radwegerkennung. Zudem ist VGG16 sehr beli
 Netz, weswegen es viele Vergleichsmöglichkeiten gibt. 
 Des Weiteren wird VGG16 als Backbone in Research zum Pre-Training mit U-Nets eingesetzt (s. \autoref{sec:transfer-learning:backbones}), 
 auf dessen Ergebnisse diese Arbeit aufbaut. 
-Demnach ist es wiederum für Vergleichszwecke sinnvoll VGG16 als Backbone für die Radwegerkennung zu verwenden.   
+Demnach ist es wiederum für Vergleichszwecke sinnvoll, VGG16 als Backbone für die Radwegerkennung zu verwenden.   
 
 \subsubsection{ResNet34-Bike-U-Net}
 
@@ -919,7 +919,7 @@ Sinn ergeben, da die Daten im Pre-Processing nicht normalisiert werden (vgl. \au
 Normalisierung übernimmt. Wenn das allerdings auf nur ein Bild angewandt wird, ist keine gute Normalisierung über den ganzen Datensatz zu erwarten. 
 Eine große Batch-Size, wie z.B. 16, ist allerdings sehr ressourcenintensiv, da alle Elemente des Batches simultan in den Speicher geladen und verarbeitet 
 werden müssen. \\
-Als Kompromiss wird eine Batch Size von 4 festgehalten. Durch die zufälligen Batches ist eine angemessene Normalisierung zu erwarten.
+Als Kompromiss wird eine Batch-Size von 4 festgehalten. Durch die zufälligen Batches ist eine angemessene Normalisierung zu erwarten.
 
 \subsubsection{Dropout-Rate:} \label{sec:hyperparameter:dropout}
 
@@ -971,7 +971,7 @@ besteht aus einem Ausschnitt von Massachusetts in Form eines unregelmäßigen Po
 also große, weiße Flächen ohne Bild. Der BikeSat-Datensatz enthält ebenfalls Zuschnitte mit schwarzen Flächen, 
 doch im Gegensatz zum BikeSat-Datensatz hat der Massachusetts-Datensatz das Problem, dass die Masken nicht von einem 
 unregelmäßigen Massachusetts-Ausschnitt genommen sind, sondern von einem quadratischen, sodass in den weißen Flächen 
-der Bilder in der dazugehörigen Maske an dießen Stellen Straßen eingezeichnet sind, wie \autoref{fig:problem-mass} illustriert. 
+der Bilder in der dazugehörigen Maske an diesen Stellen Straßen eingezeichnet sind, wie \autoref{fig:problem-mass} illustriert. 
 Dadurch sieht das Netz also willkürlich 
 im weißen (RGB = (255, 255, 255)) Bereich als Straßen annotierte weiße Pixel. \\
 Um diese Verwirrung aufzulösen, werden 
@@ -1008,14 +1008,14 @@ Die Datensätze werden vor dem Zusammenfügen aufgespalten, damit das relative V
 
 Nach der Erstellung des Datensatzes werden alle in \autoref{sec:architecture} vorgestellten Netze
 auf dem Combined-Datensatz trainiert. 
-Die \autoref{acro:BUNet}-Netze werden dabei von Grund auf neu trainiert nach den Regeln aus \autoref{sec:training}, 
-wobei für die Backbone-Netze folgend Form des Fine-Tunings des Transfer-Learning angewandt wird (vgl. \autoref{sec:transfer-learning:backbones}): 
+Die \autoref{acro:BUNet}-Netze werden dabei von Grund auf neu trainiert, nach den Regeln aus \autoref{sec:training}, 
+wobei für die Backbone-Netze folgende Form des Fine-Tunings angewandt wird (vgl. \autoref{sec:transfer-learning:backbones}): 
 Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert. Der Encoder ist für die ersten 12 Epochen des Trainings eingefroren, 
 während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 10 verringert, der Encoder 
 auf trainierbar gestellt und das Training fortgesetzt bis entweder 100 Epochen verstrichen sind oder das Training 
 zuvor gestoppt wird, wie in \autoref{sec:training} detailliert.    
 
-Generell ist es auch möglich unüberwachtes Lernen auf die Straßendatensätze (bzw. irgendwelche 
+Generell ist es auch möglich, unüberwachtes Lernen auf die Straßendatensätze (bzw. irgendwelche 
 Luftbilder von Städten) anzuwenden, um die Merkmale von Infrastruktur in Städten zu lernen. 
 Hierfür könnten konkret die Netzarchitekturen als Auto-Encoder eingesetzt werden, wobei der Input das 
 Luftbild darstellt und das Label, also der gewünschte Output, ebenfalls das Eingabeluftbild. 
@@ -1052,8 +1052,8 @@ Abzweigende Pfeile bedeuten, dass der Input dupliziert wird und beide Wege verfo
 Die Architekturen sind links im Diagramm zu sehen, wobei \ac{BUNet2} und \ac{BUNet15} den \ac{BUNet}-Block 
 bilden und die Backbone-Architekturen einen Block. Die \acp{BUNet} werden jeweils direkt auf 
 dem BikeSat-Datensatz trainiert (Pfeil ganz oben) und jeweils direkt auf dem Combined-Datensatz aus \autoref{sec:pre-training-roads}
-vortrainiert und dann diese vortrainierten \acp{BUNet} jeweils fine-tuned, indem ein mal die linke Hälfte des 
-Netzes (der Encoder) und ein mal die rechte Hälfte (der Decoder) eingefroren, als nicht modifizierbar gesetzt, werden,
+vortrainiert und dann diese vortrainierten \acp{BUNet} jeweils fine-tuned, indem einmal die linke Hälfte des 
+Netzes (der Encoder) und einmal die rechte Hälfte (der Decoder) eingefroren, also als nicht modifizierbar gesetzt, werden,
 das Training so 12 Epochen vollzogen wird, dann die Lernrate verkleinert wird um Faktor 10 und daraufhin weiter 
 das \textit{ganze} Netz trainiert wird, bis es zum vorzeitigen Ende kommt oder 100 Epochen erreicht wird. \\
 Die Backbone-Netze werden, wie in \autoref{sec:pre-training-roads} beschrieben, jeweils auf dem Combined-Datensatz vortrainiert

@@ -12,8 +12,9 @@ zunächst eine Übersicht der in diesem Kapitel beschriebenen Inhalte, um deren 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1.\textwidth]{Bilder/overview-background.drawio.pdf} 
-	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentrale vier Kästen 
-	beschreiben Hauptvorgehen in der Arbeit.}
+	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentral sollen Modelle 
+	ausgewählt werden, die dann auf dem Straßendatensatz vortrainiert werden, um daraufhin 
+	auf dem eigenen Datensatz trainiert zu werden. Abschließen werden die Resultate mit weiteren Datensätzen bewertet.}
 	\label{fig:overview-background}
 \end{figure} 
 
@@ -35,7 +36,7 @@ großen Datensätzen zur Straßenerkennung für die Radwegerkennung profitieren 
 Hierfür wird auch der aktuelle Stand bei der Straßenerkennung untersucht, da die Domäne sehr verwandt zur Radwegerkennung ist.
 Weiter werden Ähnlichkeitsmaße untersucht, die zum einen für das Training relevant sind, aber auch für die 
 abschließende Bewertung der Resultate.  \\
-Zunächst werden allerdings Grundlagen zu Neuronalen Netzen und dem Maschinellen Lernen, 
+Zunächst werden allerdings Grundlagen zu neuronalen Netzen und dem Maschinellen Lernen, 
 sowie die unterschiedlichen Aufgabenkategorien der Computer-Vision untersucht, sodass die vorher angeführten Themen 
 besser zu verstehen sind.  
 
@@ -73,9 +74,9 @@ Diese liegt vor, wenn eine Klasse deutlich stärker als eine andere vertreten is
 Das \ac{NN} vernachlässigt dann ggf. die unterrepräsentierte Klasse und führt zu schlechteren Ergebnissen.
 Die Eingabedaten sollten zusätzlich standardisiert und normalisiert sein, um das Lernen zu beschleunigen. 
 
-Bei der \textit{Ground Truth} eines Datensatzes handelt es sich um das vorgegebene Ergebnis, mit dem der Output des \ac{NN}	verglichen wird.
+Bei der \textit{Ground-Truth} eines Datensatzes handelt es sich um das vorgegebene Ergebnis, mit dem der Output des \ac{NN}	verglichen wird.
 Das Ergebnis kann beispielsweise ein Label für eine Klassifizierung sein.
-Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter direkt von der Ground Truth abhängig ist.
+Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter direkt von der Ground-Truth abhängig ist.
 
 Ist ein Modell zu komplex für die gegebenen Trainingsdaten, kann es zu \textit{Overfitting} kommen. Das bedeutet, 
 das Netz lernt die Beispiele auswendig und generalisiert nicht. 
@@ -103,7 +104,7 @@ Diese verringern die Dimensionen des Outputs, indem sie beispielsweise nur den m
 \ac{CNN}s werden bei Bildern eingesetzt, da eine räumliche Beziehung zwischen einzelnen Bildpunkten Berücksichtigung findet, räumlich zusammengehörige Regionen werden verbunden.
 Die Pooling-Schichten besitzen im Gegensatz zu den Convolutional-Schichten keine Parameter.
 Zu beachten ist, dass das Pooling zu einer räumlichen Invarianz der Merkmale führt.
-Über eine vollvermaschte Schicht nach der letzten Convolutional-Schicht kann z.B. eine Klassifikation gelernt werden.
+Über eine voll vermaschte Schicht nach der letzten Convolutional-Schicht kann z.B. eine Klassifikation gelernt werden.
 \autoref{fig:LeNet} zeigt ein Beispiel für ein \ac{CNN}.
 
 \begin{figure}
@@ -138,7 +139,7 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 	Abhilfe schafft die Verwendung einer pixelweisen Maske anstelle einer Bounding Box, das Objekt kann von seiner Umgebung abgegrenzt werden.
 
 	\item \textit{Instance Segmentation:}
-	Zusätzlich zur Semantic Segmentation kann noch gefodert werden, dass einzelne Instanzen verschiedener Objekte 
+	Zusätzlich zur Semantic Segmentation kann noch gefordert werden, dass einzelne Instanzen verschiedener Objekte 
 	unterschieden werden sollen.
 	Diese Forderung wird dann als \textit{Instance Segmentation} bezeichnet \cite{Sharma.21.08.2019}.
 \end{itemize}
@@ -161,7 +162,7 @@ Die \textit{Sigmoid}-Funktion bildet die Eingabe auf einen Wert im Intervall $(0
 Der Vorteil hier ist, dass Aktivierungen nie groß werden können, wodurch einzelne Neuronen nicht den Gradienten dominieren können und 
 eine fortlaufende Normalisierung durchgeführt wird. Die Probleme hingegen sind, dass die Funktion eher aufwendig zu berechnen ist 
 und dass die Ableitung für betragsmäßig größere Werte verschwindet. Hierdurch kann es zum \textit{Vanishing-Gradient-Problem} kommen, wobei 
-Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch geupdated werden \cite{Goodfellow.2016} 
+Neuronen in den flacheren Schichten eines neuronalen Netzes kaum noch upgedated werden \cite{Goodfellow.2016} 
 \begin{align}
 	\label{eq:sigmoid} Sigmoid(z) = \frac{1}{1+e^{-z}}~.
 \end{align} 
@@ -243,7 +244,7 @@ Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite
 
 \subsection{Dice- und F-Maß}
 
-Das \textit{Dice-}, oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites{Srenson.1948}{Dice.1945} 
+Das \textit{Dice-} oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites{Srenson.1948}{Dice.1945} 
 \begin{align}
 	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
 	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|} ~.
@@ -410,7 +411,7 @@ Dadurch ist es auch sehr beliebt für Transfer-Learning.
 VGG16 besteht aus fünf Blöcken mit $3x3$-Convolution-Schichten,
 gefolgt von drei Fully-Connected-Schichten. Die ersten beiden Convolution-Blöcke haben zwei Convolution-Schichten,
 die letzten drei Blöcke dagegen jeweils drei. 
-Jeder Convolution-Block wird gefolgt von einer Maxpool-Schicht und jeder bis auf den vorletzeten verdoppelt die Filteranzahl in den Convolution-Schichten,
+Jeder Convolution-Block wird gefolgt von einer Maxpool-Schicht und jeder bis auf den vorletzten verdoppelt die Filteranzahl in den Convolution-Schichten,
 beginnend bei 64 Filtern im ersten Block bis hin zu 512 Filtern in den letzten beiden Blöcken \cite{Simonyan.04092014}\footnote{\autoref{fig:vgg16-architecture} veranschaulicht VGG16.}. 
 
 Das gesamte Netz besitzt 138 Mio. Parameter. Werden die drei Fully-Conntected-Schichten am Ende ausgelassen, 
@@ -436,7 +437,7 @@ ResNet34 hat 63,5 Mio. Parameter. Wird auf die letzte Fully-Connected-Layer verz
 
 \subsection{DenseNet121} \label{sec:pretrained-backbones:densenet121}
 
-\textit{DenseNet121} wurde 2018 erstmals vorgeschlagen und designed, um das Vanishing-Gradient-Problem 
+\textit{DenseNet121} wurde 2018 erstmals vorgeschlagen und designt, um das Vanishing-Gradient-Problem 
 zu verbessern, bessere Feature-Übertragung in tiefere Netzschichten zu ermöglichen und das Wiederverwenden von Features 
 zu unterstützen, um somit die Anzahl der benötigten Parameter bei gleichbleibender Performanz deutlich zu reduzieren \cite{Huang.25082016}.
 
@@ -464,13 +465,13 @@ um die U-Net-Form nachzubilden.
 \section{Transfer-Learning} \label{sec:transfer-learning}
 
 \textit{Transfer-Learning} beschreibt das Übertragen von trainierten Gewichten eines \ac{ML}-Modells auf ein anderes, 
-bestenfalls ähnliches Problem und Modell. Das Modell wird dann via \textit{Fine-Tuning} verfeinert mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden.
+bestenfalls ähnliches Problem und Modell. Das Modell wird dann mit dem neuen Datensatz und unterschiedlichen Trainingsmethoden via \textit{Fine-Tuning} verfeinert.
 Häufig wird dafür ein Teil des Modells eingefroren, sodass sich die eingefrorenen Gewichte nicht verändern können. Dies verhindert, 
 dass die bereits vortrainierten Gewichte durch die erste Trainings-Batch ruiniert und unbrauchbar werden. Eine weitere Möglichkeit ist,
 mit einer sehr geringen Lernrate das gesamte Modell zu trainieren. Oft werden beide Ansätze auch verbunden.
 
 Der Vorteil von Transfer-Learning liegt darin, dass das Training deutlich kürzer dauert, 
-weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Datensätze bessere Ergebnisse erzielt werden können
+weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Datensätzen bessere Ergebnisse erzielt werden können
  und auch insgesamt eine höhere Genauigkeit 
 am Ende des Trainings erreicht wird, als bei herkömmlichem Training. Diese Effekte sind verstärkt, 
 abhängig davon, wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
@@ -489,10 +490,10 @@ symmetrisch dem Encoder nachempfunden und an passenden Stellen Skip-Verbindungen
 Hierdurch kann eine geeignete \ac{CNN}-Architektur für das spezifische Problem ausgewählt werden. Des Weiteren sind diese 
 Modelle auf sehr großen Datensätzen, wie \textit{ImageNet}, vortrainiert öffentlich zugänglich. 
 
-Bei der semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern, wurden die besten Ergebnisse von einem Dice-Maß-Standpunkt aus, 
+Bei der semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern wurden die besten Ergebnisse für das Dice-Maß 
 mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches zuerst auf dem \textit{Salient Object}
-Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse im Bezug auf das Dice-Maß, wobei allerdings das VGG16-U-Net kleine falsch-positive 
-Regionen erkannte, die weit außerhalb der Ground-Truth lagen. Die Falsch-Positiven beim Vergleichsnetz, lagen direkt an der Ground-Truth, 
+Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse in Bezug auf das Dice-Maß, wobei allerdings das VGG16-U-Net kleine falsch-positive 
+Regionen erkannte, die weit außerhalb der Ground-Truth lagen. Die Falsch-Positiven beim Vergleichsnetz lagen direkt an der Ground-Truth, 
 dies lässt auf eine sensitivere Kantenerkennung beim VGG16-U-Net schließen, die manchmal aber auch übersensitiv war \cite{Cheng.05.10.2021}. 
 
 Für das Training des VGG16-U-Nets wurde der Encoder-Teil eingefroren und somit nur der Decoder trainiert. 
@@ -501,7 +502,7 @@ Für das Training des VGG16-U-Nets wurde der Encoder-Teil eingefroren und somit 
 
 Im oben beschriebenen Problem zur semantischen Segmentierung wurde das vortrainierte Vergleichsnetz auf zwei Weisen fein-trainiert:
 \begin{enumerate}
-	\item Ohne Einfrieren mit einer Lernrate von $10^{-5}$ und
+	\item Ohne Einfrieren, mit einer Lernrate von $10^{-5}$ und
 	\item mit Einfrieren des mittleren Blocks, welcher ungefähr $14\cdot 10^6$ der insgesamt $31 \cdot 10^6$ Parameter enthielt. 
 \end{enumerate}
 Die 5-fache Kreuzvalidierung ergab sowohl für den besten Lauf, als auch für den durchschnittlichen Lauf, ein besseres Dice-Maß 
@@ -509,11 +510,11 @@ für das Training aller Parameter. In keinem der Fälle gab es, anders als beim 
 
 In einem weiteren Paper wurde untersucht, welche Layer eines U-Net am besten eingefroren werden sollten, für das Fine-Tuning von medizinischen Bildern - 
 zum einen von Lungen-Ultraschall-Bildern und zum anderen von Brust-Röntgen-Aufnahmen. 
-Hier wurde wieder mit dem \textit{Salient Objetcs} Datensatz vortrainiert. Dann wurden für beide Anwendungsfälle folgende Tests durchgeführt: 
+Hier wurde wieder mit dem \textit{Salient-Objetcs}-Datensatz vortrainiert. Dann wurden für beide Anwendungsfälle folgende Tests durchgeführt: 
 \begin{enumerate}
 	\item Einfrieren der linken Hälfte (Encoder) des Netzes,
 	\item Einfrieren der rechten Hälfte (Decoder) des Netzes,
-	\item gesamtes Netz, bis auf den ersten Block eingefroren und dann nach jeweils fünf Epochen sukkzessive weitere Blöcke freigeben und
+	\item gesamtes Netz, bis auf den ersten Block eingefroren und dann nach jeweils fünf Epochen sukzessive weitere Blöcke freigeben und
 	\item dasselbe allerdings von hinten nach vorne.
 \end{enumerate}
 Für die Röntgenaufnahmen gab es keine Unterschiede, wobei der Dice-Score hier allerdings auch bei $0.98$ lag. 
@@ -527,7 +528,7 @@ um eine Transfer-Learning-Methode für das Problem der Radwegerkennung zu konzip
 
 \section{Aktueller Stand bei der Straßendetektion}
 
-Die Erkennung von Fahrradwegen soll auf der bereits existierenden Straßenextraktion aus Satellitenbildern aufbauen.
+Die Erkennung von Fahrradwegen soll auf der bereits existierenden Straßenextraktion aus Luftbildern aufbauen.
 Hierfür werden vorhandene Datensätze für Straßen vorgestellt. 
 Im Anschluss werden auf den aktuellen Stand und Benchmark-Optionen eingegangen.
 
@@ -574,15 +575,15 @@ Die Liniendicke der gelabelten Straßen beträgt $7 px$ und ist ungeglättet, da
 Der Zuschnitt der Bilder sorgt teilweise für einen hohen Anteil weißer Stellen in den Bildern.
 
 Das \textit{Buffalo Roads Dataset} ist als zusätzliches Testset für das Massachusetts Roads Dataset zu sehen.
-Hintergrund ist die Überprüfung des Netzes mit Daten aus einem anderem Gebiet unter anderen Bedingungen.
-Es besteht lediglich aus 30 Orthophotos ($5:5:20$) mit einer Größe von $609{\times}914$ und einer Auflösung von $1 \frac{px}{m^2}$.
-Die Generierung der gelabelten Daten erfolgt analog zum Massachusetts Road Set über \ac{OSM}.
+Hintergrund ist die Überprüfung des Netzes mit Daten aus einem anderen Gebiet unter anderen Bedingungen.
+Es besteht lediglich aus 30 Orthofotos ($5:5:20$) mit einer Größe von $609{\times}914$ und einer Auflösung von $1 \frac{px}{m^2}$.
+Die Generierung der gelabelten Daten erfolgt analog zum Massachusetts Road Dataset über \ac{OSM}.
 Größter Unterschied ist die Verdeckung von Straßen durch Bäume \cite{Mnih.2013}.
 
 \textit{LandCover.ai} kann für die Erkennung von Gebäuden, Waldgebieten, Gewässern und Straßen verwendet werden.
 Die Aufnahmen stammen aus Polen und Zentraleuropa in einer Größe von $21627 km^2$.
-$33$ Orthophotos haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000{\times}9500$ Pixeln, 
-$8$ Bilder von $50 \frac{cm}{px}$ mit $4200{\times}4700$ Pixeln \cite{.20.04.2022}.
+$33$ Orthofotos haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000{\times}9500$ Pixeln, 
+$8$ Bilder von $50 \frac{cm}{px}$, mit $4200{\times}4700$ Pixeln \cite{.20.04.2022}.
 Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländlichen Gebieten.
 
 \begin{wrapfigure}{l}{0.5\textwidth}
@@ -599,13 +600,13 @@ Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländliche
 	\label{fig:deep_globe-example}
 \end{wrapfigure}
 
-Mithilfe des \textit{Deep Globe Road Extraction Datasets} können in Kathastrophgebieten Informationen über Karten und Zugänglichkeitsmöglichkeiten für die Krisenbewältigung gesammelt werden.
-Der Datensatz besteht aus $6226$ Satellitenbildern in RGB mit einer Größe von $1024{\times}1024$.
+Mithilfe des \textit{Deep Globe Road Extraction Datasets} können in Katastrophengebieten Informationen über Karten und Zugänglichkeitsmöglichkeiten für die Krisenbewältigung gesammelt werden.
+Der Datensatz besteht aus $6226$ Luftbildern in RGB, mit einer Größe von $1024{\times}1024$.
 Die Auflösung der Aufnahmen beträgt $50 cm$. \autoref{fig:deep_globe-example} zeigt ein Beispiel.
 Mit $1243$ Validierungs- und $1101$ Testdaten ist der Split in Training, Validierung und Test zu $73:15:13$ erfolgt.
 Der hohe Aufwand zur Erstellung der Labels führt zu Ungenauigkeiten, insbesondere in ländlichen Regionen. 
 Kleine Straßen innerhalb von Landwirtschaftsflächen sind bewusst unbeschriftet geblieben.
-Die Bilder sind ursprünglich über Thailand, Indonesien und Indien mit je $19584{\times}19584$ Pixeln aufgenommen worden.
+Die Bilder sind ursprünglich über Thailand, Indonesien und Indien, mit je $19584{\times}19584$ Pixeln aufgenommen worden.
 Insgesamt entspricht es einer Fläche von $2220~km^2$ \cite{Ashwath.10.11.2020}.
 
 Mit finanzieller Unterstützung des Chesapeak Bay Programms wurde ein Datensatz \textit{Land Cover} zur Landnutzung und Bodenbedeckung erstellt.
@@ -623,14 +624,14 @@ Für Straßen können alle Testdaten verwendet werden.
 Die Labels sind manuell mithilfe von CloudCompare erstellt worden \cite{Englich.06.10.2022b,Tan.2020}.
 
 Der Testdatensatz \textit{Vaihingen/Enz} besteht aus einer Untermenge der Daten, welche für einen Test von digitalen Luftbildkameras verwendet wurden.
-Er ist in drei Testgebiete für verschiedene Objektklassen und in einen größeren Bereich für das Überprüfen von Straßenextrakion aufgeteilt, wobei die drei Gebiete hier mit inbegriffen sind.
+Er ist in drei Testgebiete für verschiedene Objektklassen und in einen größeren Bereich für das Überprüfen von Straßenextraktion aufgeteilt, wobei die drei Gebiete hier mit inbegriffen sind.
 Die einzelnen Gebiete sind in verschiedene Kategorien unterteilt: Hochhäuser, Wohngebiete mit kleineren Einfamilienhäusern und Innenstadt mit dichter Bebauung.
 Die Bodenauflösung beträgt $8cm$ \cite{Englich.06.10.2022b}.
 
 Für die Stadt \textit{Potsdam} gibt es einen ähnlichen Datensatz. 
-Dieser zeigt eine typsiche Altstadt mit großen Gebäudeblöcken, kleinen Straßen und einer dichten Besiedelung.
+Dieser zeigt eine typische Altstadt mit großen Gebäudeblöcken, kleinen Straßen und einer dichten Besiedelung.
 Die \ac{GSD} beträgt $5cm$.
-Zur Vermeidung von Randbereichen ohne Daten, sind zentrale Ausschnitte verwendet worden.
+Zur Vermeidung von Randbereichen ohne Daten sind zentrale Ausschnitte verwendet worden.
 Übrig gebliebene Datenlücken wurden interpoliert \cite{Englich.17.11.2022}.
 
 \subsection{Aktueller Stand und Benchmarks} \label{sec:state-of-the-art-roads} % ...der straßen detection
@@ -666,8 +667,8 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 	Ein so klassifizierter Pixel ändert also nichts an dem Score. Es werden nur Straßen betrachtet, nicht aber der Hintergrund.    
 	\item Das verwendete \ac{CNN} hat je Input-Neuron bzw. -Pixel $p$ \textit{zwei} Output-Neuronen $\mathbf{o_p} = (o_{p_S}, o_{p_H})$, 
 	wobei dies eine One-Hot-Kodierung von Punkt (1) darstellt. 
-	Ein Hintergrund-Pixel wird nun \textit{explizit} als solcher klassifiziert. 
-	Dies ändert allerdings die Berechnungsgrundlage von Dice und \ac{IoU} erheblich, da diese nun (zumeist) als Mittelwert 
+	Ein Hintergrundpixel wird nun \textit{explizit} als solcher klassifiziert. 
+	Dies ändert allerdings die Berechnungsgrundlage von Dice und \ac{IoU} erheblich, da diese indessen (zumeist) als Mittelwert 
 	der Scores zu $o_p{_S}$ und $o_p{_H}$ berechnet werden. Hierdurch fließen die zuvor unberücksichtigten wahr-negativen 
 	Hintergrundpixel als wahr-postive in den Dice- bzw. \ac{IoU}-Score ein. Die Verzerrung wird noch verstärkt, 
 	da eine starke Imbalance zwischen Straßen- und Hintergrundpixel herrscht, wodurch der Dice-/\ac{IoU}-Score bei 
@@ -676,7 +677,7 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 \end{enumerate}
 
 Im Weiteren werden aktuelle Ergebnisse zu den Massachusetts- und Deep-Globe-Datensätzen vorgestellt, 
-um zu Ermitteln, was für diese Datensätze gut funktioniert, sodass diese state-of-the-art Erkenntnisse beim 
+um zu ermitteln, was für diese Datensätze gut funktioniert, sodass diese state-of-the-art Erkenntnisse beim 
 späteren Entwurf eines oder mehrerer Netze zum Erkennen von Fahrradwegen (s. \autoref{sec:architecture}) 
 genutzt werden können. Die beiden Datensätze sind für die Literaturrecherche ausgewählt, 
 da sie sehr häufig als Benchmark zum Erkennen von Straßen genutzt werden, es dazu sehr viel Literatur und 
@@ -685,7 +686,7 @@ Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensä
 Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. \\   
 \autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Baseline}-Modellen.
 Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht sonderlich auf den jeweiligen Datensatz optimiert sind,
-was die Hyper-Parameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
+was die Hyperparameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
 Mit den Baseline-Resultaten können diese Modelle zu Vergleichszwecken verwendet werden 
 und es bestehen Daten zu mehreren Benchmarks. Aus den Baseline-Resultaten lässt sich schließen, dass das Vortrainieren eines Netzes auf einem 
 anderen Datensatz bessere Ergebnisse für die Straßendatensätze und somit ggf. auch für die spätere Betrachtung mit 
@@ -716,7 +717,7 @@ Dense-U-Net-121 ist dabei ein U-Net mit einem vortrainierten DenseNet121 als Bac
 Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
 indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen dem Input der ersten und dem Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
 ersetzt wurden und der Bottleneck-Block
-um Dilation erweitert wurde \cite{Gao.2019}. 
+um Dilatation erweitert wurde \cite{Gao.2019}. 
 Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}. \\
 Die besten Netze beider Datensätze haben die Gemeinsamkeit der U-Net-Struktur, wie auch die Residual-Blöcke (bzw.
 sogar Dense-Blöcke, was als eine Erweiterung der Residual-Blöcke aufgefasst werden kann). 
@@ -749,14 +750,14 @@ diese Arbeit untersucht:
 \begin{enumerate}
 	\item Bisher existieren keine wissenschaftlichen Untersuchungen, die versuchen, unterschiedliche Straßenelemente,
 	wie Gehwege, Radwege, Busspuren o.Ä. auf Luftaufnahmen von Straßen zu unterscheiden. Da Straßen als Ganzes 
-	auf Satellitenbildern gut zu erkennen sind, deren unterschiedlichen, sehr heterogenen Bestandteile jedoch weniger, 
+	auf Luftbildern gut zu erkennen sind, deren unterschiedlichen, sehr heterogenen Bestandteile jedoch weniger, 
 	kann mit dem Beispiel der Radwege überprüft werden, ob die Unterscheidung mit derzeitigen Luftbildqualitäten von circa 20 bis 50 cm \ac{GSD} 
 	machbar ist. 
 	\item Da für vorgenannten Punkt noch keinen Datensatz vorhanden ist, muss ein solcher erstellt werden. Dieser muss umfangreich 
 	genug sein, dass er für \ac{ML} verwendbar ist. Es soll geklärt werden, ob bisherige Methoden, Datensätze für die Straßenerkennung 
 	((semi-)automatisch) zu erstellen, auch für Radwege angewandt werden können und wie die Güte eines solchen Datensatzes bewertet werden kann. 
 	\item Die Literatur bezüglich der Straßenerkennung fordert eine sehr genaue Segmentierung des Bildes. Für Radwege ist es ausreichend, 
-	zu ermitteln, ob einer existiert und wo dieser grob liegt (auf welcher Straßenseite). Für diesen Verwendugnszweck gibt 
+	zu ermitteln, ob einer existiert und wo dieser grob liegt (auf welcher Straßenseite). Für diesen Verwendungszweck gibt 
 	es auch ein Bewertungsmaß -- die \textit{Quality} (vgl. \autoref{sec:evaluation-metrics:quality}). Für die Quality gibt es allerdings
 	keine Implementation auf Rastern, wie bei einer semantischen Segmentierung, sondern nur auf daraus extrahierten Graphen. 
 	Folglich soll diese Arbeit eine Berechnungsmethode konzipieren, um die Quality auf die Masken der semantischen Segmentierung anzuwenden 

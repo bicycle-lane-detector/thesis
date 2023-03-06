@@ -54,7 +54,7 @@ ImageNet vortrainierten Encoder aufweisen. Die \ac{BIoU} verwendet wie bei der R
 festgelegt eine Puffergröße von 15 Pixeln. \\ 
 BUNet2 schneidet am schlechtesten ab, während VBUNet die höchsten Werte für IoU und BIoU aufweist. 
 Generell sind alle Netze mit vortrainiertem Backbone besser, als die nicht vortrainierten Netze 
-der BUNet-Archtiektur. 
+der BUNet-Architektur. 
 
 \autoref{fig:combined-samples-bune2-vbunet} zeigt ausgewählte Beispielpredictions des \ac{BUNet2} (links) und 
 des \ac{VBUNet} (rechts).\footnote{Weitere Beispiele anderer Netze in \autoref{sec:pred-combined}.} \\
@@ -198,15 +198,15 @@ da diese weniger interessant sind.
 	sowie die IoU und BIoU von Karlsruhe zu Wolfsburg ($p = 1,14 \cdot 10^{-7}$, bzw. $1,36 \cdot 10^{-4}$). 
 	Die Differenz von IoU des BikeSat-Datensatzes zur IoU des Wolfsburg-Datensatzes verfehlt die statistische Signifikanz 
 	mit $p = 0,122$.\footnote{Alle Tests als einseitige Zweistichproben-Welch-Tests.}  
-	\item Über alle Datensätze performt RBUNet$^*$ am besten. Es liefert über alle sechs Maßzahlen Top-3-Ergebnisse wobei es 
-	in für drei davon am besten performt. 
+	\item Über alle Datensätze performt RBUNet$^*$ am besten. Es liefert über alle sechs Maßzahlen Top-3-Ergebnisse, wobei es 
+	in drei davon am besten performt. 
 	\item Darüber hinaus ist auffällig, wie viel schlechter die vortrainierten Varianten der VBUNet-Architektur performen. 
 	Während VBUNet$^*$ auf dem BikeSat- und Wolfsburg-Datensatz solide Ergebnisse liefert, liegen VBUNet$^l$ und VBUNet$^r$ 
 	weit unterhalb. Bei der IoU 10 Prozentpunkte, bei der BIoU bis zu 16 Prozentpunkte.
 	\item Generell performen die Netze der \ac{BUNet2}-Architektur schlechter als die der \ac{BUNet15}-Architektur.
 	\item Interessanterweise performen die vortrainierten Modelle der Backbone-Architekturen auf dem BikeSat- und 
 	Wolfsburg-Datensatz konstant schlechter als die nicht vortrainierten. Die rechtsseitig vortrainierten zeigen 
-	allerdings bessere Performance auf dem Karlsruhe-Datensatz, als die anderen Modelle der jeweiligen Backbone-Archtiektur.\\
+	allerdings bessere Performance auf dem Karlsruhe-Datensatz, als die anderen Modelle der jeweiligen Backbone-Architektur.\\
 	Für Modelle der BUNet-Architektur sind die Ergebnisse recht ähnlich und es ist keine schlechtere Performance
 	zu beobachten. 
 \end{enumerate}
@@ -222,7 +222,7 @@ des $VBUNet^l$ (b) auf dem BikeSat-Datensatz bei Training mit Basic-Augmentation
 	wie zum Beispiel die gepunktete Prediction aus Bild vier von oben links zeigt.
 	\item Es werden Wege, die von der Beschaffenheit Radwege sein könnten als solche erkannt, 
 	obwohl es sich um keine handelt, wie links das sechste Bild von oben zeigt. Auch haben beide Netze 
-	auf den Bildern zwei und drei von unten auf beiden Straßenseiten Radwege erkannt, obwohl nur auf einer tatsächlich einer ist.
+	auf den Bildern zwei und drei von unten auf beiden Straßenseiten Radwege erkannt, obwohl nur auf einer Straßenseite tatsächlich ein Radweg ist.
 	Bei Bild vier von unten zeigen sich sehr gute Predictions durch beide Netze, da hier korrekterweise nur eine Straßenseite 
 	mit Radweg versehen ist. 
 	\item Generell geht die quantitativ gemessene bessere Performance von VBUNet$^l$ empirisch aus den Bildern hervor.
@@ -235,7 +235,7 @@ des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Basic-Augmentati
 	BikeSat-Datensatz. So gibt es kaum mit den Masken kongruente Bereiche und die Radwege sind oft nur 
 	qualitativ durch unterbrochene oder gepunktete Linien angedeutet. 
 	\item RBUNet$^*$ kann die ersten sieben Bilder qualitativ recht gut predicten, erkennt aber auf den letzten 
-	drei Bildern auch eher Radwege wo keine sind - viele Falsch-Positive also. 
+	drei Bildern auch eher Radwege, wo keine sind - viele Falsch-Positive also. 
 	Das Modell weist eine eher relativ hohe Sensitivität auf. \\
 	RBUNet$^l$ hingegen erkennt generell kaum Radwege, aber weist auch keine Falsch-Positiven auf, 
 	was kein Radweg ist, wird auch zuverlässig als negativ eingestuft. Dieses Modell hat also eine hohe Spezifität.     
@@ -245,7 +245,7 @@ des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Basic-Augmentati
 des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Color-Augmentation. \\
  Durch das veränderte Training mit Color-Augmentation hat sich die Art, wie die Modelle predicten, 
 	im Gegensatz zu \autoref{fig:ka-samples-rbunet-l-rbunet-s}, geändert. RBUNet$^l$ weist nun ein paar 
-	Falsch-Positive aber auch mehr Wahr-Positive auf. RBUNet$^*$ zeichnet dünnere Linien und erzeugt 
+	Falsch-Positive, aber auch mehr Wahr-Positive auf. RBUNet$^*$ zeichnet dünnere Linien und erzeugt 
 	weniger Wahr-Positive, aber auch weniger Falsch-Positive. Generell scheinen die beiden Netze ähnlicher zu predicten. 
 
 \autoref{fig:wolfsburg-samples-rbunet-l-rbunet-s-color} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
@@ -426,7 +426,7 @@ in einer von Menschen gesichteten und bewerteten Stichprobe \textbf{722} von \te
 Es fehlen also zwei Radwege. 
 
 Die manuell von Menschen annotierten Bilder des Karlsruhe-Datensatzes zeigen dagegen eine höhere 
-Fehlerquote. Die bestehenden Label sind zwar genauer platziert, aber dafür weniger vollständig. 
+Fehlerquote. Die bestehenden Labels sind zwar genauer platziert, aber dafür weniger vollständig. 
 Hier ist bei einer Sichtung der Daten aufgefallen, dass ca. 15\% der Radwege nicht annotiert sind. 
 Das hat aber keine Auswirkung auf das Training, da der Karlsruhe-Datensatz nur zum Testen verwendet wird.
 \autoref{fig:annotation-mistake} zeigt ausgewählte Predictions (b)-(d) 
@@ -435,7 +435,7 @@ Radwege in der Straße, die von links unten nach rechts oben verläuft, überseh
 In den Ausschnitten (c) und (d) sind die Radwege trotzdem erkannt, während es aber auch 
 Beispiele wie (b) gibt, worin die querenden Radwege nicht getroffen sind. Ausschnitte (c) 
 und (d) zeigen allerdings, dass die Netze Radwege erkennen können, die ein Mensch übersieht.
-Es war allerdings kein Netz in der Lage für den gegebenen Bildausschnitt alle Radwege korrekt 
+Es war allerdings kein Netz in der Lage, für den gegebenen Bildausschnitt alle Radwege korrekt 
 zu erkennen. \\
 Was außerdem auffällig ist, ist, dass in Bild (c) der Radweg rechts unten genau getroffen ist 
 (vgl. menschliche Annotation aus (a)), während in Bild (c) und (d) der Gehweg neben dem eigentlichen 
