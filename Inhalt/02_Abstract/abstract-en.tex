@@ -16,8 +16,12 @@ and OpenStreetMap data. In order to evaluate the results, a buffered form of \te
 called \textit{\acf{BIoU}}, which is the rasterized version of the \textit{Quality} measure, is developed. \\
 Results show mediocre success for recognizing cycle ways, especially for cities 
 with different infrastructure than that used during training. 
+Potentially, better annotations with a greater variety of cities in terms of infrastructure 
+could improve the results. Furthermore, semantic segmentation provides more information 
+than is required for the task, so alternative approaches, such as directly extracting a graph 
+of cycle ways, may yield better results.
 The impact of different architectures and training methodologies does not show consistent
-performance improvements and is deemed insignificant. 
+performance improvements and is thus deemed insignificant. 
 
 \end{addmargin}
 \end{abstract}

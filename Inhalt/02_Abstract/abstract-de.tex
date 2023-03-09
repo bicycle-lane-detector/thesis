@@ -15,9 +15,13 @@ und semantisch Segmentieren von städtischen Radwegen.
 Dafür werden mehrere Datensätze erstellt und mittels eines eigens entwickelten Algorithmus 
 und OpenStreetMap-Daten automatisch annotiert. Um die Ergebnisse zu bewerten, 
 wird eine gepufferte Form der  \textit{\acf{IoU}}, genannt \textit{\acf{BIoU}}, 
-welche eine rasterisierte Version des \textit{Quality}-Maßes darstellt, entwickelt. \\
+welche eine rasterisierte Version des \textit{Quality}-Maßes darstellt, entwickelt. \hspace{2mm} \\
 Die Ergebnisse zeigen mittelmäßigen Erfolg beim Erkennen von Fahrradwegen, insbesondere dann, 
 wenn Städte mit abweichender Infrastruktur, die nicht während des Trainings verwendet wurden, getestet werden.
+Potenziell können bessere Annotationen mit einem Datensatz mit einer größeren Vielfalt an städtischer Infrastruktur 
+bessere Ergebnisse erzielen. Außerdem liefert semantische Segmentierung mehr Information 
+als für die Aufgabe notwendig ist, weswegen alternative Herangehensweisen, wie das direkte Extrahieren 
+eines Graphens der Radwege, bessere Ergebnisse liefern könnten.
 Die unterschiedlichen Architekturen und Trainingsmethoden zeigen keine konsequenten 
 Verbesserungen der Performanz und werden als nicht signifikant erachtet. 
 
