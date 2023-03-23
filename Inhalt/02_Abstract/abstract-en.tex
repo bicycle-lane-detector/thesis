@@ -10,16 +10,19 @@
 \vspace{0.25cm}
 
 This work compares several U-Net-based architectures using various pre-training, fine-tuning, and 
-augmentation methods to recognize and semantically segment cycle ways in cities. 
+augmentation methods to recognize and semantically segment cycle ways in cities from ariel imagery. 
 To that end, multiple data sets are created and automatically annotated using a custom algorithm 
-and OpenStreetMap data. In order to evaluate the results, a buffered form of \textit{\acf{IoU}}, 
+and OpenStreetMap (OSM) data. In order to evaluate the results, a buffered form of \textit{\acf{IoU}}, 
 called \textit{\acf{BIoU}}, which is the rasterized version of the \textit{Quality} measure, is developed. \\
 Results show mediocre success for recognizing cycle ways, especially for cities 
-with different infrastructure than that used during training. 
-Potentially, better annotations with a greater variety of cities in terms of infrastructure 
+with different infrastructure than that used during training. The here used training data 
+features similar cities and faulty annotations in parts, so, potentially, better annotations created by, 
+for example, humans with a greater variety of cities in terms of infrastructure for training samples
 could improve the results. Furthermore, semantic segmentation provides more information 
-than is required for the task, so alternative approaches, such as directly extracting a graph 
-of cycle ways, may yield better results.
+than is required for the task, adding unneeded complexity and hard-to-learn details. 
+Therefore, alternative approaches, such as directly extracting a graph 
+of cycle ways in the deep learning network using OSM graphs as annotations, may yield better results.
+The hereby predicted graph can then be projected onto the images to compare the results to the here used approach.
 The impact of different architectures and training methodologies does not show consistent
 performance improvements and is thus deemed insignificant. 
 

@@ -11,17 +11,23 @@
 
 Diese Arbeit vergleicht einige U-Net-basierte Architekturen und unterschiedliche
 Pre-Training-, Fine-Tuning- und Augmentierungs-Methoden zum Erkennen 
-und semantisch Segmentieren von städtischen Radwegen. 
+und semantisch Segmentieren von städtischen Radwegen aus Luftbildern. 
 Dafür werden mehrere Datensätze erstellt und mittels eines eigens entwickelten Algorithmus 
-und OpenStreetMap-Daten automatisch annotiert. Um die Ergebnisse zu bewerten, 
-wird eine gepufferte Form der  \textit{\acf{IoU}}, genannt \textit{\acf{BIoU}}, 
+und OpenStreetMap-(OSM)-Daten automatisch annotiert. Um die Ergebnisse zu bewerten, 
+wird eine gepufferte Form der \textit{\acf{IoU}}, genannt \textit{\acf{BIoU}}, 
 welche eine rasterisierte Version des \textit{Quality}-Maßes darstellt, entwickelt. \hspace{2mm} \\
 Die Ergebnisse zeigen mittelmäßigen Erfolg beim Erkennen von Fahrradwegen, insbesondere dann, 
-wenn Städte mit abweichender Infrastruktur, die nicht während des Trainings verwendet wurden, getestet werden.
-Potenziell können bessere Annotationen mit einem Datensatz mit einer größeren Vielfalt an städtischer Infrastruktur 
-bessere Ergebnisse erzielen. Außerdem liefert semantische Segmentierung mehr Information 
-als für die Aufgabe notwendig ist, weswegen alternative Herangehensweisen, wie das direkte Extrahieren 
-eines Graphens der Radwege, bessere Ergebnisse liefern könnten.
+wenn Städte mit abweichender Infrastruktur, die nicht während des Trainings verwendet wurden, getestet werden. 
+Der hier verwendete Trainingsdatensatz enthält nur sehr ähnliche Städte und ist teilweise falsch annotiert, 
+also können bessere Annotationen, zum Beispiel durch Menschen erstellt,
+mit einem Datensatz mit einer größeren Vielfalt an städtischer Infrastruktur 
+potentiell bessere Ergebnisse erzielen. Außerdem liefert semantische Segmentierung mehr Information 
+als für die Aufgabe notwendig ist, was unnötige Komplexität und schwer zu lernende Details hinzufügt, 
+weswegen alternative Herangehensweisen, wie das direkte Extrahieren 
+eines Graphens der Radwege im Deep-Learning-Netz selbst, bessere Ergebnisse liefern könnten. 
+Hierfür können die OSM-Graphen direkt als Annotation genutzt werden. 
+Um die so erhaltenen Graphen mit den Ergebnissen dieser Arbeit zu vergleichen, können 
+sie zurück auf die Bilder projiziert werden.
 Die unterschiedlichen Architekturen und Trainingsmethoden zeigen keine konsequenten 
 Verbesserungen der Performanz und werden als nicht signifikant erachtet. 
 
