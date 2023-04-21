@@ -14,7 +14,7 @@ zunächst eine Übersicht der in diesem Kapitel beschriebenen Inhalte, um deren 
 	\includegraphics[width=1.\textwidth]{Bilder/overview-background.drawio.pdf} 
 	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentral sollen Modelle 
 	ausgewählt werden, die dann auf dem Straßendatensatz vortrainiert werden, um daraufhin 
-	auf dem eigenen Datensatz trainiert zu werden. Abschließen werden die Resultate mit weiteren Datensätzen bewertet.}
+	auf dem eigenen Datensatz trainiert zu werden. Abschließend werden die Resultate mit weiteren Datensätzen bewertet.}
 	\label{fig:overview-background}
 \end{figure} 
 
@@ -23,15 +23,14 @@ zusammenspielen. Dabei nehmen die zentralen vier Kästen eine besondere Rolle ei
 für diese Arbeit geplante Vorgehen, um zu einem guten Ergebnis für die Radwegerkennung zu gelangen. 
 \begin{enumerate}
 	\item Es werden verschiedene Modelle mit verschiedenen Architekturen erstellt, die dann
-	\item auf den Datensätzen, die zur Straßenerkennung zur Verfügung stehen, trainiert werden, um dann mit diesem Pre-Training
-	\item auf dem Datensatz zur Radwegerkennung, der in dieser Arbeit erstellt wird, da  
-    bisher keiner existiert, trainiert zu werden.
+	\item auf den Datensätzen, die zur Straßenerkennung zur Verfügung stehen, trainiert werden, um mit diesem Pre-Training
+	\item auf dem Datensatz zur Radwegerkennung, der in dieser Arbeit aus Mangel an Existenz erstellt wird, trainiert zu werden.
 	\item Schließlich werden die Ergebnisse bewertet, diskutiert und die unterschiedlichen Modelle und Methoden miteinander verglichen.  
 \end{enumerate}
 Um die spätere Konzeption der Modelle verstehen zu können, müssen einige Grundlagen im Bereich von verschiedenen 
 Architekturkomponenten, Aktivierungsfunktionen, Netzarchitekturen, wie U-Nets oder Klassifikationsnetze, und 
 weiteren Elementen, die die Performance verbessern können, gelegt werden. 
-Außerdem wird Transfer-Learning und unterschiedliche Methoden dafür aus der Literatur erörtert, um damit von den 
+Außerdem wird Transfer-Learning und unterschiedliche Methoden dafür aus der Literatur erörtert, um von den 
 großen Datensätzen zur Straßenerkennung für die Radwegerkennung profitieren zu können. 
 Hierfür wird auch der aktuelle Stand bei der Straßenerkennung untersucht, da die Domäne sehr verwandt zur Radwegerkennung ist.
 Weiter werden Ähnlichkeitsmaße untersucht, die zum einen für das Training relevant sind, aber auch für die 
@@ -66,7 +65,7 @@ Sie kann im Laufe des Trainings verringert werden, um die Parameter feingranular
 
 Das \ac{NN} wird mithilfe der Testdaten bewertet, die Validierungsdaten können für eine Hyperparameter-Anpassung während des Trainings
 verwendet werden. Das Training verläuft in Epochen, wobei eine Epoche das Durchlaufen aller Trainingsdaten meint. 
-Es folgen so viele Epochen, wie vorgegeben, oder bis das Netz nicht mehr verbessert. Für ein schnelleres Training werden die 
+Es folgen so viele Epochen, wie vorgegeben, oder bis sich das Netz nicht mehr verbessert. Für ein schnelleres Training werden die 
 Trainingsdaten in Batches einer bestimmten Größe eingeteilt, die parallel verarbeitet werden können. \\  
 Für ein gutes Ergebnis sollten verschiedene Kategorien der Bilder in allen drei Datensets gleichermaßen repräsentiert sein.
 Eine Klassen-Imbalance sollte vermieden werden.
@@ -81,7 +80,7 @@ Eine hohe Datenqualität sollte gegeben sein, da die Berechnung der Parameter di
 Ist ein Modell zu komplex für die gegebenen Trainingsdaten, kann es zu \textit{Overfitting} kommen. Das bedeutet, 
 das Netz lernt die Beispiele auswendig und generalisiert nicht. 
 Dem kann entweder mit \textit{Regularisierung} entgegengewirkt werden, welche die Komplexität eines Modells zu reduzieren versucht,
-oder mit \textit{Augmentierung} der Eingaben, wodurch ein Auswendiglernen durch mehr unterschiedliche Eingaben erschwert wird  
+oder mit \textit{Augmentierung} der Eingaben, wodurch ein Auswendiglernen durch unterschiedlichere Eingaben erschwert wird  
 \cites{Goodfellow.2016, Russell.2012}.
 
 \begin{figure}
@@ -254,11 +253,11 @@ Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gle
 \begin{align}
 	\label{eq:precision} P = \frac{|X \cap Y|}{|Y|}~,
 \end{align}
-der Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die \textit{Trefferquote} oder auch \textit{Recall} gegeben durch
+den Anteil der richtig eingestuften Elemente an allen positiv eingestuften Elementen und die \textit{Trefferquote} oder auch \textit{Recall} gegeben durch
 \begin{align}
 	\label{eq:recall} R = \frac{|X \cap Y|}{|X|}~,
 \end{align}
-der Anteil der richtig eingestuften Elemente an allen positiven Elementen. \\
+den Anteil der richtig eingestuften Elemente an allen positiven Elementen. \\
 Das F-Maß, bzw. genauer das $F_1$-Maß, ist dann gegeben durch das harmonische Mittel aus Precision $P$ und Recall $R$, wobei $tp$ die Anzahl von wahr-positiven, $fp$ die Anzahl von falsch-positiven und $fn$ die Anzahl von falsch-negativen Elementen ist \cite{YutakaSasaki.2007}:
 \begin{align}
 	\label{eq:f1} F_{1} = \frac{2\cdot P\cdot R}{P + R} = \frac{2\cdot tp}{2 \cdot tp + fp + fn}~.
