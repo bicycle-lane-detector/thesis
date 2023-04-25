@@ -24,7 +24,7 @@ für diese Arbeit geplante Vorgehen, um zu einem guten Ergebnis für die Radwege
 \begin{enumerate}
 	\item Es werden verschiedene Modelle mit verschiedenen Architekturen erstellt, die dann
 	\item auf den Datensätzen, die zur Straßenerkennung zur Verfügung stehen, trainiert werden, um mit diesem Pre-Training
-	\item auf dem Datensatz zur Radwegerkennung, der in dieser Arbeit aus Mangel an Existenz erstellt wird, trainiert zu werden.
+	\item auf dem Datensatz zur Radwegerkennung, der in dieser Arbeit erstellt wird, trainiert zu werden.
 	\item Schließlich werden die Ergebnisse bewertet, diskutiert und die unterschiedlichen Modelle und Methoden miteinander verglichen.  
 \end{enumerate}
 Um die spätere Konzeption der Modelle verstehen zu können, müssen einige Grundlagen im Bereich von verschiedenen 
@@ -41,13 +41,21 @@ besser zu verstehen sind.
 
 \section{Grundlagen Neuronale Netze}
 
-Ein \ac{NN} ist eine \ac{ML}-Methode und besteht aus mehreren einzelnen \textit{Neuronen}, die miteinander verbunden werden.
+Ein \ac{NN} ist eine Sammlung an Architekturen im \ac{ML}, wobei für alle gilt,
+dass sie aus mehreren einzelnen \textit{Neuronen} bestehen, die miteinander in Verbindung stehen.
 Der Aufbau eines Neurons lässt sich \autoref{fig:neuron} entnehmen.
 Die Ausgänge der Neuronen sind mit denen der nächsten Schicht verbunden.
 Die einzelnen Eingänge können über Parameter gewichtet einfließen.
 Zusätzlich gibt es bei jedem Neuron einen Bias, der gesetzt werden kann.
-Das Training eines \ac{NN} besteht darin, optimale Werte der Gewichte zu finden, damit korrekte Schlüsse des Netzes gezogen werden.
+Das Training eines \ac{NN} besteht darin, optimale Werte der Gewichte zu finden, damit korrekte Schlüsse durch das Netz gezogen werden.
 Hierfür wird eine Unterteilung des vorhandenen Datensatzes in Training-, Test- und Validation-Set vorgenommen.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.65\textwidth]{Bilder/Modell eines Neurons.png} 
+	\caption{Modell eines Neurons \cite{Russell.2012}.}
+	\label{fig:neuron}
+\end{figure} 
 
 \subsection{Training eines neuronalen Netzes}
 
@@ -56,10 +64,10 @@ Die Output-Aktivierung einer Einheit $i$ mit Aktivierungsfunktion $g$ lässt sic
 \begin{align}
 	\label{eq:activationNeuron} a_j = g(\sum_{i = 0}^{n}w_{i,j} \cdot a_i) ~.
 \end{align}
-Die Aktivierungsfunktion bestimmt den Grad der Aktivierung, also den numerischen Wert, des nachfolgenden Neurons.
-Der errechnete Output wird mit dem erwarteten Ergebnis verglichen.
+Die Aktivierungsfunktion bestimmt den Grad der Aktivierung $a_j$, also den numerischen Wert, den das nachfolgende Neuron erhält.
+Der errechnete Output der letzten Aktivierung wird mit dem erwarteten Ergebnis verglichen.
 Die Anpassung der Gewichte erfolgt anschließend über Backpropagation.
-Hierbei werden die Fehler der Ausgabeneuronen auf jedes vorherige Neuron zurückprojiziert.
+Hierbei werden die Fehler der Ausgabeneuronen auf jedes vorherige Neuron zurückgeführt.
 Die für die Aktualisierung genutzte Lernrate entscheidet darüber, wie schnell eine Anpassung der Gewichte erfolgt.
 Sie kann im Laufe des Trainings verringert werden, um die Parameter feingranular anzupassen.
 
@@ -83,12 +91,6 @@ Dem kann entweder mit \textit{Regularisierung} entgegengewirkt werden, welche di
 oder mit \textit{Augmentierung} der Eingaben, wodurch ein Auswendiglernen durch unterschiedlichere Eingaben erschwert wird  
 \cites{Goodfellow.2016, Russell.2012}.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\textwidth]{Bilder/Modell eines Neurons.png} 
-	\caption{Modell eines Neurons \cite{Russell.2012}.}
-	\label{fig:neuron}
-\end{figure} 
 
 \subsection{\acf{CNN}}
 
@@ -124,11 +126,11 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 	\item \textit{Klassifizierung:}
 	Eine reine Klassifizierung ist die einfachste Lösungskategorie. 
 	Es soll lediglich erkannt werden, welche Klasse in einem Bild enthalten ist.
-	Die Lokalität des erkannten Objektes wird vernachlässigt, wichtiger ist die Zuordnung zu einer Klasse.
+	Die Lokalität des erkannten Objektes wird vernachlässigt, es handelt sich rein umd die Zuordnung zu einer Klasse.
 	Dies lässt sich auch entsprechend auf die Erkennung von mehreren Klassen erweitern.
 	
 	\item \textit{Object Detection:}
-	Eine Erweiterung der Klassifizierung um die Lokalität des erkannten Objektes wird \textit{Image Localization} genannt.
+	Eine Erweiterung der Klassifizierung um die Lokalität des erkannten Objektes wird Image Localization genannt.
 	Für mehrere Objekte wird der Begriff Object Detection verwendet.
 	Die Darstellung erkannter Objekte wird über Bounding Boxes realisiert, welche die Objekte jeweils umschließen.
 
@@ -172,7 +174,7 @@ Die \textit{\acf{ReLU}} ist eine Aktivierungsfunktion, welche durch \autoref{eq:
 \ac{ReLU} ist inzwischen der de-facto Standard von Aktivierungsfunktionen in den verborgenen Schichten eines Deep-Learning-Modells.
 Dies liegt vor allem daran, dass das Vanishing-Gradient-Problem adressiert wird. Allerdings hat \ac{ReLU} das Problem, 
 dass Neuronen auf $0$ gesetzt werden, wodurch sie kein Gradienten-Update mehr erhalten und dauerhaft genullt bleiben 
-und somit nichts mehr zum Netzwerk beitragen - die Neuronen sterben. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite{Goodfellow.2016} 
+und somit nichts mehr zum Netzwerk beitragen - die Neuronen \enquote{sterben}. Das Problem wird \textit{Dying-\ac{ReLU}-Problem} genannt \cite{Goodfellow.2016} 
 \begin{align}
 	\label{eq:relu} ReLU(z) = \begin{cases} 
 		z & z > 0 \\
@@ -243,7 +245,7 @@ Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite
 
 \subsection{Dice- und F-Maß}
 
-Das \textit{Dice-} oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cites{Srenson.1948}{Dice.1945} 
+Das \textit{Dice-} oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cite{Dice.1945} 
 \begin{align}
 	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
 	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|} ~.
@@ -299,7 +301,7 @@ So soll relativiert werden, dass vor allem im Randbereich einer Segmentierung ei
 nicht als falsch anerkannt werden, sodass die Segmentierung im Großen und Ganzen als richtig anerkannt wird. 
 Ursprünglich wurde dieses Maß 1998 zur empirischen Bewertung der automatischen Straßenextraktion entwickelt \cite{ChristianWiedemann.1998}. 
 
-Konkret handelt es sich bei der \textit{Quality} um eine gepufferte Form des \ac{IoU},
+Konkret handelt es sich bei der \textit{Quality} um eine gepufferte Form der \ac{IoU},
 die toleranter bezüglich der Lokalität der Elemente der verglichenen Mengen, oder konkreter,
 der Pixel einer semantischen Segmentierung, ist, 
 wobei für dieselbe Eingabe $Quality \geq IoU$; $Quality \in [0;1]$ gilt, abhängig von der Puffergröße. 
@@ -328,15 +330,7 @@ und Batch-Normalization-Layer begutachtet.
 
 \textit{Dropout} ist eine ressourcenschonende Regularisierungstechnik für \ac{ML}-Modelle. 
 Hierbei werden einzelne Neuronen mit einer Wahrscheinlichkeit von \textit{Rate} $r$ während des Trainings 
-deaktiviert, also deren Output auf $0$ gesetzt.\\ 
-Da bei der Inferenz Dropout dazu führen kann, 
-dass wichtige Features ignoriert werden, ist Dropout während der Inferenz unerwünscht. Ohne Dropout während der 
-Inferenz sind allerdings alle Gewichte aktiv, was zu einer höheren Summe der Gewichte während der Inferenz, 
-als während des Trainings führt. Deswegen müssen die Gewichte für die Inferenz nach unten skaliert werden. 
-Alternativ können während des Trainings alle Gewichte nach oben skaliert werden, die nicht deaktiviert wurden. 
-Somit muss für die Inferenz keine Anpassung vorgenommen werden. Nach jedem Trainings-Batch werden die aktivierten 
-Neuronen dann um Faktor $\frac{1}{1-r}$ skaliert \cites{Goodfellow.2016}{NitishSrivastava.2014}.
-
+deaktiviert, also deren Output auf $0$ gesetzt \cites{Goodfellow.2016}{NitishSrivastava.2014}. \\s
 Es hat sich gezeigt, dass Dropout eine effektivere Regularisierungstechnik zur Minderung von Overfitting ist, 
 als andere ressourcenschonende Techniken, wie \textit{Weight-Decay}, \textit{Filter-Norm-Constraints} oder 
 \textit{Sparse-Activity-Regularization}, wobei Dropout für eine noch bessere Regularisierung mit diesen kombiniert werden kann \cites{Goodfellow.2016}.
@@ -407,7 +401,7 @@ Inzwischen ist es ein Standard-Netz, auf welchem viele weitere Architekturen auf
 um verschiedene Verbesserungen zu realisieren. 
 Dadurch ist es auch sehr beliebt für Transfer-Learning. 
 
-VGG16 besteht aus fünf Blöcken mit $3x3$-Convolution-Schichten,
+VGG16 besteht aus fünf Blöcken mit $3{\times}3$-Convolution-Schichten,
 gefolgt von drei Fully-Connected-Schichten. Die ersten beiden Convolution-Blöcke haben zwei Convolution-Schichten,
 die letzten drei Blöcke dagegen jeweils drei. 
 Jeder Convolution-Block wird gefolgt von einer Maxpool-Schicht und jeder bis auf den vorletzten verdoppelt die Filteranzahl in den Convolution-Schichten,
@@ -429,8 +423,8 @@ der zweiten Layer. Durch die Skip-Connections kann bei der Backpropagation der G
 um so auch die flachen Layer upzudaten. So kann z.B. \textit{ResNet34} 34 trainierbare Layer haben, 
 während zuvor mit VGG nur 16 bzw. 19 effektiv waren \cite{He.10122015}. 
 
-Die Architektur ist dabei sehr simpel. Sie stellt - im Falle von ResNet34 - im Prinzip 33 Convolutional-Layer mit wiederholtem Downsampling 
-und Skip-Connections zw. jeweils zwei Convoltuional-Layern, gefolgt von einer Fully-Connected-Layer dar \cite{He.10122015}\footnote{\autoref{fig:resnet34-architecture} veranschaulicht ResNet34.}.
+Die Architektur ist dabei sehr simpel. Sie stellt - im Falle von ResNet34 - 33 Convolutional-Layer mit wiederholtem Downsampling 
+und Skip-Connections zwischen jeweils zwei Convoltuional-Layern, gefolgt von einer Fully-Connected-Layer dar \cite{He.10122015}\footnote{\autoref{fig:resnet34-architecture} veranschaulicht ResNet34.}.
 
 ResNet34 hat 63,5 Mio. Parameter. Wird auf die letzte Fully-Connected-Layer verzichtet, sind es 21,2 Mio. Parameter.
 
@@ -448,7 +442,7 @@ anstatt nur mit dem einen Nachfolgenden, wie es zum Beispiel bei VGG16 der Fall 
 
 DenseNet121 enthält circa 7,6 Mio. Parameter. Ohne die letzte Fully-Connected-Schicht sind es noch circa 6,9 Mio. 
 Bei nur halb so vielen Parametern erreicht DenseNet121 leicht bessere Ergebnisse als VGG16 auf dem ImageNet-Datensatz 
-(93\% ggü. 92\% Accuracy für ImageNet-Top5) \cite{Huang.25082016}. 
+(93\% ggü. 92\% Accuracy für ImageNet-Top-5) \cite{Huang.25082016}. 
 
 \subsection{Vortrainierte CNN-Modelle als U-Net-Backbone} \label{sec:pretrained-as-unet-backbone}
 
@@ -475,37 +469,29 @@ weil direkt mit einer höheren Genauigkeit eingestiegen wird, mit kleineren Date
 am Ende des Trainings erreicht wird, als bei herkömmlichem Training. Diese Effekte sind verstärkt, 
 abhängig davon, wie ähnlich der Datensatz des Pre-Trainings und des eigentlichen Trainings sind \cite{Ruder.3212017}. \\
 Insbesondere bei Computer-Vision ist Transfer-Learning effektiv, da sich bei Bildern high-level Features wie Clustering 
-ähnlichfarbiger Pixel oder Kantenerkennung kaum unterscheiden zwischen unterschiedlichen Datensätzen und damit schon vorhanden sind \cite{Ruder.3212017}. 
+ähnlichfarbiger Pixel oder Kantenerkennung kaum unterscheiden zwischen unterschiedlichen Datensätzen und damit bereits vorhanden sind \cite{Ruder.3212017}. 
 
 Für Transfer-Learning mit U-Nets gibt es verschiedene Strategien: Backbone-Netze als Encoder, 
 partielles Einfrieren verschiedener Netzbereiche und direktes Trainieren mit geringer Learning-Rate.
-Der Stand der Wissenschaft diesbezüglich wird im Folgenden vorgestellt. 
 
-\subsection{Training mit Backbones} \label{sec:transfer-learning:backbones}
-
-Im Kontext von Transfer-Learning bei U-Nets bezeichnet ein \textit{Backbone} ein etabliertes vortrainiertes \ac{CNN}, 
+Zunächst ist im Kontext von Transfer-Learning bei U-Nets ein \textit{Backbone} ein etabliertes vortrainiertes \ac{CNN}, 
 welches, leicht modifiziert, als Encoder für das U-Net verwendet wird. Hierbei wird der Decoder-Teil des U-Net 
 symmetrisch dem Encoder nachempfunden und an passenden Stellen Skip-Verbindungen zwischen En- und Decoder eingebaut. \\
 Hierdurch kann eine geeignete \ac{CNN}-Architektur für das spezifische Problem ausgewählt werden. Des Weiteren sind diese 
 Modelle auf sehr großen Datensätzen, wie \textit{ImageNet}, vortrainiert öffentlich zugänglich. 
 
-Bei der semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern wurden die besten Ergebnisse für das Dice-Maß 
-mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches zuerst auf dem \textit{Salient Object}
-Datensatz vortrainiert wurde, erzielte schlechtere Ergebnisse in Bezug auf das Dice-Maß, wobei allerdings das VGG16-U-Net kleine falsch-positive 
-Regionen erkannte, die weit außerhalb der Ground-Truth lagen. Die Falsch-Positiven beim Vergleichsnetz lagen direkt an der Ground-Truth, 
-dies lässt auf eine sensitivere Kantenerkennung beim VGG16-U-Net schließen, die manchmal aber auch übersensitiv war \cite{Cheng.05.10.2021}. 
-
-Für das Training des VGG16-U-Nets wurde der Encoder-Teil eingefroren und somit nur der Decoder trainiert. 
-
-\subsection{Partielles Einfrieren und Training mit geringer Lernrate}
-
-Im oben beschriebenen Problem zur semantischen Segmentierung wurde das vortrainierte Vergleichsnetz auf zwei Weisen fein-trainiert:
+Das Fine-Tuning kann unterschiedlich ablaufen, so wurden beispielsweise bei der
+semantischen Segmentierung von medizinischen Lungen-Ultraschall-Bildern die besten Ergebnisse  
+mit einem U-Net mit auf ImageNet trainierten \textit{VGG16}-Backbone erzielt. Das Vergleichsnetz, welches auf einem weniger umfangreichen
+Datensatz (der \textit{Salient-Objects}-Datensatz) vortrainiert wurde, erzielte schlechtere Ergebnisse in Bezug auf das Dice-Maß, wobei allerdings das VGG16-U-Net kleine falsch-positive 
+Regionen erkannte \cite{Cheng.05.10.2021}. \\
+Das Netz mit VGG16-Backbone wurde fine-tuned, indem der Encoder eingefroren wurde und nur der Decoder trainiert.
+Das Fine-Tuning auf dem Vegleichsnetz wurde auf zwei Weisen durchgeführt: 
 \begin{enumerate}
 	\item Ohne Einfrieren, mit einer Lernrate von $10^{-5}$ und
 	\item mit Einfrieren des mittleren Blocks, welcher ungefähr $14\cdot 10^6$ der insgesamt $31 \cdot 10^6$ Parameter enthielt. 
 \end{enumerate}
-Die 5-fache Kreuzvalidierung ergab sowohl für den besten Lauf, als auch für den durchschnittlichen Lauf, ein besseres Dice-Maß 
-für das Training aller Parameter. In keinem der Fälle gab es, anders als beim VGG16-U-Net, segmentierte Regionen ohne Zusammenhang mit der Ground-Truth \cite{Cheng.05.10.2021}. 
+Hierbei erzielte das Vergleichsnetz deutlich bessere Ergebnisse bei Training mit geringer Lernrate und ohne Einfrieren \cite{Cheng.05.10.2021}.
 
 In einem weiteren Paper wurde untersucht, welche Layer eines U-Net am besten eingefroren werden sollten, für das Fine-Tuning von medizinischen Bildern - 
 zum einen von Lungen-Ultraschall-Bildern und zum anderen von Brust-Röntgen-Aufnahmen. 
@@ -516,12 +502,14 @@ Hier wurde wieder mit dem \textit{Salient-Objetcs}-Datensatz vortrainiert. Dann 
 	\item gesamtes Netz, bis auf den ersten Block eingefroren und dann nach jeweils fünf Epochen sukzessive weitere Blöcke freigeben und
 	\item dasselbe allerdings von hinten nach vorne.
 \end{enumerate}
-Für die Röntgenaufnahmen gab es keine Unterschiede, wobei der Dice-Score hier allerdings auch bei $0.98$ lag. 
+Für die Röntgenaufnahmen gab es keine Unterschiede zwischen den Methoden. \\
 Für die Ultraschallbilder lieferte Methode (1) die schlechtesten Ergebnisse (Dice: $0.72$), gefolgt von Methode (2) (Dice: $0.80$) 
-und gleichermaßen (3) und (4) (Dice: $0.82$), wobei (3) deutlich schneller konvergierte \cite{Amiri.19.02.2020}. \\ 
-Es ist ersichtlich, dass die Methodik beim Fine-Tuning, abhängig vom Datensatz, einen erheblichen Einfluss 
-auf die abschließende Performanz des Modells haben kann und stets berücksichtigt und gegen Alternativen abgewogen werden sollte,
-um beste Ergebnisse zu erzielen. Die vorgestellten Methodiken können später genutzt werden, 
+und gleichermaßen (3) und (4) (Dice: $0.82$) \cite{Amiri.19.02.2020}. 
+
+Es ist ersichtlich, dass die Methodik beim Fine-Tuning, abhängig vom Datensatz, dem Anwendungsproblem und dem vortrainierten Backbone, einen erheblichen Einfluss 
+auf die abschließende Performanz des Modells haben kann aber nicht muss. 
+Um das Netz also zu optimieren und die besten Ergebnisse zu erzielen sollte also neben den Hyperparametern die Fine-Tuning-Methode untersucht werden. 
+Die hier vorgestellten Methodiken können später genutzt werden, 
 um eine Transfer-Learning-Methode für das Problem der Radwegerkennung zu konzipieren. 
 
 
@@ -542,10 +530,22 @@ und nicht den \textit{Test-Split} eines größeren Datensatzes.
 Im Rahmen der Straßenerkennung ist dies besonders relevant, 
 da sich unterschiedliche Städte in unterschiedlichen Ländern und Kulturen stark unterscheiden können, 
 während die Trainingsdaten meist nur aus einer Stadt, die in sich ein eher homogenes Bild aufweist, bestehen.
-Der Testdatensatz soll also die Generalisierungsfähigkeit des Netzes testen, um zu sehen,
+Der Testdatensatz soll also die Generalisierungsfähigkeit des Netzes testen, um zu identifizieren,
 ob das Modell, das bspw. auf einem Datensatz einer modernen amerikanischen Stadt trainiert wurde, 
 auch auf Bildern einer mitteleuropäischen Altstadt funktioniert. Deswegen ist es wichtig, 
 dass keine Bilder des Testdatensatzes im Training verwendet werden. 
+
+% Bei den letzten Datensets zu Toronto, Vaihingent und Potsdam handelt es sich um Testdatensätze. 
+Beim \textit{Massachusetts Roads Dataset} liegen $1171$ Luftaufnahmen aus dem Gebiet Massachusetts vor.
+Jedes der Bilder besteht aus $1500{\times}1500$ Pixeln, was einer Fläche von $2.25 km^2$ entspricht.
+Ein Beispiel hiervon zeigt \autoref{fig:mass-example}.
+Die gesamte Abdeckung sind $2600 km^2$ bestehend aus städtischer und ländlicher Gegend.
+Der Split erfolgt im Verhältnis $95:1:4$. 
+Über den Split wird sichergestellt, dass keine Durchmischung der Test- und Validierungsdaten mit den Trainingsdaten erfolgt und die Bewertung des Netzes verfälscht wird.
+Es gibt also $1108$ Trainings-, $14$ Validierungs- und $49$ Testbilder.
+Die Zielbilder sind über eine Rasterung der Straßenmittellinien aus dem \ac{OSM}-Projekt generiert worden.
+Die Liniendicke der gelabelten Straßen beträgt $7 px$ und ist ungeglättet, da hiermit bessere Ergebnisse erzielt worden sind \cite{Mnih.2013}.
+Der Zuschnitt der Bilder sorgt teilweise für einen hohen Anteil weißer Stellen in den Bildern.
 
 \begin{wrapfigure}{r}{0.50\textwidth}
 	\centering
@@ -561,43 +561,17 @@ dass keine Bilder des Testdatensatzes im Training verwendet werden.
 	\label{fig:mass-example}
 \end{wrapfigure}
 
-% Bei den letzten Datensets zu Toronto, Vaihingent und Potsdam handelt es sich um Testdatensätze. 
-Beim \textit{Massachusetts Roads Dataset} liegen $1171$ Luftaufnahmen aus dem Gebiet Massachusetts vor.
-Jedes der Bilder besteht aus $1500{\times}1500$ Pixeln, was einer Fläche von $2.25 km^2$ entspricht.
-Ein Beispiel hiervon zeigt \autoref{fig:mass-example}.
-Die gesamte Abdeckung sind $2600 km^2$ bestehend aus städtischer und ländlicher Gegend.
-Der Split erfolgt im Verhältnis $95:1:4$. 
-Über den Split wird sichergestellt, dass keine Durchmischung der Test- und Validierungsdaten mit den Trainingsdaten erfolgt und die Bewertung des Netzes verfälscht wird.
-Es gibt also $1108$ Trainings-, $14$ Validierungs- und $49$ Testbilder.
-Die Zielbilder sind über eine Rasterung der Straßenmittellinien aus dem \ac{OSM}-Projekt generiert worden.
-Die Liniendicke der gelabelten Straßen beträgt $7 px$ und ist ungeglättet, da hiermit bessere Ergebnisse erzielt worden sind \cite{Mnih.2013}.
-Der Zuschnitt der Bilder sorgt teilweise für einen hohen Anteil weißer Stellen in den Bildern.
-
 Das \textit{Buffalo Roads Dataset} ist als zusätzliches Testset für das Massachusetts Roads Dataset zu sehen.
 Hintergrund ist die Überprüfung des Netzes mit Daten aus einem anderen Gebiet unter anderen Bedingungen.
-Es besteht lediglich aus 30 Orthofotos ($5:5:20$) mit einer Größe von $609{\times}914$ und einer Auflösung von $1 \frac{px}{m^2}$.
+Es besteht lediglich aus 30 Fotos ($5:5:20$) mit einer Größe von $609{\times}914$ und einer Auflösung von $1 \frac{px}{m^2}$.
 Die Generierung der gelabelten Daten erfolgt analog zum Massachusetts Road Dataset über \ac{OSM}.
 Größter Unterschied ist die Verdeckung von Straßen durch Bäume \cite{Mnih.2013}.
 
 \textit{LandCover.ai} kann für die Erkennung von Gebäuden, Waldgebieten, Gewässern und Straßen verwendet werden.
 Die Aufnahmen stammen aus Polen und Zentraleuropa in einer Größe von $21627 km^2$.
-$33$ Orthofotos haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000{\times}9500$ Pixeln, 
-$8$ Bilder von $50 \frac{cm}{px}$, mit $4200{\times}4700$ Pixeln \cite{.20.04.2022}.
-Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländlichen Gebieten.
-
-\begin{wrapfigure}{l}{0.5\textwidth}
-	\centering
-	\vspace{-20pt} % Manchmal möchte man den oberen Abstand selbst anpassen
-	\includegraphics[width=0.45\textwidth]{Bilder/deep_globe_example.jpg}
-	\vspace{-5pt}
-	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
-	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
-	% im Abbildungsverzeichnis. Der Text darunter wird
-	% tatsächlich angezeigt.
-	\caption[$1024{\times}1024$-Pixel Beispiel des Deep-Globe-Datensatzes.]{\unskip}
-	$1024{\times}1024$-Pixel Beispiel des Deep-Globe-Datensatzes.
-	\label{fig:deep_globe-example}
-\end{wrapfigure}
+$33$ Bilder haben eine Auflösung von $25 \frac{cm}{px}$ mit $9000{\times}9500$ Pixeln und 
+$8$ Bilder von $50 \frac{cm}{px}$, mit $4200{\times}4700$ Pixeln.
+Die Bilder sind hand-annotiert und beinhalten einen großen Anteil an ländlichen Gebieten \cite{.20.04.2022}.
 
 Mithilfe des \textit{Deep Globe Road Extraction Datasets} können in Katastrophengebieten Informationen über Karten und Zugänglichkeitsmöglichkeiten für die Krisenbewältigung gesammelt werden.
 Der Datensatz besteht aus $6226$ Luftbildern in RGB, mit einer Größe von $1024{\times}1024$.
@@ -608,10 +582,19 @@ Kleine Straßen innerhalb von Landwirtschaftsflächen sind bewusst unbeschriftet
 Die Bilder sind ursprünglich über Thailand, Indonesien und Indien, mit je $19584{\times}19584$ Pixeln aufgenommen worden.
 Insgesamt entspricht es einer Fläche von $2220~km^2$ \cite{Ashwath.10.11.2020}.
 
-Mit finanzieller Unterstützung des Chesapeak Bay Programms wurde ein Datensatz \textit{Land Cover} zur Landnutzung und Bodenbedeckung erstellt.
-Es lassen sich Einblicke in die Landschaft und die Verwaltung der Regionen gewinnen.
-Das Einzugsgebiet umfasst $250.000km^2$ mit einer Auflösung von $1m$. 
-Damit handelt es sich bei diesem Datensatz um den größten bei der Analyse von der Landnutzung im Vergleich zur Bodenbedeckung \cite{ChesapeakeConservancy.02.06.2022}.
+\begin{wrapfigure}{l}{0.5\textwidth}
+	\centering
+	\vspace{-0pt} % Manchmal möchte man den oberen Abstand selbst anpassen
+	\includegraphics[width=0.45\textwidth]{Bilder/deep_globe_example.jpg}
+	\vspace{-5pt}
+	% Das folgende ist ein Trick, um "Abbilgung x.y" in eine
+	% eigene Zeile zu packen. Der Text zwischen [ und ] steht
+	% im Abbildungsverzeichnis. Der Text darunter wird
+	% tatsächlich angezeigt.
+	\caption[$1024{\times}1024$-Pixel Beispiel des Deep-Globe-Datensatzes.]{\unskip}
+	$1024{\times}1024$-Pixel Beispiel des Deep-Globe-Datensatzes.
+	\label{fig:deep_globe-example}
+\end{wrapfigure}
 
 Bei den nachfolgenden drei Datensätzen handelt es sich um Testdatensätze.
 Das \textit{Toronto Dataset} umfasst $1,45km^2$ im Umkreis der Stadt Toronto in Canada. 
@@ -674,6 +657,23 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 	der One-Hot-Kodierung viel mehr eine Aussage darüber trifft, wie viele Hintergrundpixel, von denen es ja viel mehr gibt,
 	richtig klassifiziert wurden. Die so erzielten Dice-/IoU-Werte sind hier rein numerisch deutlich höher. 
 \end{enumerate}
+\autoref{fig:problematic-output} visualisiert das Problem der Vergleichbarkeit von Dice/IoU je nach gewählter Output-Kodierung.
+Das Problem verstärkt sich bei mehr Pixeln. Im Beispiel wurde die Hälfte aller Straßen korrekt erkannt, 
+weswegen eine IoU von 50\% zu erwarten ist. Liegt jedoch eine One-Hot-Kodierung vor, werden 75\% aller Pixel richtig erkannt.
+Dies spiegelt allerdings nicht die Empirie wider, da kein Interesse an korrekt klassifizierten Hintergrundpixeln besteht.
+Durch die One-Hot-Kodierung kommen bei manchen Modellen zur Straßenerkennung IoU-Werte von über 95\% zu Stande.
+Im Weiteren wird für alle Werte eine implizite Kodierung (50\% in \autoref{fig:problematic-output}) vorausgesetzt. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{Bilder/output-enc-example.drawio.pdf} 
+	\vspace{-5pt}
+	\caption{Veranschaulichung des Problems der Output-Kodierung. Links zeigt die 4-Pixel-Ground-Truth-Maske, 
+	wobei weiße Flächen Hintergrund und rote Straße darstellen. Rechts zeigt die semantische Segmentierung 
+	eines Modells, wobei der Pixel rechts unten fälschlicherweise als Hintergrund klassifiziert wurde.
+	Bei einer impliziten Kodierung mit einem Output ist $IoU = 50\%$, bei einer One-Hot-Kodierung ist $IoU = 75\%$.}
+	\label{fig:problematic-output}
+\end{figure} 
 
 Im Weiteren werden aktuelle Ergebnisse zu den Massachusetts- und Deep-Globe-Datensätzen vorgestellt, 
 um zu ermitteln, was für diese Datensätze gut funktioniert, sodass diese state-of-the-art Erkenntnisse beim 
@@ -682,16 +682,9 @@ genutzt werden können. Die beiden Datensätze sind für die Literaturrecherche 
 da sie sehr häufig als Benchmark zum Erkennen von Straßen genutzt werden, es dazu sehr viel Literatur und 
 Forschung gibt und da beide Datensätze sich stark unterscheiden, soweit das im Rahmen der Straßenerkennung möglich ist. 
 Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensätze ähnliche gut funktionierende
-Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. \\   
-\autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Baseline}-Modellen.
-Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht sonderlich auf den jeweiligen Datensatz optimiert sind,
-was die Hyperparameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
-Mit den Baseline-Resultaten können diese Modelle zu Vergleichszwecken verwendet werden 
-und es bestehen Daten zu mehreren Benchmarks. Aus den Baseline-Resultaten lässt sich schließen, dass das Vortrainieren eines Netzes auf einem 
-anderen Datensatz bessere Ergebnisse für die Straßendatensätze und somit ggf. auch für die spätere Betrachtung mit 
-den Radweg-Datensätzen liefert \cite{C.Henry.2021}.
+Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. 
 
-\begin{table}
+\begin{table}[H]
 	\centering
 	\begin{tabular}{l|l|l|l|l}
 		\multirow{2}{*}{Model} & \multicolumn{2}{c|}{Massachusetts} & \multicolumn{2}{c}{Deep Globe}  \\
@@ -704,23 +697,17 @@ den Radweg-Datensätzen liefert \cite{C.Henry.2021}.
 		Dense-U-Net-121 & \textbf{73,03} & \textbf{57,12} & \textbf{79,19} & \textbf{65,13}  \\
 	\end{tabular}
 	\caption{Baseline-Resultate verschiedener Modelle auf dem Massachusetts- 
-	bzw. Deep-Globe-Datensatz in Prozent, aufsteigend sortiert. Nicht one-hot-kodiert. * nicht vortrainiert \cite{C.Henry.2021}.}
+	bzw. Deep-Globe-Datensatz in Prozent, aufsteigend sortiert. Nicht one-hot-kodiert. \\ * nicht vortrainiert \cite{C.Henry.2021}.}
 	\label{tab:basline-benchmarks}
 \end{table}
 
-\autoref{tab:optimized-benchmarks} zeigt hingegen die top-drei optimierten Modelle, die derzeit die Leaderboards 
-des jeweiligen Datensatzes anführen. Alle hiervon sind U-Net-Derivate.
-Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:basline-benchmarks} beispielsweise beim Massachusetts-Datensatz 
-bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall. 
-Dense-U-Net-121 ist dabei ein U-Net mit einem vortrainierten DenseNet121 als Backbone \cite{C.Henry.2021}. \\
-Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
-indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen dem Input der ersten und dem Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
-ersetzt wurden und der Bottleneck-Block
-um Dilatation erweitert wurde \cite{Gao.2019}. 
-Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}. \\
-Die besten Netze beider Datensätze haben die Gemeinsamkeit der U-Net-Struktur, wie auch die Residual-Blöcke (bzw.
-sogar Dense-Blöcke, was als eine Erweiterung der Residual-Blöcke aufgefasst werden kann). 
-Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verwendet werden.  
+\autoref{tab:basline-benchmarks} zeigt Resultate zum Massachusetts- und Deep-Globe-Datensatz von sogenannten \textit{Baseline}-Modellen.
+Hierbei handelt es sich um verschiedene Architekturen, die allerdings nicht sonderlich auf den jeweiligen Datensatz optimiert sind,
+was die Hyperparameter oder manche Architektur-Anpassungen angeht. Ein Beispiel dafür wäre das Ausprobieren von verschiedenen (Kompositions-)Kostenfunktionen. 
+Mit den Baseline-Resultaten können diese Modelle zu Vergleichszwecken verwendet werden 
+und es bestehen Daten zu mehreren Benchmarks. Aus den Baseline-Resultaten lässt sich schließen, dass das Vortrainieren eines Netzes auf einem 
+anderen Datensatz bessere Ergebnisse für die Straßendatensätze und somit ggf. auch für die spätere Betrachtung mit 
+den Radweg-Datensätzen liefert \cite{C.Henry.2021}.
 
 \newcommand*\rot{\rotatebox{60}}
 
@@ -738,9 +725,24 @@ Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verw
 		& U-Net-likeResNet34 & 64,00 \\
 	\end{tabular}
 	\caption{Optimierte Resultate verschiedener Modelle auf dem Massachusetts- 
-	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert. Nicht one-hot-kodiert. \cite{C.Henry.2021}.}
+	bzw. Deep-Globe-Datensatz in Prozent, absteigend sortiert. Nicht one-hot-kodiert \cite{C.Henry.2021}.}
 	\label{tab:optimized-benchmarks}
 \end{table}
+
+
+\autoref{tab:optimized-benchmarks} zeigt hingegen die top-drei optimierten Modelle, die derzeit die Leaderboards 
+des jeweiligen Datensatzes anführen. Alle hiervon sind U-Net-Derivate.
+Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:basline-benchmarks} beispielsweise beim Massachusetts-Datensatz 
+bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall. 
+Dense-U-Net-121 ist dabei ein U-Net mit einem vortrainierten DenseNet121 als Backbone \cite{C.Henry.2021}. \\
+Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
+indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen dem Input der ersten und dem Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
+ersetzt wurden und der Bottleneck-Block
+um Dilatation erweitert wurde \cite{Gao.2019}. 
+Beim EOSResUNet wurden ebenfalls die Encoder-Blöcke mit Residual-Blöcken ersetzt und zusätzlich nach \ac{IoU} statt nach Dice oder \ac{BCE} optimiert \cite{O.Filin.2018}. \\
+Die besten Netze beider Datensätze haben die Gemeinsamkeit der U-Net-Struktur, wie auch die Residual-Blöcke (bzw.
+sogar Dense-Blöcke, was als eine Erweiterung der Residual-Blöcke aufgefasst werden kann). 
+Diese Informationen können zur Konzeption eines Netzes zur Radwegerkennung verwendet werden.  
 
 \section{Neuheitswert} \label{sec:novelty}
 
@@ -749,9 +751,9 @@ diese Arbeit untersucht:
 \begin{enumerate}
 	\item Bisher existieren keine wissenschaftlichen Untersuchungen, die versuchen, unterschiedliche Straßenelemente,
 	wie Gehwege, Radwege, Busspuren o.Ä. auf Luftaufnahmen von Straßen zu unterscheiden. Da Straßen als Ganzes 
-	auf Luftbildern gut zu erkennen sind, deren unterschiedlichen, sehr heterogenen Bestandteile jedoch weniger, 
+	auf Luftbildern gut zu erkennen sind, deren unterschiedliche, sehr heterogenen Bestandteile jedoch weniger, 
 	kann mit dem Beispiel der Radwege überprüft werden, ob die Unterscheidung mit derzeitigen Luftbildqualitäten von circa 20 bis 50 cm \ac{GSD} 
-	machbar ist. 
+	möglich ist. 
 	\item Da für vorgenannten Punkt noch keinen Datensatz vorhanden ist, muss ein solcher erstellt werden. Dieser muss umfangreich 
 	genug sein, dass er für \ac{ML} verwendbar ist. Es soll geklärt werden, ob bisherige Methoden, Datensätze für die Straßenerkennung 
 	((semi-)automatisch) zu erstellen, auch für Radwege angewandt werden können und wie die Güte eines solchen Datensatzes bewertet werden kann. 
