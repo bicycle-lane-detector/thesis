@@ -247,8 +247,8 @@ Eine Abhilfe dagegen schafft eine Gewichtung der unterschiedlichen Klassen \cite
 
 Das \textit{Dice-} oder auch \textit{Sorensen-Dice-}Maß $D$ wurde 1945 bzw. 1948 erstmals vorgestellt und genutzt, um die Ähnlichkeit zweier botanischer Stichproben zu ermitteln. Verallgemeinert auf diskrete Mengen $X$, $Y$ kann deren Ähnlichkeit nach Dice $D$ beschrieben werden durch \autoref{eq:dice-coeff}. Es gilt $D \in [0; 1]$ \cite{Dice.1945} 
 \begin{align}
-	\label{eq:dice-coeff} D = \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
-	=\frac{2 \cdot | X \cap Y |}{|X| + |Y|} ~.
+	\label{eq:dice-coeff} D &= \frac{2 \cdot | X \cap Y |}{2 \cdot | X \cap Y | + |Y \setminus X| + |X \setminus Y|} 
+	&=\frac{2 \cdot | X \cap Y |}{|X| + |Y|} ~.
 \end{align} 
 
 Angewandt auf boolesche Mengen und binäre Klassifikatoren ist das Dice-Maß gleich dem $F_1$-Maß, das ein Maß für die Qualität eines statistischen Tests darstellt. Dafür sei $X$ nun die Menge der positiven Elemente und $Y$ die Menge der als positiv eingestuften Elemente. Dann ist die \textit{Genauigkeit} oder auch \textit{Precision} gegeben durch
@@ -286,8 +286,8 @@ wobei $tp$, $fp$, $fn$ wie in \autoref{eq:f1} \cite{Fletcher.2018}.
 
 Auffällig ist die Ähnlichkeit zum Dice- bzw. $F_{1}$-Maß. Es ist allerdings anzumerken, dass bei Dice/$F_1$ die $tp$, also die Wahr-Positiven, stärker gewichtet werden, als bei der \ac{IoU}. Die augenscheinliche Ähnlichkeit lässt sich durch die Beziehungen
 \begin{align}
-	\label{eq:dice-iou} IoU = \frac{D}{2 - D} \\
-	D = \frac{2 \cdot IoU}{1 + IoU} ~,
+	\label{eq:dice-iou} IoU &= \frac{D}{2 - D} \\
+	D &= \frac{2 \cdot IoU}{1 + IoU} ~,
 \end{align}
 beschreiben.
 Im Gegensatz zur \ac{IoU} wird beim Dice-Maß eine höhere Gewichtung auf die wahr-positiven Elemente 

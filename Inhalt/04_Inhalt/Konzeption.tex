@@ -419,17 +419,17 @@ Durch die automatische Generierung des Radweg-Datensatzes sind zudem viele Bilde
 Industriegebieten, Feldern und Wäldern vorhanden, die keinerlei eingezeichnete Radwege enthalten. 
 Selbst in Bildern der Innenstadt haben oft nur größere Straßen dedizierte Radwege, während der 
 Großteil des Bildes mit Wohngebiet gefüllt ist. 
-Somit ist nur ein verschwindender Anteil aller Pixel des Datensatzes als Radweg markiert. 
+Somit ist nur ein kleiner Anteil aller Pixel des Datensatzes als Radweg markiert. 
 
 
 Um den Anteil an als Radweg annotierten Pixel zu erhöhen, sollen nur Bilder zum Training verwendet werden,
-die überhaupt Radwege enthalten. Da es technisch zu ressourcenintensiv ist, ein ganzes 
+die überhaupt Radwege enthalten. Da es außerdem technisch zu ressourcenintensiv ist, ein ganzes 
 $10.000{\times}10.000$-Pixel-Bild einzugeben, sollen die Bilder in kleinere Stücke zerteilt werden. 
 Dies ist auch bei den Modellen zur Straßenerkennung aus \autoref{sec:state-of-the-art-roads} die Praxis. 
 Vorgeschlagene Ausschnittsgrößen können hierbei $256{\times}256$, $512{\times}512$ und $1024{\times}1024$ sein. 
 Wird ein größerer Ausschnitt gewählt, steigt die Klassenimbalance, da häufig viele überflüssige 
 Hintergrundpixel eingeschlossen werden, allerdings kein weiterer Radweg im Bild liegt. 
-Wird eine kleine Größe gewählt, kann es sein, dass nur noch Radwege im Bild vorhanden sind, 
+Wird eine kleine Größe gewählt, kann es sein, dass Radwege im Bild überwiegen, 
 wodurch die Gefahr besteht, dass jede beliebige Straße einen Radweg seitlich angezeichnet bekommt. 
 In kleinen Ausschnitten sind hauptsächlich stark ausgebaute Straßen mit Radwegen vorhanden. 
 Schmalere und weniger gut ausgebaute Straßen sind aufgrund von fehlenden Radwegen kaum vorhanden, wodurch diese nicht als wahr-negativ gelernt werden.  
@@ -463,7 +463,7 @@ Der Karlsruhe-Datensatz lässt sich in ${\frac{10.000}{512}}^2 = 196$ Bildaussch
 Weiter werden alle Ausschnitte entfernt, die keine oder fast keine als Radweg annotierten Pixel beinhalten. 
 Die Quote wird auf 1\% festgelegt. Sollte also ein Bildausschnitt weniger als 1\% Fahrradweg-Pixel beinhalten, 
 wird es entfernt. Durch diese Maßnahme sinkt die Anzahl an Bildausschnitten von $57.200$ auf $10.181$ Bildausschnitte - 
-dieser Anteil entspricht ca. 17,7\%. Dieser Schritt wird für den Karlsruhe-Datensatz nicht durchgeführt. Hier bleiben alle 196 
+dieser Anteil entspricht ca. 17,7\%. Der Karlsruhe-Datensatz wird \textit{nicht} auf diese Weise gefiltert. Hier bleiben alle 196 
 Bildausschnitte erhalten.
  
 \autoref{fig:cut-example} zeigt beispielhaft ein auf $512{\times}512$ Pixel zugeschnittenes Bild aus dem BikeSat-Datensatz 
@@ -480,7 +480,7 @@ Training-, Validation- und Test-Daten aufgeteilt.
 Damit sollten die unterschiedlichen Städte gleichermaßen in allen Partitionen auftauchen, 
 sodass die Test- und Validationspartition gut die Generalisierungsfähigkeit des Netzes überprüfen. 
 Durch die bereits höhere Zahl an Bildausschnitten (10.181 Stück) ist es eher unwahrscheinlich, 
-dass eine ungleiche Verteilung der Städte vorkommt. Außerdem ist das Mischen wichtig, 
+dass eine anteilig ungleiche Verteilung der Städte vorkommt. Außerdem ist das Mischen wichtig, 
 damit die Randausschnitte, die große schwarze Flächen beinhalten, anteilig gleich in 
 jedem Teildatensatz repräsentiert sind, damit dies das Ergebnis nicht verfälscht, falls diese 
 zum Beispiel nur in dem Validation- oder Testdatensatz vorkommen. 
@@ -495,9 +495,10 @@ und den Einfluss der kleineren Städte auf die Generalisierungsfähigkeit zu erh
 bzw. der Trainingsdatensatz aus 92\% vom Rest gebildet. \\
 Die Trainingspartition ist mit ca. 75\% der gesamten Daten eher groß gewählt, während der Validation-Datensatz eher klein gewählt ist. 
 Nun kann ein größerer Validation-Datensatz dazu beitragen, die Hyperparameter besser zu optimieren. Das soll allerdings nicht Fokus der Arbeit sein.
-Diese Entscheidung des großen Trainingsdatensatzes wurde getroffen,
-um möglichst viele und unterschiedliche Bilder zum Training zu verwenden, da der Datensatz mit automatischer Synthese 
-generiert wurde und daher qualitativ eher unvorteilhaft ist, wodurch eine höhere Anzahl an Trainingsdaten nötig wird.
+Diese Entscheidung über die Größe des Trainingsdatensatzes wurde getroffen,
+da der gesamte Datensatz mit den 10.181 Beispielen eher klein ist und deswegen möglichst viele Beispiele 
+im Trainingsdatensatz vorhanden sein sollen, um gut die Strukturen der Fahrradwege zu lernen. 
+Die Testpartition sollte jedoch nicht zu klein sein, um statistisch belastbare Aussagen zu erhalten.
 
 \begin{table}
 	\centering
@@ -570,7 +571,7 @@ da die Vorausberechnung parallel stattfinden kann. Ergebnisse zu den Laufzeiten 
 	\label{fig:color-aug}
 \end{figure}
 
-Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:augmentation} und \autoref{fig:color-aug}, 
+Jede der folgenden Augmentationen, wie beispielhaft zu sehen in \autoref{fig:color-aug} und \autoref{fig:augmentation}, 
 werden in ihrem Wertebereich pseudozufällig angewandt. 
 Sollte es die Veränderung erfordern, werden fehlende Bildteile mit Schwarz gefüllt. Schwarz wurde ausgewählt, da es ohnehin Bilder mit 
 schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei kein neues Merkmal lernen muss. 
@@ -594,7 +595,9 @@ schwarzen Rändern im Datensatz gibt, weswegen das Netz hierbei kein neues Merkm
 	\item Erhöhung oder Senkung der Helligkeit des Bildes.
 	\item Erhöhung oder Senkung des Kontrasts des Bildes.
 	\item RGB-Shift. Es werden zufällige Werte im Intervall $[-30; 30]$ zu den drei 255-stufigen Kanälen rot, grün und blau addiert.   
-	\item Kanaltausch. Hierbei werden zufällig die Werte der Kanäle rot, grün und blau getauscht. 
+	\item Kanaltausch. Hierbei werden zufällig die Werte der Kanäle rot, grün und blau getauscht.
+	Zunächst mag das unrealistisch erscheinen, aber da Fahrradstreifen in manchen Städten 
+	rot und in anderen Städten grün markiert sind, kann hier ein Kanaltausch Abhilfe schaffen. 
 	\item Fab-Jitter. Es werden Helligkeit, Kontrast, Sättigung und Farbton zufällig angepasst. 
 \end{enumerate} 
 Punkte 6. bis 10. werden mit einer Wahrscheinlichkeit von 20\% durchgeführt und sind in \autoref{fig:color-aug} an einem Beispielbild dargestellt. 
@@ -645,7 +648,7 @@ ergänzt durch Tests auf dem Wolfsburg-Datensatz, im Ergebnis-Kapitel zeigt, ob 
 
 Für den Spezialfall von semantischer Segmentierung zur Erkennung von Radwegen muss für die \textit{Quality} (vgl. \autoref{sec:evaluation-metrics:quality}) 
 eine Berechnungsmöglichkeit ermittelt werden, um die Quality auf diskreten Rastern, also den Bildern und Masken, anwenden zu können.
-Hierfür wird der Name der \textit{\acf{BIoU}} eingeführt, der fortan für die Quality mit Anwendung auf semantische Segmentierung verwendet wird.
+Hierfür wird der Name der \textit{\acf{BIoU}} eingeführt, der fortan für die Quality mit Anwendung auf semantische Segmentierung steht.
 
 Sei $P$ die Prediction der Segmentierungsmaske für ein Eingabebild, $Y$ die tatsächliche Segmentierungsmaske (Ground-Truth / Label)
 und $P, Y \in \{0, 1\}^{w{\times}h}$, wobei $w$ und $h$ die Breite und Höhe des Eingabebildes darstellen.
@@ -653,22 +656,22 @@ Die Einträge mit Wert eins von $P$ und $Y$ sind Radweg, die Einträge mit Wert 
 $B$ sei die Puffergröße in Pixeln. \\
 Die folgenden Formeln beziehen sich auf die Bestimmung der \ac{BIoU} \textit{einer} Prediction $P$ zu \textit{einer} Ground-Truth-Maske $Y$. 
 Über einen Batch lassen sich die einzelnen \ac{BIoU}-Werte mitteln. 
-Zunächst sei die Hilfsfunktion $dilate_B: \{0,1\}^{w{\times}h} \mapsto \{0,1\}^{w{\times}h}$ definiert als 
+Zunächst sei die Hilfsfunktion $\delta_B: \{0,1\}^{w{\times}h} \mapsto \{0,1\}^{w{\times}h}$ definiert als 
 \begin{align}
-	\label{eq:dilate} dilate_B(A) = \left( \begin{cases} 
+	\label{eq:dilate} \delta_B(A) = \left( \begin{cases} 
 		1 & \exists a_{kl} \in A: a_{kl} = 1 \land \norm{
 			\begin{pmatrix} k \\ l \end{pmatrix} - \begin{pmatrix} i \\ j \end{pmatrix} }_2 \leq B \\
 		0 & else 
 	\end{cases} \right)_{1 \leq i \leq h, 1 \leq j \leq w}~.
 \end{align}
-Die Funktion $dilate_B$ bildet eine Matrix auf eine weitere derselben Ordnung ab, 
-sodass alle Einträge gleich eins sind, die in der Eingabematrix eins sind. Zusätzlich sind alle Einträge eins, 
+Die Funktion $\delta_B$ bildet eine Matrix auf eine weitere derselben Ordnung ab, 
+sodass alle Einträge gleich eins sind, die in der Eingabematrix eins sind und zusätzlich alle Einträge eins sind, 
 die im Umkreis von $B$ Pixeln um eine Eins in der Eingabematrix liegen. Somit werden die positiven (Wert = 1)
 Pixel der Eingabematrix um die Bufferzone erweitert.  \\
-\autoref{eq:dilate_example} zeigt den Funktionswert von $dilate_B$ für eine Beispieleingabe 
+\autoref{eq:dilate_example} zeigt den Funktionswert von $\delta_B$ für eine Beispieleingabe 
 bei Puffergröße $B=1$.
 \begin{align}
-	\label{eq:dilate_example} dilate_1\left(\begin{pmatrix} 
+	\label{eq:dilate_example} \delta_1\left(\begin{pmatrix} 
 	0 & 0 & 1 \\ 
 	0 & 1 & 0 \\ 
 	0 & 0 & 0 
@@ -681,21 +684,21 @@ bei Puffergröße $B=1$.
 Damit lassen sich die gepufferten, fehlertoleranteren wahr-positiv $tp_B$, falsch-positiv $fp_B$ und 
 falsch-negativ $fn_B$ Werte berechnen: 
 \begin{align}
-	\label{eq:buffering} {tp}_B = \norm{dilate_{B}(Y) \odot P}_{1,1} , \\
-	fn_B = \norm{Y - (Y \odot dilate_{B}(P))}_{1,1} , \\
-	{fp}_B = \norm{P}_{1,1} - {tp}_B .
+	\label{eq:buffering} {tp}_B &= \norm{\delta_{B}(Y) \odot P}_{1,1} , \\
+	fn_B &= \norm{Y - (Y \odot \delta_{B}(P))}_{1,1} , \\
+	{fp}_B &= \norm{P}_{1,1} - {tp}_B .
 \end{align}
 Beispielhaft und intuitiv dargestellt für $tp_B$: Es sollen auch alle Eins-Pixel als wahr-positiv aufgefasst werden,
 die leicht von der Ground-Truth abweichen, also sich noch in der Pufferzone befinden. 
 Hierfür wird die Pufferzone um die Ground-Truth $Y$ gelegt und das Hadamard-Produkt mit der Predicition $P$ gebildet.
 Da alle Matrizen als Einträge nur 0 oder 1 enthalten, findet durch das Hadamard-Produkt eine Art Verundung statt, 
 sodass im Produkt nur Einträge eins sind, die in beiden Matrizen eins sind. Der Rest ist null. 
-Durch die zuvor durchgeführte Pufferung mit $dilate_B$ sind allerdings auch Einträge gleich eins, die in $Y$ 
+Durch die zuvor durchgeführte Pufferung mit $\delta_B$ sind allerdings auch Einträge gleich eins, die in $Y$ 
 zuvor null waren. Hierdurch besitzt das Hadamard-Produkt mehr Einträge mit eins, als bei der Berechnung der \ac{IoU}.
 Diese Zahl ist genau um die Anzahl an positiven Pixeln aus $P$ größer, die in der Pufferzone liegen. 
 Schließlich wird mit der $1,1$-Höldernorm für Matrizen die Anzahl an Einsen gezählt, was dann $tp_B$ ergibt. \\
 Die Formel für die \ac{BIoU} pro Ausgabe ist analog zur \ac{IoU}, bis auf die Verwendung der jeweils gepufferten 
-Variablen:\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}
+Variablen\footnote{\autoref{code:quality} zeigt die dazugehörige Python-Implementation.}:
 \begin{align}
 	\label{eq:quality} BIoU = \begin{cases}
 		 1 & tp_B + fp_B + fn_B = 0 \\ 
@@ -737,7 +740,7 @@ bezüglich der qualitativen Erkennung der Radwege gezeichnet werden und wird erg
 als Bewertungsfunktion eingesetzt. \\
 Als Verlustfunktion ist die \ac{BIoU} allerdings ungeeignet, da wie bei der \ac{IoU} die Wahr-Positiven $tp$ nicht 
 stärker gewichtet werden, sodass das Netz nicht bevorzugt die Wahr-Positiven lernt. Des Weiteren ist die \ac{BIoU} aufgrund der 
-in \autoref{eq:dilate} beschriebenen Dilate-Funktion nicht bekannt differenzierbar, was für die Verlustfunktion nötig ist. 
+in \autoref{eq:dilate} beschriebenen $\delta$-Funktion nicht bekannt differenzierbar, was für die Verlustfunktion nötig ist. 
 Gegebenenfalls kann eine Ableitung für die \ac{BIoU} gefunden werden, 
 die Untersuchung dessen geht allerdings über den Umfang dieser Arbeit hinaus. 
 Zuletzt wird das Verwenden der \ac{BIoU} als Loss-Funktion - unter der Prämisse, dass dies möglich ist - einen weiteren 
@@ -749,8 +752,8 @@ Die blaue Maske ist die Ground-Truth und die rote die Prediction. In (a) ist kau
 tatsächliche Überschneidung, was sich in der IoU widerspiegelt (0,63\%), es kann allerdings trotzdem 
 klar erkannt werden, auf welcher Straßenseite sich der obere rote Radweg befindet. Die BIoU 
 bestätigt diese menschliche Intuition mit einem Wert von 39,18\%. In (c) wird der Radweg perfekt getroffen
-(BIoU = 100\&), die IoU beträgt allerdings nur 61,56\%, was in der Auswertung die tatsächliche Performanz 
-sehr verzerrt. Zusammenfassend ist die BIoU ein Maß, das geeigneter die menschliche Intuition vertritt.
+(BIoU = 100\%), die IoU beträgt allerdings nur 61,56\%, was in der Auswertung die tatsächliche Performanz 
+sehr verzerrt. Zusammenfassend ist die BIoU ein Maß, das geeigneter der menschlichen Intuition Nahe kommt.
 
 \section{Architektur} \label{sec:architecture}
 
