@@ -126,7 +126,7 @@ Die aufgeführten Kategorien nehmen in der genannten Reihenfolge in ihrer Komple
 	\item \textit{Klassifizierung:}
 	Eine reine Klassifizierung ist die einfachste Lösungskategorie. 
 	Es soll lediglich erkannt werden, welche Klasse in einem Bild enthalten ist.
-	Die Lokalität des erkannten Objektes wird vernachlässigt, es handelt sich rein umd die Zuordnung zu einer Klasse.
+	Die Lokalität des erkannten Objektes wird vernachlässigt, es handelt sich rein um die Zuordnung zu einer Klasse.
 	Dies lässt sich auch entsprechend auf die Erkennung von mehreren Klassen erweitern.
 	
 	\item \textit{Object Detection:}
@@ -507,8 +507,8 @@ Für die Ultraschallbilder lieferte Methode (1) die schlechtesten Ergebnisse (Di
 und gleichermaßen (3) und (4) (Dice: $0.82$) \cite{Amiri.19.02.2020}. 
 
 Es ist ersichtlich, dass die Methodik beim Fine-Tuning, abhängig vom Datensatz, dem Anwendungsproblem und dem vortrainierten Backbone, einen erheblichen Einfluss 
-auf die abschließende Performanz des Modells haben kann aber nicht muss. 
-Um das Netz also zu optimieren und die besten Ergebnisse zu erzielen sollte also neben den Hyperparametern die Fine-Tuning-Methode untersucht werden. 
+auf die abschließende Performanz des Modells haben kann, aber nicht muss. 
+Um das Netz zu optimieren und die besten Ergebnisse zu erzielen, sollte zusätzlich zu den Hyperparametern die Fine-Tuning-Methode untersucht werden. 
 Die hier vorgestellten Methodiken können später genutzt werden, 
 um eine Transfer-Learning-Methode für das Problem der Radwegerkennung zu konzipieren. 
 
@@ -528,7 +528,7 @@ der ausschließlich zum Testen und Bewerten eines bereits
 trainierten Modells verwendet werden soll und ausschließlich dafür annotiert wurde, beschreibt 
 und nicht den \textit{Test-Split} eines größeren Datensatzes. 
 Im Rahmen der Straßenerkennung ist dies besonders relevant, 
-da sich unterschiedliche Städte in unterschiedlichen Ländern und Kulturen stark unterscheiden können, 
+da sich unterschiedliche Städte in verschiedenen Ländern und Kulturen stark unterscheiden können, 
 während die Trainingsdaten meist nur aus einer Stadt, die in sich ein eher homogenes Bild aufweist, bestehen.
 Der Testdatensatz soll also die Generalisierungsfähigkeit des Netzes testen, um zu identifizieren,
 ob das Modell, das bspw. auf einem Datensatz einer modernen amerikanischen Stadt trainiert wurde, 
@@ -681,8 +681,8 @@ späteren Entwurf eines oder mehrerer Netze zum Erkennen von Fahrradwegen (s. \a
 genutzt werden können. Die beiden Datensätze sind für die Literaturrecherche ausgewählt, 
 da sie sehr häufig als Benchmark zum Erkennen von Straßen genutzt werden, es dazu sehr viel Literatur und 
 Forschung gibt und da beide Datensätze sich stark unterscheiden, soweit das im Rahmen der Straßenerkennung möglich ist. 
-Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensätze ähnliche gut funktionierende
-Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein könnten. 
+Haben die State-Of-The-Art-Lösungen trotz des starken Unterschieds der Datensätze ähnlich gut funktionierende
+Komponenten, stärkt das die Annahme, dass diese Komponenten auch für das Erkennen von Radwegen nützlich sein können. 
 
 \begin{table}[H]
 	\centering
