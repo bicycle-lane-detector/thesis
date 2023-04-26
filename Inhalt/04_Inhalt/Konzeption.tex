@@ -1,9 +1,9 @@
 \chapter{Konzeption} % Das würde eigentlich 'Konzeption' heißen aber Tichy wirkt stark in mir
 
-In diesem Kapitel werden die Konzepte beschrieben, die die in \autoref{sec:novelty} 
+In diesem Kapitel werden die Konzepte vorgestellt, die die in \autoref{sec:novelty} 
 beschriebenen Probleme untersuchen sollen. Hierfür bietet \autoref{sec:concept-overview}
 \textit{\nameref{sec:concept-overview}}
-zunächst eine Übersicht der in diesem Kapitel beschriebenen Inhalte, um das Vorgehen, 
+zunächst eine Übersicht der in diesem Kapitel erarbeiteten Inhalte, um das Vorgehen, 
 die relevanten Neuerungen und deren Wichtigkeit für das Erfüllen der Ziele zu erkennen. 
 
 \section{Übersicht} \label{sec:concept-overview}
@@ -13,7 +13,7 @@ die relevanten Neuerungen und deren Wichtigkeit für das Erfüllen der Ziele zu 
 	\includegraphics[width=1.\textwidth]{Bilder/overview.drawio.pdf} 
 	\caption{Überblick über die relevanten Inhalte des Kapitels und wofür diese wichtig sind. Zentral sollen Modelle 
 	ausgewählt werden, die dann auf dem Straßendatensatz vortrainiert werden, um daraufhin 
-	auf dem eigenen Datensatz trainiert zu werden. Abschließen werden die Resultate mit weiteren Datensätzen bewertet.
+	auf dem eigenen Datensatz trainiert zu werden. Abschließend werden die Resultate mit weiteren Datensätzen bewertet.
 	Ausgegraute Elemente zeigen Inhalte des Stands der Technik.}
 	\label{fig:overview-concept}
 \end{figure} 
@@ -21,9 +21,9 @@ die relevanten Neuerungen und deren Wichtigkeit für das Erfüllen der Ziele zu 
 \autoref{fig:overview-concept} zeigt eine Übersicht über die in diesem Kapitel relevanten Inhalte und wie diese 
 zusammenspielen. Grob sollen Modelle verschiedener Architekturen 
 konzipiert werden, auf den Straßendatensätzen vortrainiert, dann auf einem neu zu erstellenden Datensatz für Radwegerkennung 
-trainiert und schließlich untereinander verglichen werden, um die geeignete Architektur und Methode des Trainings zu identifizieren. 
+trainiert und schließlich untereinander verglichen werden, um die geeignetste Architektur und Methode des Trainings zu identifizieren. 
 Die ausgegrauten Inhalte im Diagramm gehören zum Grundlagenkapitel, sind natürlich aber für die Konzeption relevant. \\ 
-Wie in \autoref{sec:novelty} beschrieben, existiert kein Datensatz zur Erkennung von Radwegen. Daher wird hier 
+Wie in \autoref{sec:novelty} beschrieben, existiert kein Datensatz zur Erkennung von Radwegen, daher wird hier 
 der BikeSat-Datensatz konzipiert, um zum Training verwendet zu werden. Weiter wird der Karlsruhe-Datensatz 
 erstellt, um die Ergebnisse auf einer anderen Stadt, mit Bildern, die sich visuell vom BikeSat-Datensatz unterscheiden, zu testen. \\
 Mit den eigenen Datensätzen kann dann eine geeignete Methode des Pre-Processing konzipiert werden, mit der die Datensätze 
@@ -40,23 +40,24 @@ ist es erforderlich einen eigenen Datensatz, den BikeSat-Datensatz, zu erstellen
 Prinzipiell gibt es die Möglichkeiten, den Datensatz manuell zu labeln oder automatisch generieren zu lassen.
 Manuelles Labeln führt zu einer hohen Genauigkeit.
 Allerdings ist diese Art der Datensatzerstellung entsprechend zeitintensiv und mit hohen Kosten verbunden.
-Gerade lange Labelsessions sorgen für Ungenauigkeiten beim Einzeichnen der Ground-Truth. 
+Gerade lange Labelsessions sorgen für Ungenauigkeiten beim Einzeichnen der Ground-Truth, weil die Konzentration sinkt. 
 In jedem Bild müssen Fahrradwege händisch erkannt werden, wobei die Wege nicht immer eindeutig als solche identifiziert werden können.\\
-Für die Generierung der Labels müssen entsprechende Koordinaten bekannt sein, an denen sich Fahrradwege befinden.
+Für die automatische Generierung der Labels müssen entsprechende Koordinaten bekannt sein, an denen sich Fahrradwege befinden.
 Mithilfe dieser Punkte können dann Polygone in eine Maske eingezeichnet werden 
 und somit entsteht die zu einer Satellitenaufnahme zugehörige Ground-Truth-Maske.
 Diese Art der Datensatzgenerierung ist deutlich weniger aufwändig als das manuelle Labeln. 
 Ebenso können unter der Beschränkung der gegebenen Koordinaten und Luftbilder große Datensätze erzeugt werden.
 Abweichende Koordinaten wirken sich jedoch nachteilig auf die Qualität des Datensatzes aus, da keine menschliche Überprüfung im Anschluss erfolgt.
-Aufgrund der Vielfältigkeit der Radwege, der damit verbundenen Größe des benötigten Datensatzes und dem geringeren Arbeitsaufwand, ist eine Entscheidung zugunsten der automatischen Datengenerierung gefallen.
-Eine schlechtere Datenqualität des Labels wird hingenommen. \\
+Aufgrund der Vielfältigkeit der Radwege, der damit verbundenen Größe des benötigten Datensatzes und dem geringeren Arbeitsaufwand, 
+fällt die Entscheidung zugunsten der automatischen Datengenerierung.
+Eine schlechtere Datenqualität der Label wird hingenommen. \\
 Die Abdeckung der automatischen Annotationen ist allerdings sehr gut. Auch wenn die 
 automatisch generierten Label nicht immer die Position des Fahrradweges genau treffen, 
 ist die Datengrundlage äußerst vollständig. Eine manuelle Sichtung der Datengrundlage mit 
 einer Stichprobengröße von 234 zufällig 
 ausgewählten Bildausschnitten, die laut Datengrundlage insgesamt 722 Radwege enthalten, hat ergeben, 
-dass lediglich zwei Radwege nicht in der Datengrundlage verzeichnet sind. Es sind also \textbf{722} 
-von \textbf{724} realen Radwegen in der Stichprobe enthalten. Demnach wird der Einfluss von 
+dass lediglich zwei Radwege nicht in der Datengrundlage verzeichnet sind. Es sind also $722$ 
+von $724$ ($99,72\%$) realen Radwegen in der Stichprobe enthalten. Demnach wird der Einfluss von 
 fehlenden Radwegen auf das Training als eher gering eingestuft.   
  
 
@@ -82,17 +83,18 @@ kollektiv als Radweg bezeichnet.
 
 Die Erstellung wird in mehreren Schritten vorgenommen.
 Zunächst müssen Luftbilder unter Berücksichtigung der \ac{GSD} ausfindig gemacht werden.
-In dem durch die Luftbilder abgedeckten Gebiet sind anschließend offizielle Fahrradwege aus einer \ac{OSM} API auszulesen.
+In dem durch die Luftbilder abgedeckten Gebiet sind anschließend eingetragene Fahrradwege aus einer \ac{OSM} API auszulesen.
 Mit den vorhandenen Informationen können dann die zugehörigen Masken nach \autoref{lst:gen-bikesat} erstellt werden.
 Hierzu werden zunächst die Luftbilder und die Radwege und -streifen geladen. Ein einzelner Radweg/-streifen 
 ist dabei eine Liste von Koordinaten-Tupeln, die den jeweiligen Weg ergeben, 
 wenn die Tupel in Iterationsreihenfolge der Liste verbunden werden.
 Daraufhin wird über alle Bildausschnitte iteriert und für jeden Ausschnitt eine Maske erstellt. 
-Dazu werden zunächst die Wege gefunden, die im derzeitigen Bild $f$ liegen. Dazu werden die Koordinaten der 
-Eckpunkte von $f$ verwendet, die bekannt sind. Dann wird über jeden Weg in $f$ iteriert und dessen 
-Koordinaten von Längen und Breitengrad zu Pixelkoordinaten x und y relativ zu dem Bild $f$ konvertiert. 
-Handelt es sich bei $w$ um einen Radstreifen, so handelt es sich bei den Koordinaten um die Straßenmittellinie 
-und der Radstreifen muss dementsprechend an den Straßenrand verschoben werden. Ist es ein Radweg,
+Hierfür werden zunächst die Wege gefunden, die im derzeitigen Bild $f$ liegen. Dazu werden die Koordinaten der 
+Eckpunkte von $f$ verwendet, die bekannt sind. Dann wird über jeden Weg $w$ in $f$ iteriert und dessen 
+Koordinaten von Längen und Breitengrad auf Pixelkoordinaten x und y relativ zu dem Bild $f$ abgebildet. 
+Ist $w$ ein Radstreifen, so handelt es sich bei den Koordinaten um die Straßenmittellinie 
+der zugehörigen (Auto-)Straße
+und der Radstreifen muss dementsprechend an den Straßenrand verschoben werden. Ist $w$ ein Radweg,
 sind die Koordinaten bereits korrekt. Schließlich wird $w$ in die Maske eingezeichnet, 
 indem die Pixelkoordinaten mit Strichen der vordefinierten Konstante der Radwegbreite eingezeichnet werden.
 Die Maske wird an eine Liste angehangen und das nächste Foto wird bearbeitet. Den Datensatz bildet 
@@ -126,13 +128,13 @@ In den nachfolgenden Unterkapiteln wird auf die Einzelschritte detaillierter ein
 
 Für die Luftbilder wird eine entsprechend niedrige \ac{GSD} von $20 \frac{cm}{px}$ benötigt, damit sich Radwege erkennen lassen. 
 Aufgrund der aufwändigen Gewinnung und Aufbereitung der Orthofotos, sind diese meist nur kostenpflichtig zu erlangen.
-Das Landesamt für Geoinformation und Landesvermessung Niedersachsen jedoch stellt Orthofotos in der benötigten Qualität kostenfrei zum Download zur Verfügung.
-Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von 3 Jahren.
-Für die Datensatz-Generierung ist ein Auszug der verfügbaren Städte verwendet worden, Hannover, Oldenburg, Osnabrück und Braunschweig. 
-Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2{\times}2 ~km^2$-Kacheln ($10.000{\times}10.000{\times}3$ Bilder)\cite{.26.10.2022}.
+Das Landesamt für Geoinformation und Landesvermessung Niedersachsen stellt jedoch Orthofotos in der benötigten Qualität kostenfrei zum Download zur Verfügung.
+Der Datenbestand umfasst flächendeckend ganz Niedersachsen mit einer Aktualität von vor drei Jahren.
+Für die Datensatz-Generierung ist ein Auszug der verfügbaren (Groß-)Städte verwendet worden: Hannover, Oldenburg, Osnabrück und Braunschweig. 
+Der Download in diesem Bereich umfasst dann die Aufnahmen als je $2{\times}2 ~km^2$-Kacheln ($10.000{\times}10.000$ Pixel RGB-Bilder)\cite{.26.10.2022}.
 % \autoref{fig:hannover-data} zeigt ein solches Bild. 
-Für eine bessere Generalisierung des neuronalen Netzes, werden mehrere Städte verwendet. Die Robustheit des Netzes 
-bei unterschiedlichen Städten wird später getestet.
+Für eine bessere Generalisierung des neuronalen Netzes werden mehrere Städte verwendet. Die Robustheit des Netzes 
+bei anderen Städten wird später getestet.
 Die jeweilige Anzahl der Aufnahmen pro Stadt lässt sich aus \autoref{tab:city-distribution} entnehmen.
 Die Gesamtsumme beträgt 143 Luftbilder, also 572 $km^2$ Fläche.
 Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3,05 GB$.
@@ -150,7 +152,7 @@ Der benötigte Speicherplatz für den gesamten Datensatz beträgt $3,05 GB$.
 \end{table}
 
 Auch bei der Stadt Karlsruhe können Luftaufnahmen von Karlsruhe in benötigter Qualität für Lehre und Forschung kostenfrei beantragt werden.
-Der Richtwert für die zu beantragende Größe beträgt $1km^2$.
+Es werden allerdings lediglich $1km^2$ freigegeben.
 Um die Generalisierungsfähigkeit und Robustheit der Netze für eine völlig neuen Stadt zu testen, 
 die nicht bereits während des Trainings vom Netz gesehen wurde,  
 dienen diese Daten ausschließlich als Testdaten \cite{.04.12.2022}.
@@ -166,7 +168,7 @@ Der mitgegebene Bereich entspricht genau der Abdeckung durch die Luftbilder.
 Die ausgelesenen Daten können als das Dateiformat GeoJSON exportiert werden. \\
 Alle Wege werden von der API als Listen von Koordinaten zurückgegeben. Jede Liste ist mit den zusätzlichen angefragten 
 Attributen ausgestattet. Die Overpass-API-Query zum Erhalten der Radwege des gewünschten Kartenausschnitts ist in 
-\autoref{code:osm-query-short} gekürzt dargestellt.\footnote{\autoref{code:osm-query} zeigt die vollständige Query.} 
+\autoref{code:osm-query-short} gekürzt dargestellt\footnote{\autoref{code:osm-query} zeigt die vollständige Query.}. 
 Die Konstanten geben dabei die Koordinaten des Kartenausschnitts an. 
 
 \lstinputlisting[
@@ -180,6 +182,8 @@ Die Konstanten geben dabei die Koordinaten des Kartenausschnitts an.
 
 \autoref{code:geojson} zeigt einen beispielhaften Ausschnitt aus der GeoJSON, die durch die Overpass API 
 zurückgeliefert wird. Es handelt sich dabei um einen Radweg, der aus drei Koordinaten besteht. 
+
+\pagebreak
 
 \lstinputlisting[
 	label=code:geojson,    % Label; genutzt für Referenzen auf dieses Code-Beispiel
@@ -232,9 +236,9 @@ Dieser Wert wurde analog zur durchschnittlichen Breite einer Fahrbahn über 50 z
 \autoref{lst:move-strip} zeigt den vereinfachten Algorithmus zum Verschieben eines Radstreifens,
 sodass dieser sich an der geschätzt richtigen Stelle befindet. Für bessere Übersichtlichkeit 
 zeigt der Algorithmus nur den Fall für einen rechtsseitigen Streifen. 
-Zunächst wird paarweise über alle Stützvektoren des Streifens iteriert. Die Differenz $d$ des Paares 
+Zunächst wird über alle je zwei benachbarte Stützvektoren $(v_i,v_{i+1})$ des Streifens iteriert. Die Differenz $d$ der Nachbarn $(v_i,v_{i+1})$ 
 wird berechnet, normiert, um 90° nach rechts rotiert und um die Hälfte der geschätzten Straßenbreite skaliert. 
-Schließlich werden die Stützpunkte um diesen Vektor verschoben. 
+Schließlich werden die benachbarten Stützpunkte $(v_i,v_{i+1})$ um diesen Vektor verschoben. 
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \begin{algorithm}
@@ -260,14 +264,14 @@ Schließlich werden die Stützpunkte um diesen Vektor verschoben.
 \end{algorithm}
 
 \autoref{fig:good-mask} zeigt einen Luftbildausschnitt (links) zusammen mit der dafür automatisch generierten Maske (rechts),
-wobei die automatische Annotation sehr gut funktioniert. 
+wobei die automatische Annotation sehr gut passt. 
 
 \subsubsection{Güteabschätzung der Masken} \label{sec:quality-of-masks}
 
-Die Schätzung beim Einzeichnen der Maske führt dazu, dass manchmal Radwege in Grünstreifen oder auf Straßen eingezeichnet werden, da sie ungenau verschoben worden sind.
-\autoref{fig:bad-mask} zeigt ein solches Negativbeispiel: Großteil der Annotationen (über Schätzung generiert) trifft den eigentlichen Radweg nicht. 
+Die geschätzte Verschiebung beim Einzeichnen von Fahrradstreifen in die Maske führt dazu, dass manchmal Radwege in Grünstreifen oder auf Straßen eingezeichnet werden, da sie ungenau verschoben worden sind.
+\autoref{fig:bad-mask} zeigt ein solches Negativbeispiel: Ein Großteil der Annotationen (über Schätzung generiert) trifft den eigentlichen Radweg nicht. 
 In der Straßenmitte befindliche Schienen für Straßenbahnen werden ebenfalls nicht berücksichtigt.
-Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschweren, durchgängige Linien einzuzeichnen.
+Beim Übergang zwischen Fahrradstreifen und -wegen kommt es häufig zu einer sprunghaften Veränderung, die es dem neuronalen Netz erschwert, durchgängige Linien einzeichnen zu lernen.
 Die geschätzte Pixelbreite eines Weges stimmt nicht immer exakt überein, bietet aber einen relativ zuverlässigen Ausgangspunkt, wegen geringerer Varianz in den Stichproben, 
 die zur Ermittlung erhoben sind.
 
@@ -286,7 +290,7 @@ die zur Ermittlung erhoben sind.
 \end{wrapfigure}
 
 Das Problem bei den generierten Masken sind nicht die Fahrrad\textit{wege}, denn diese sind von Menschen manuell annotiert und damit passend im Luftbild, 
-sondern die Fahrrad\textit{streifen}, denn diese sind durch die Schätzung ggf. daneben oder enthalten die beschriebenen Sprünge. \\
+sondern die Fahrrad\textit{streifen}, denn diese sind durch die Schätzung ggf. daneben oder verursachen die beschriebenen Sprünge. \\
 Der Anteil an manuell annotierten Fahrradwegen und über Schätzung annotierten Fahrradstreifen kann Aufschluss über die Güte geben. 
 Dieser Anteil trifft aber noch keine Aussage über die Länge der jeweiligen Wege. Um dies zu berücksichtigen, werden stattdessen die Kanten, die zu 
 entweder Fahrradwegen oder Fahrradstreifen gehört gezählt. Hier liegt die Annahme zugrunde, dass Kanten im Schnitt ähnlich lang sind.\\
@@ -338,9 +342,10 @@ die von der Optik kaum Unterschiede zu den im BikeSat-Datensatz verwendeten Stä
 Helligkeit, Schatten, Schärfe und Farbtemperatur, sondern auch im Inhalt, wie der Jahreszeit zum Aufnahmezeitpunkt 
 (kahle Bäume), Wetter (sonnig), Sonnenstand (Schattenausdehnung und -winkel) und sogar Farbe des Radweges 
 (dunkleres grau im Kontrast zu dem hellgrauen Gehweg). Da die Bilder sich sehr ähneln, ist der Hauptunterschied 
-das Stadtbild, wodurch isoliert untersucht werden kann, ob dieses einen Unterschied in der Performanz der Netze macht. 
-Das ist vor allem interessant, weil der nachfolgend beschriebene Karlsruhe-Datensatz Bilder mit anderer Optik 
-aufweist und somit eine Bewertung, was eventuell abweichende Performance hervorruft, verkompliziert. \\ 
+das Stadtbild, wodurch isoliert untersucht werden kann, ob dieses einen Unterschied in der Performanz der Netze ausmacht. 
+Das ist vor allem interessant, weil der nachfolgend beschriebene Karlsruhe-Datensatz Bilder eine andere Optik 
+aufweist und somit eine Bewertung, was eventuell abweichende Performance hervorruft, verkompliziert.
+Hier soll der Wolfsburg-Datensatz Abhilfe schaffen. \\ 
 Der Wolfsburg-Datensatz besteht aus 442 $512{\times}512$-Pixel-Ausschnitten mit Radwegen. 
 
 \section{Karlsruhe-Datensatz} \label{sec:karlsruhe}
@@ -349,14 +354,14 @@ Der Wolfsburg-Datensatz besteht aus 442 $512{\times}512$-Pixel-Ausschnitten mit 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.6\textwidth]{Bilder/karlsruhe-data-shrinked.png} 
-	\caption{Karlsruhe-Datensatz: $1433{\times}1433~ m^2$ Luftaufnahmen mit Radstreifen cyanfarben annotiert.}
+	\caption{Gesamter Karlsruhe-Datensatz: $1433{\times}1433~ m^2$ Luftaufnahmen mit Radstreifen cyanfarben annotiert.}
 	\label{fig:karlsruhe-data}
 \end{figure} 
 
 Der Karlsruhe-Datensatz besteht aus Luftaufnahmen und manuell von Menschen annotierten Masken von Fahrradstreifen 
 über eine Stadtfläche von $1433{\times}1433~ m^2$ bzw. ca. $2,054~ km^2$, was im Vergleich zu den 
-$572~ km^2$ des BikeSat-Datensatzes also eher wenig ist. Ein Pixel im Karlsruhe-Datensatz entspricht $0,2~m$, 
-also hat der Datensatz eine GSD von $20 \frac{cm}{px}$.
+$572~ km^2$ des BikeSat-Datensatzes also eher wenig ist. 
+Ein Pixel im Karlsruhe-Datensatz entspricht $0,2m$ in der Realität (GSD: $20 \frac{cm}{px}$).
 Der gesamte Datensatz samt cyanfarben annotierter Radstreifen ist in einem 
 $7168{\times}7168$ Pixel großen Bild in \autoref{fig:karlsruhe-data} zu sehen. Es fällt auf, 
 dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt einen Ausschnitt der Karlsruher Weststadt im März 2022. 
@@ -364,10 +369,10 @@ dass nur die drei großen Straßen Radstreifen enthalten. Das Luftbild zeigt ein
 
 Aufgrund der geringen Größe des Datensatzes wird dieser lediglich zum Testen der trainierten Modelle verwendet. 
 Da es sich um eine andere Stadt handelt und die Bilder visuell anders geartet sind, als aus dem BikeSat-Datensatz 
-kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen, zusammen mit dem Wolfsburg-Datensatz 
+kann dieser Datensatz die Generalisierungsfähigkeit des Netzes gut testen. Zusammen mit dem Wolfsburg-Datensatz 
 können auch Aussagen darüber gemacht werden, ob es sich um die Stadt oder die Art der Bilder handelt. 
 Es ist auch vorteilhaft, dass im Datensatz Radwege eher unterrepräsentiert sind, womit getestet werden kann, 
-ob Straßen allgemein alle Radwege erhalten oder eine echte Unterscheidung der Straßen im Modell stattfindet.
+ob Straßen allgemein alle Radwege vom Modell erhalten oder eine echte Unterscheidung der Straßen im Modell stattfindet.
 
 \begin{figure}[h]
 	\centering
@@ -390,7 +395,7 @@ und dem Karlsruhe-Datensatz, wie \autoref{fig:comp-bikesat-karlsruhe} zeigt. Die
 eine stärkere Sättigung, höheren Kontrast, dunklere Schatten und höhere Schärfe auf. Inhaltlich sind beide 
 Bilder augenscheinlich bei sonnigem Wetter, ähnlichem Sonnenstand und gleicher Jahreszeit entstanden, jedoch 
 fällt sofort auf, dass der Radweg auf der rechten Straßenseite im Karlsruhe-Bild vom Fußweg lediglich durch 
-einen Strich getrennt ist, jedoch keine andere Farbe wie im BikeSat-Bild aufweist. Auch ist der Radweg auf 
+eine Fahrbahnmarkierung getrennt ist, jedoch keine andere Farbe wie im BikeSat-Bild aufweist. Auch ist der Radweg auf 
 der linken Straßenseite direkt auf der Straße (gleiche Farbe wie die Straße) und recht breit für einen Radweg.   
 Wegen dieser Unterschiede, ist der Karlsruhe-Datensatz gut geeignet, um die Robustheit der Netze einzuschätzen. 
 
