@@ -781,7 +781,7 @@ Insbesondere ermöglicht dies auch die Modelle zur Fahrradwegerkennung auf den v
 in \autoref{sec:road-detection:roads-data} vorgestellten Datensätzen zur Straßenerkennung vorzutrainieren, 
 was zu allgemein besseren Ergebnissen führen kann (s. \autoref{sec:transfer-learning}). 
 Außerdem können so die erzielten Ergebnisse vom Pre-Training mit den öffentlichen Benchmarks verglichen werden,
-um deren Ergebnisse zu validieren und früh Fehler in den eigenen Entscheidungen und Implementationen zu entdecken.
+um die Ergebnisse zu validieren und früh Fehler in den eigenen Entscheidungen und Implementationen zu entdecken.
 
 \renewcommand{\labelenumii}{\theenumii}
 \renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
@@ -844,7 +844,7 @@ ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.
 
 \begin{itemize}
 	\item Der Output verwendet keine explizite One-Hot-Kodierung für Fahrradweg und Hintergrund, 
-	sondern eine mit lediglich einem Output-Neuron, wobei keine Aktivierung einen Hintergrundpixel 
+	sondern eine mit lediglich einem Output-Neuron pro Pixel, wobei keine Aktivierung einen Hintergrundpixel 
 	und eine Aktivieriung ein Radweg-Pixel impliziert, wie in \autoref{sec:state-of-the-art-roads} beschrieben, 
 	um eine intuitivere Bewertung zu ermöglichen. 
 	\item Im Gegensatz zum originalen U-Net (vgl. \autoref{sec:architekturkomponenten:unet}) soll der 
@@ -882,7 +882,7 @@ ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.
 
 \subsection{Backbone-U-Nets}
 
-Dieser Abschnitt beschreibt, warum die Backbone-U-Nets, wie in \autoref{sec:pretrained-as-unet-backbone} beschrieben gebildet,
+Dieser Abschnitt beschreibt, warum die Backbone-U-Nets, wie in \autoref{sec:pretrained-as-unet-backbone} beschrieben,
 für diese Arbeit relevant sind und untersucht werden. Wie diese konkret in ihrer Architektur umgesetzt sind, 
 wird im Implementationskapitel \autoref{sec:arch-impl} detailliert.  
 
@@ -892,10 +892,10 @@ wird im Implementationskapitel \autoref{sec:arch-impl} detailliert.
 mit auf ImageNet vortrainierten Gewichten als Backbone. 
 VGG16 wird als Backbone ausgewählt und getestet, da es als eine Art Basis- bzw. Standardversion der nachfolgenden 
 Backbone-Netze aufgefasst werden kann, da diese auf VGG16 aufbauen und dieses - zumindest 
-für den ImageNet-Datensatz - verbessern und nachvollzogen werden soll, ob diese Anpassungen dienlich sind 
+für den ImageNet-Datensatz - verbessern soll und nachvollzogen werden soll, ob diese Anpassungen dienlich sind 
 für den konkreten Anwendungsfall der Radwegerkennung. Zudem ist VGG16 sehr beliebt als vortrainiertes 
 Netz, weswegen es viele Vergleichsmöglichkeiten gibt. 
-Des Weiteren wird VGG16 als Backbone in Research zum Pre-Training mit U-Nets eingesetzt (s. \autoref{sec:transfer-learning:backbones}), 
+Des Weiteren wird VGG16 als Backbone in Research zum Pre-Training mit U-Nets eingesetzt (s. \autoref{sec:transfer-learning}), 
 auf dessen Ergebnisse diese Arbeit aufbaut. 
 Demnach ist es wiederum für Vergleichszwecke sinnvoll, VGG16 als Backbone für die Radwegerkennung zu verwenden.   
 
@@ -967,7 +967,7 @@ Dabei sind die Vorteile eines heterogenen Pre-Trainings genutzt: Es sind sowohl 
 als auch sehr heterogene weltweite städtische und ländliche Straßen (DeepGlobe) enthalten, wodurch 
 die grundlegenden Features, die Straßen ausmachen, sehr generalisiert gelernt werden sollen. Damit lassen sich diese 
 Features auf die Radwegerkennung übertragen. Zudem wurden diese beiden Datensätze gewählt, da sie die größten öffentlich zugänglichen 
-im Gebiet der Straßenerkennung darstellen und die viele der in diesem Kapitel vorgenommenen Entscheidungen 
+im Gebiet der Straßenerkennung darstellen und viele der in diesem Kapitel vorgenommenen Entscheidungen 
 auf den Ergebnissen zu diesen Datensätzen basieren, sowie eine hohe Vergleichbarkeit möglich ist. 
 Auf weitere Datensätze wird verzichtet, da der Combined-Datensatz mit 25294 $512{\times}512$-Ausschnitten 
 bereits eine angemessene Größe hat und weitere Datensätze die Bewertung des Pre-Trainings erschweren und Vergleichswerte 
@@ -986,12 +986,9 @@ Um diese Verwirrung aufzulösen, werden
 für den Combined-Datensatz alle Bild-Ausschnitte so transformiert, dass weiße, zusammenhängende Flächen, 
 die mehr als 1\% der Pixel ausmachen, in schwarze Flächen ($RGB = (0,0,0)$) konvertiert werden und die dazugehörigen
 Masken an den gleichen Stellen geschwärzt werden. Die 1\%-Schwelle wird gewählt, um einzelne, kleine, regulär komplett weiße 
-Flächen zu schwärzen. \\
-Ansonsten unterliegen die Bilder dem gleichen Pre-Processing wie die sonstigen Datensätze (vgl. \autoref{sec:pre-processing}). 
-
-Schließlich werden beide Datensätze gemischt und in einen Training-Validation-Test-Split unterteilt und diese Splits werden zum 
-Combined-Datensatz vereinigt, wofür der Split in \autoref{tab:combined-split} abgebildet ist. 
-Die Datensätze werden vor dem Zusammenfügen aufgespalten, damit das relative Verhältnis in allen Teildatensätzen gleich ist.  
+Flächen \textit{nicht} zu schwärzen. 
+Ansonsten unterliegen die Bilder dem gleichen Pre-Processing wie die sonstigen Datensätze (vgl. \autoref{sec:pre-processing}). \\
+Schließlich werden beide Datensätze gemischt und in einen Training-Validation-Test-Split unterteilt (s. \autoref{tab:combined-split}). 
 
 \begin{figure}
 	\centering
@@ -1017,7 +1014,7 @@ Die Datensätze werden vor dem Zusammenfügen aufgespalten, damit das relative V
 Nach der Erstellung des Datensatzes werden alle in \autoref{sec:architecture} vorgestellten Netze
 auf dem Combined-Datensatz trainiert. 
 Die \autoref{acro:BUNet}-Netze werden dabei von Grund auf neu trainiert, nach den Regeln aus \autoref{sec:training}, 
-wobei für die Backbone-Netze folgende Form des Fine-Tunings angewandt wird (vgl. \autoref{sec:transfer-learning:backbones}): 
+wobei für die Backbone-Netze folgende Form des Fine-Tunings angewandt wird (vgl. \autoref{sec:transfer-learning}): 
 Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert. Der Encoder ist für die ersten 12 Epochen des Trainings eingefroren, 
 während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 10 verringert, der Encoder 
 auf trainierbar gestellt und das Training fortgesetzt bis entweder 100 Epochen verstrichen sind oder das Training 
@@ -1031,7 +1028,7 @@ So lernt das Netz das Eingabebild aus einer komprimierten Darstellung in der Mit
 Dabei werden die Merkmale des Bildes gelernt. Allerdings liegt hierbei der Fokus nicht unbedingt auf den für 
 den Straßenverkehr relevanten Merkmale, sondern irgendwelchen, die am besten ermöglichen das Bild zu rekonstruieren. 
 Durch die Annotation der Straßen soll der Fokus stärker auf die Merkmale gelenkt werden, die für Straßen und 
-Wege relevant sind, wie die Farbe, die Straßenmarkierungen, die Breite im Verhältnis zur Länge usw. 
+Wege relevant sind, wie die Farbe, die Straßenmarkierungen, die Breite im Verhältnis zur Länge und so weiter. 
 
 
 \section{Training} \label{sec:training}
@@ -1056,17 +1053,17 @@ Es wird maximal 100 Epochen trainiert.
 Ziel soll es sein, die beste Architektur für das Erkennen von Radwegen zu finden und zu untersuchen,
 ob es starke Unterschiede bei den verwendeten Fine-Tuning-Techniken gibt. 
 \autoref{fig:training} zeigt, wie die Architekturen aus \autoref{sec:architecture} trainiert werden. 
-Abzweigende Pfeile bedeuten, dass der Input dupliziert wird und beide Wege verfolgt. 
+Abzweigende Pfeile bedeuten, dass der Input dupliziert wird und beide Wege verfolgt werden. 
 Die Architekturen sind links im Diagramm zu sehen, wobei \ac{BUNet2} und \ac{BUNet15} den \ac{BUNet}-Block 
 bilden und die Backbone-Architekturen einen Block. Die \acp{BUNet} werden jeweils direkt auf 
 dem BikeSat-Datensatz trainiert (Pfeil ganz oben) und jeweils direkt auf dem Combined-Datensatz aus \autoref{sec:pre-training-roads}
 vortrainiert und dann diese vortrainierten \acp{BUNet} jeweils fine-tuned, indem einmal die linke Hälfte des 
 Netzes (der Encoder) und einmal die rechte Hälfte (der Decoder) eingefroren, also als nicht modifizierbar gesetzt, werden,
 das Training so 12 Epochen vollzogen wird, dann die Lernrate verkleinert wird um Faktor 10 und daraufhin weiter 
-das \textit{ganze} Netz trainiert wird, bis es zum vorzeitigen Ende kommt oder 100 Epochen erreicht wird. \\
+das \textit{ganze} Netz trainiert wird, bis es zum vorzeitigen Ende kommt oder die 100. Epoche erreicht wird. \\
 Die Backbone-Netze werden, wie in \autoref{sec:pre-training-roads} beschrieben, jeweils auf dem Combined-Datensatz vortrainiert
 (wobei natürlich nur die linke Hälfte, also der Encoder, eingefroren wird) und dann jeweils auf dem BikeSat-Datensatz 
-fine-tuned wie die \acp{BUNet}. Die Backbone-Netze werden zusätzlich ohne Pre-Training direkt auf dem BikeSat-Datensatz 
+fine-tuned, wie die \acp{BUNet}. Die Backbone-Netze werden zusätzlich ohne Pre-Training direkt auf dem BikeSat-Datensatz 
 trainiert, wobei der Ablauf derselbe ist wie für den Combined-Datensatz. \\
 Es resultieren Netze, die \textit{nicht} auf dem Combined-Datensatz vortrainiert sind (hochgestellter *), 
 vortrainiert und über ein linksseitiges Einfrieren fine-tuned sind (hochgestelltes l) oder vortrainiert und über ein 
