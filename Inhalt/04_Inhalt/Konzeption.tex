@@ -3,7 +3,7 @@
 In diesem Kapitel werden die Konzepte vorgestellt, die die in \autoref{sec:novelty} 
 beschriebenen Probleme untersuchen sollen. Hierfür bietet \autoref{sec:concept-overview}
 \textit{\nameref{sec:concept-overview}}
-zunächst eine Übersicht der in diesem Kapitel erarbeiteten Inhalte, um das Vorgehen, 
+zunächst einen Überblick der in diesem Kapitel erarbeiteten Inhalte, um das Vorgehen, 
 die relevanten Neuerungen und deren Wichtigkeit für das Erfüllen der Ziele zu erkennen. 
 
 \section{Übersicht} \label{sec:concept-overview}
@@ -29,8 +29,8 @@ erstellt, um die Ergebnisse auf einer anderen Stadt, mit Bildern, die sich visue
 Mit den eigenen Datensätzen kann dann eine geeignete Methode des Pre-Processing konzipiert werden, mit der die Datensätze 
 auf das Training vorbereitet werden können. Wie in \autoref{sec:evaluation-metrics:quality} erwähnt, muss zudem 
 eine geeignete Bewertungsfunktion für die Quantifizierung der Ergebnisse entwickelt werden, was in \autoref{sec:eval:biou} 
-vorgenommen wird. Mit dem Wissen aus dem Grundlagenkapitel können die Architekturen für die zu vergleichenden Modelle entworfen werden 
-und deren Hyperparameter festgelegt werden. Schließlich kann die Trainings- und Pre-Trainingsmethodik und die daraus resultierenden 
+vorgenommen wird. Mit dem Wissen aus dem Grundlagenkapitel können die Architekturen für die zu vergleichenden Modelle entworfen 
+und deren Hyperparameter festgelegt werden. Schließlich können die Trainings- und Pre-Trainingsmethodik und die daraus resultierenden 
 trainierten Modelle im Abschnitt \textit{Training} erörtert werden.  
 
 \section{BikeSat-Datensatz} \label{sec:bike-data}
@@ -72,8 +72,8 @@ Im Zusammenhang mit dem BikeSat-Datensatz sind folgende Definitionen notwendig:
 	\item \textbf{Radweg:} Ein Radweg ist ein eigenständiger Pfad zur Benutzung durch Fahrräder 
 	und kann unabhängig von sonstiger Infrastruktur existieren, aber auch Spur einer Straße sein. 
 	Koordinaten eines Radwegs beziehen sich in jedem Fall auf die Mittellinie des Radwegs.  
-	\item \textbf{Radstreifen:} Ein Radstreifen ist nicht eigenständig, sondern bezieht sich auf eine Straße. 
-	Koordinaten eines Radstreifens beziehen sich auf die Mittellinie der dazugehörigen Straße. 
+	\item \textbf{Radstreifen:} Ein Radstreifen ist nicht eigenständig, sondern steht in Bezug zu einer Straße. 
+	Koordinaten eines Radstreifens entsprechen der Mittellinie der dazugehörigen Straße. 
 	Radstreifen können links-, rechts- oder beidseitig an einer Straße anliegen. 
 	\item \textbf{Orthofoto:} 
 	\enquote{[...] Orthofotos [...] sind entzerrte Luftbilder, die die Landschaft lagerichtig abbilden} \cite{dop27022023}.
@@ -89,7 +89,7 @@ Hierzu werden zunächst die Luftbilder und die Radwege und -streifen geladen. Ei
 ist dabei eine Liste von Koordinaten-Tupeln, die den jeweiligen Weg ergeben, 
 wenn die Tupel in Iterationsreihenfolge der Liste verbunden werden.
 Daraufhin wird über alle Bildausschnitte iteriert und für jeden Ausschnitt eine Maske erstellt. 
-Hierfür werden zunächst die Wege gefunden, die im derzeitigen Bild $f$ liegen. Dazu werden die Koordinaten der 
+Zunächst werden die Wege gefunden, die im derzeitigen Bild $f$ liegen. Dazu werden die Koordinaten der 
 Eckpunkte von $f$ verwendet, die bekannt sind. Dann wird über jeden Weg $w$ in $f$ iteriert und dessen 
 Koordinaten von Längen und Breitengrad auf Pixelkoordinaten x und y relativ zu dem Bild $f$ abgebildet. 
 Ist $w$ ein Radstreifen, so handelt es sich bei den Koordinaten um die Straßenmittellinie 
@@ -97,8 +97,8 @@ der zugehörigen (Auto-)Straße
 und der Radstreifen muss dementsprechend an den Straßenrand verschoben werden. Ist $w$ ein Radweg,
 sind die Koordinaten bereits korrekt. Schließlich wird $w$ in die Maske eingezeichnet, 
 indem die Pixelkoordinaten mit Strichen der vordefinierten Konstante der Radwegbreite eingezeichnet werden.
-Die Maske wird an eine Liste angehangen und das nächste Foto wird bearbeitet. Den Datensatz bildet 
-dann das Tupel der Listen der Fotos und Masken. Bei dem dargestellten Algorithmus handelt es sich um eine 
+Die Maske wird an eine Liste angehangen und das nächste Foto bearbeitet. Der Datensatz wird dann aus dem Tupel  
+der Listen der Fotos und Masken gebildet. Bei dem dargestellten Algorithmus handelt es sich um eine 
 vereinfachte Version.\footnote{\autoref{code:gen-dataset} zeigt eine Implementation des vollständigen Algorithmus.} \\   
 In den nachfolgenden Unterkapiteln wird auf die Einzelschritte detaillierter eingegangen.
 
@@ -753,7 +753,7 @@ tatsächliche Überschneidung, was sich in der IoU widerspiegelt (0,63\%), es ka
 klar erkannt werden, auf welcher Straßenseite sich der obere rote Radweg befindet. Die BIoU 
 bestätigt diese menschliche Intuition mit einem Wert von 39,18\%. In (c) wird der Radweg perfekt getroffen
 (BIoU = 100\%), die IoU beträgt allerdings nur 61,56\%, was in der Auswertung die tatsächliche Performanz 
-sehr verzerrt. Zusammenfassend ist die BIoU ein Maß, das geeigneter der menschlichen Intuition Nahe kommt.
+sehr verzerrt. Zusammenfassend ist die BIoU ein Maß, das geeigneter der menschlichen Intuition nahekommt.
 
 \section{Architektur} \label{sec:architecture}
 

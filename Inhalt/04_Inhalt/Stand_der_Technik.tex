@@ -652,7 +652,7 @@ da es trotz gleicher Bewertungsmaße wie Dice oder \ac{IoU}, zwei unterschiedlic
 	Ein Hintergrundpixel wird nun \textit{explizit} als solcher klassifiziert. 
 	Dies ändert allerdings die Berechnungsgrundlage von Dice und \ac{IoU} erheblich, da diese indessen (zumeist) als Mittelwert 
 	der Scores zu $o_p{_S}$ und $o_p{_H}$ berechnet werden. Hierdurch fließen die zuvor unberücksichtigten wahr-negativen 
-	Hintergrundpixel als wahr-postive in den Dice- bzw. \ac{IoU}-Score ein. Die Verzerrung wird noch verstärkt, 
+	Hintergrundpixel als wahr-positive in den Dice- bzw. \ac{IoU}-Score ein. Die Verzerrung wird noch verstärkt, 
 	da eine starke Imbalance zwischen Straßen- und Hintergrundpixel herrscht, wodurch der Dice-/\ac{IoU}-Score bei 
 	der One-Hot-Kodierung viel mehr eine Aussage darüber trifft, wie viele Hintergrundpixel, von denen es ja viel mehr gibt,
 	richtig klassifiziert wurden. Die so erzielten Dice-/IoU-Werte sind hier rein numerisch deutlich höher. 
@@ -675,7 +675,7 @@ Im Weiteren wird für alle Werte eine implizite Kodierung (50\% in \autoref{fig:
 	\label{fig:problematic-output}
 \end{figure} 
 
-Im Weiteren werden aktuelle Ergebnisse zu den Massachusetts- und Deep-Globe-Datensätzen vorgestellt, 
+Nachfolgend werden aktuelle Ergebnisse zu den Massachusetts- und Deep-Globe-Datensätzen vorgestellt, 
 um zu ermitteln, was für diese Datensätze gut funktioniert, sodass diese state-of-the-art Erkenntnisse beim 
 späteren Entwurf eines oder mehrerer Netze zum Erkennen von Fahrradwegen (s. \autoref{sec:architecture}) 
 genutzt werden können. Die beiden Datensätze sind für die Literaturrecherche ausgewählt, 
@@ -735,7 +735,7 @@ des jeweiligen Datensatzes anführen. Alle hiervon sind U-Net-Derivate.
 Mit der Modell-Optimierung kann \textit{Dense-U-Net-121} aus \autoref{tab:basline-benchmarks} beispielsweise beim Massachusetts-Datensatz 
 bis zu 66,61\% erreichen, anstelle von den 57,12\% wie im Baseline-Fall. 
 Dense-U-Net-121 ist dabei ein U-Net mit einem vortrainierten DenseNet121 als Backbone \cite{C.Henry.2021}. \\
-Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network), konnte die große Verbesserung erzielt werden,
+Im Falle vom RDRCNN (Refined Deep Residual Convolutional Neural Network) konnte die große Verbesserung erzielt werden,
 indem das U-Net so angepasst wurde, dass die Encoder-Blöcke mit Residual-Blöcken\footnote{Zwei Convolutional-Layer bei dem eine Skip-Connection zwischen dem Input der ersten und dem Output der zweiten Schicht besteht (s. \autoref{sec:pretrained-backbones:resnet}).} 
 ersetzt wurden und der Bottleneck-Block
 um Dilatation erweitert wurde \cite{Gao.2019}. 
@@ -764,6 +764,6 @@ diese Arbeit untersucht:
 	Folglich soll diese Arbeit eine Berechnungsmethode konzipieren, um die Quality auf die Masken der semantischen Segmentierung anzuwenden 
 	(s. \autoref{sec:eval:biou} \textit{BIoU}), also einen Schritt bevor aus der Maske die Graphen extrahiert werden.  
 	\item Da zum Pre-Training Datensätze zum Einsatz kommen, die keine deutschen Städte darstellen, 
-	die Optik der Infrastrukturen sich in unterschiedlichen Ländern aber unterscheidet, kann diese Arbeit 
-	Aufschluss darüber geben, ob Ergebnisse zwischen Städten unterschiedlicher Länder übertragbar sind.     
+	die Optik der Infrastrukturen sich in anderen Ländern aber unterscheidet, kann diese Arbeit 
+	Aufschluss darüber geben, ob Ergebnisse zwischen Städten verschiedener Länder übertragbar sind.     
 \end{enumerate} 
