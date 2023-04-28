@@ -160,12 +160,12 @@ dienen diese Daten ausschließlich als Testdaten \cite{.04.12.2022}.
 \subsection{Auslesen der Fahrradwege} \label{subsec:overpass-api}
 
 Eingetragene Radwege können über die Overpass API von \ac{OSM} ausgelesen werden \cites{.05.10.2021}{OpenStreetMapcontributors.2017}.
-Innerhalb der Anfrage kann zwischen einer Vielzahl von Attributen unterschieden werden.
+Innerhalb der Anfrage lässt sich zwischen einer Vielzahl von Attributen unterscheiden.
 Alle Radwege und Fahrradstreifen innerhalb der angegebenen Zone sollen zurückgeliefert werden.
 Auch einseitige Radstreifen werden ausgegeben. 
 Die jeweiligen Attribute geben Aufschluss darüber, ob es sich um einen links-, rechts- oder beidseitigen Radstreifen handelt.
 Der mitgegebene Bereich entspricht genau der Abdeckung durch die Luftbilder.
-Die ausgelesenen Daten können als das Dateiformat GeoJSON exportiert werden. \\
+Die ausgelesenen Daten können anschließend als das Dateiformat GeoJSON exportiert werden. \\
 Alle Wege werden von der API als Listen von Koordinaten zurückgegeben. Jede Liste ist mit den zusätzlichen angefragten 
 Attributen ausgestattet. Die Overpass-API-Query zum Erhalten der Radwege des gewünschten Kartenausschnitts ist in 
 \autoref{code:osm-query-short} gekürzt dargestellt\footnote{\autoref{code:osm-query} zeigt die vollständige Query.}. 
@@ -187,7 +187,7 @@ zurückgeliefert wird. Es handelt sich dabei um einen Radweg, der aus drei Koord
 
 \lstinputlisting[
 	label=code:geojson,    % Label; genutzt für Referenzen auf dieses Code-Beispiel
-	caption={Auschnitt aus der GeoJSON, die die Overpass API zurückliefert. Es ist ein Radweg abebildet.},
+	caption={Auschnitt aus der GeoJSON, die die Overpass API zurückliefert. Es ist ein Radweg abgebildet.},
 	captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
 	% style=EigenerPythonStyle,   % Eigener Style der vor dem Dokument festgelegt wurde
 	% firstline=1,                % Zeilennummer im Dokument welche als erste angezeigt wird
@@ -225,7 +225,7 @@ Die zugehörigen Koordinaten werden als Liste mit Breiten- und Längengraden üb
 Für die in \autoref{subsec:overpass-api} erwähnte Verschiebung werden zusätzlich die Anzahl der Fahrspuren sowie die Existenz eines links- oder rechtsseitigen Weges berücksichtigt.
 Die Berechnung wird als Schätzung über die Anzahl an Autospuren durchgeführt.
 Je mehr Spuren vorhanden sind, desto weiter muss der Fahrradstreifen verschoben werden.
-Es wird die durchschnittliche Breite einer Fahrbahn von, also eine Verschiebung um, $17.625px$ angenommen. 
+Es wird die durchschnittliche Breite einer Fahrbahn von $17.625px$ angenommen. 
 Dazu wurden 50 Straßen zufällig als Stichproben gewählt und deren Pixelbreiten manuell ausgemessen. 
 Fahrradwege werden hingegen nicht verschoben, da diese passend von Menschen annotiert sind.\\
 Für jedes Luftbild wird zunächst eine leere Maske erstellt.
@@ -290,7 +290,7 @@ die zur Ermittlung erhoben sind.
 \end{wrapfigure}
 
 Das Problem bei den generierten Masken sind nicht die Fahrrad\textit{wege}, denn diese sind von Menschen manuell annotiert und damit passend im Luftbild, 
-sondern die Fahrrad\textit{streifen}, denn diese sind durch die Schätzung ggf. daneben oder verursachen die beschriebenen Sprünge. \\
+sondern die Fahrrad\textit{streifen}, denn diese liegen durch die Schätzung ggf. daneben oder verursachen die beschriebenen Sprünge. \\
 Der Anteil an manuell annotierten Fahrradwegen und über Schätzung annotierten Fahrradstreifen kann Aufschluss über die Güte geben. 
 Dieser Anteil trifft aber noch keine Aussage über die Länge der jeweiligen Wege. Um dies zu berücksichtigen, werden stattdessen die Kanten, die zu 
 entweder Fahrradwegen oder Fahrradstreifen gehört gezählt. Hier liegt die Annahme zugrunde, dass Kanten im Schnitt ähnlich lang sind.\\
@@ -308,7 +308,7 @@ wenn diese einen Radweg enthält. Dadurch kann aber nicht differenziert werden, 
 Richtungen existiert oder nur eine. Um dies zu beheben, könnte jeweils die Seite nur rechts oder links von der Straßenmittellinie
 annotiert werden, um zu signalisieren, in welche Richtung ein Fahrradstreifen existiert. 
 Das Problem hierbei ist, dass sehr große Teile der Straße annotiert werden müssen, die nichts mit dem Radweg zu tun haben.
-Außerdem ist dadurch nicht möglich zu erkennen, ob bei einer Kreuzung ein separater Streifen für linksabbiegende 
+Außerdem ist es dadurch nicht möglich zu erkennen, ob bei einer Kreuzung ein separater Streifen für linksabbiegende 
 Fahrradfahrer existiert. Um diese Information zu erhalten, wird weiter der bisherige Ansatz verfolgt.  
    
 % dafür kannst du natürlich viele Bilder in das Kapitel ballern
@@ -434,7 +434,7 @@ wodurch die Gefahr besteht, dass jede beliebige Straße einen Radweg seitlich an
 In kleinen Ausschnitten sind hauptsächlich stark ausgebaute Straßen mit Radwegen vorhanden. 
 Schmalere und weniger gut ausgebaute Straßen sind aufgrund von fehlenden Radwegen kaum vorhanden, wodurch diese nicht als wahr-negativ gelernt werden.  
 Außerdem tritt es bei kleinen Ausschnitten häufiger auf, dass Radwege nur sehr klein in den Ecken des Bildausschnittes
-vorkommen und die lange zusammenhängende Struktur, die zu einem Radweg gehört, schwierige zu erlernen ist. 
+vorkommen und die lange zusammenhängende Struktur, die zu einem Radweg gehört, schwieriger zu erlernen ist. 
 Aus diesen Gründen wird als Kompromiss die $512{\times}512$-Größe gewählt. Somit entspricht eine Bildkante 
 $512 \cdot 0,2m = 102,4m$. Die Zweierpotenz wird gewählt, 
 sodass das Bild nicht zu klein wird in der U-Net-Struktur, bzw. damit eine saubere Teilung der 
@@ -486,7 +486,7 @@ jedem Teildatensatz repräsentiert sind, damit dies das Ergebnis nicht verfälsc
 zum Beispiel nur in dem Validation- oder Testdatensatz vorkommen. 
 
 \autoref{tab:bike-split} zeigt den im Folgenden verwendeten Trainings-Validation-Test-Split. 
-Hierbei sind zwei Dinge zu bemerken, die nicht aus der Tabelle hervorgehen: 
+Hierbei sind zwei Dinge anzumerken, die nicht aus der Tabelle hervorgehen: 
 Zunächst wird die Testpartition abgespalten. Hierzu wird 15\% von Hannover und 
 20\% von den jeweiligen restlichen Städte als Testpartition verwendet. Da der Hannover-Teil so groß ist, wie die Teile der
 restlichen Städte zusammen, läuft dies auf einen eher unkonventionellen Split von 17,5\% Testdaten hinaus. Diese Verteilung wurde so getroffen, 
