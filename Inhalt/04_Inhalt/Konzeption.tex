@@ -515,7 +515,7 @@ Die Testpartition sollte jedoch nicht zu klein sein, um statistisch belastbare A
 
 \subsection{Augmentierung}
 
-Die Augmentierungen werden unterteilt in \textit{Basic-Augmentation}, wobei das Bild jeweils nur verschoben wird und 
+Die Augmentierungen werden unterteilt in \textit{Basic-Augmentation}, wobei das Bild jeweils nur verschoben wird, und 
 \textit{Color-Augmentation}, also farbverändernde Augmentierungen, wobei verschiedene Eigenschaften des Bildes,
 wie Kontrast, Helligkeit, Farbe und Sättigungen verändert werden. Color-Augmentation beinhaltet dabei alle 
 Augmentierungen von Basic-Augmentation, ist also eine echte Obermenge.
@@ -524,7 +524,7 @@ Die Augmentierung wird nicht vor dem Training angewandt, um den Datensatz künst
 sondern während dem Training pseudozufällig, mit festem Seed, 
 also per Zufallsgenerator, der auf Basis des Startwertes (Seed) eine feste, 
 deterministische Sequenz an Zufallszahlen zurückgibt, um die Ergebnisse reproduzieren zu können.
-Somit wird jedes Bild während des Trainings, bevor es in das Netz eingegeben wird zufällig augmentiert 
+Somit wird jedes Bild während des Trainings, bevor es in das Netz eingegeben wird, zufällig augmentiert 
 und dann eingegeben. Damit erhält ein und dasselbe Bild über die verschiedenen Epochen jedes Mal unterschiedliche 
 Anpassungen auf Basis des Zufallsgenerators. Dies erhöht die Generalisierungsfähigkeit bzw. 
 verringert die Gefahr von Overfitting. Das Netz sieht so viel mehr Varianten der Bilder. 
@@ -767,7 +767,7 @@ zum Erkennen von Straßen auch für das Erkennen von Fahrradwegen nützlich sein
 \\
 Die Radwege sollen, wie Straßen auch (s. \autoref{sec:state-of-the-art-roads}), 
 mittels Image-Semantic-Segmentation von einem Computer-Vision-Modell 
-markiert werden. Andere Klassifizierungsarten, wie die in \autoref{sec:aufgabenkategorien} beschriebene 
+markiert werden. Andere Klassifizierungsarten wie die in \autoref{sec:aufgabenkategorien} beschriebene 
 Objektdetektion würde zu grobe Bounding-Boxes um schräg verlaufende Radwege legen, sodass im Prinzip 
 eine Straße markiert werden würde, die zwar einen Radweg hat, aber nicht klar wäre, wo dieser verläuft, 
 bzw. ob ein Radweg in beide Richtungen existiert. Aus demselben Grund ergibt eine reine Klassifikation, 
@@ -873,7 +873,7 @@ ist im Implementationskapitel \autoref{sec:arch-impl:bunet} zu finden.
 	oder überhaupt nicht, nötig.
 	\item Die Aktivierungsfunktion trägt zu der Lernfähigkeit des Netzes bei (Robustheit gegen das Vanishing-Gradient-Problem), 
 	es sind alle Netzteile möglichst beteiligt, um die Komplexität zu nutzen (Resistenz gegen das Dying-Neuron-Problem) und
-	numerisch zu große Aktivierungen sind vermieden. Hierzu wird \ac{ELU} verwendet.\footnote{Eine genauere Beschreibung liegt im Implementationskapitel vor.}
+	numerisch zu große Aktivierungen werden vermieden. Hierzu wird \ac{ELU} verwendet.\footnote{Eine genauere Beschreibung liegt im Implementationskapitel vor.}
 	\item Für das Ouptut-Layer soll eine probabilistische Aktivierungsfunktion verwendet werden, 
 	um die Ergebnisse leichter zu interpretieren.
 \end{itemize}
@@ -892,8 +892,8 @@ wird im Implementationskapitel \autoref{sec:arch-impl} detailliert.
 mit auf ImageNet vortrainierten Gewichten als Backbone. 
 VGG16 wird als Backbone ausgewählt und getestet, da es als eine Art Basis- bzw. Standardversion der nachfolgenden 
 Backbone-Netze aufgefasst werden kann, da diese auf VGG16 aufbauen und dieses - zumindest 
-für den ImageNet-Datensatz - verbessern soll und nachvollzogen werden soll, ob diese Anpassungen dienlich sind 
-für den konkreten Anwendungsfall der Radwegerkennung. Zudem ist VGG16 sehr beliebt als vortrainiertes 
+für den ImageNet-Datensatz - verbessern sollen und nachvollzogen werden soll, ob diese Anpassungen 
+für den konkreten Anwendungsfall der Radwegerkennung dienlich sind. Zudem ist VGG16 sehr beliebt als vortrainiertes 
 Netz, weswegen es viele Vergleichsmöglichkeiten gibt. 
 Des Weiteren wird VGG16 als Backbone in Research zum Pre-Training mit U-Nets eingesetzt (s. \autoref{sec:transfer-learning}), 
 auf dessen Ergebnisse diese Arbeit aufbaut. 
@@ -935,7 +935,7 @@ Dropout soll dem Overfitting, was aufgrund der wenigen Trainingsdaten auftreten 
 Die Rate, mit der die Dropout-Layer Neuronen auf null setzen, wird nicht als ein konstanter Wert für das ganze Netz festgelegt, 
 sondern nimmt im Encoder-Teil sukzessive zu und ab dem Decoder-Teil gespiegelt sukzessive ab, siehe \autoref{tab:dropout}. 
 Das soll eine hohe Dropout-Rate im Mittelteil des Netzes ermöglichen, während die Rate in den äußeren Schichten eher niedrig ist. 
-Dies ist erwünscht, damit in den äußeren Schichten, möglichst alle Inputs eingefangen werden bzw. die Outputs richtig lokalisiert werden. 
+Dies ist erwünscht, damit in den äußeren Schichten möglichst alle Inputs eingefangen werden bzw. die Outputs richtig lokalisiert werden. 
 In den äußeren Schichten mit eher weniger Filtern und damit weniger Parametern stellt Overfitting ein geringeres Problem dar. 
 Für die mittleren Layer mit ausgeprägten Feature-Maps, vielen Filtern und Parametern jedoch ein größeres Problem, weswegen hier ein eher größerer
 Dropout erwünscht ist. Die Werte zum Dropout in \autoref{tab:dropout} 
@@ -971,9 +971,9 @@ im Gebiet der Straßenerkennung darstellen und viele der in diesem Kapitel vorge
 auf den Ergebnissen zu diesen Datensätzen basieren, sowie eine hohe Vergleichbarkeit möglich ist. 
 Auf weitere Datensätze wird verzichtet, da der Combined-Datensatz mit 25294 $512{\times}512$-Ausschnitten 
 bereits eine angemessene Größe hat und weitere Datensätze die Bewertung des Pre-Trainings erschweren und Vergleichswerte 
-darauf nicht zugänglich sind. 
+darauf nicht zur Verfügung stehen. 
 
-Der DeepGlobe-Datensatz kann ohne weiteres übernommen werden und nach den Regeln in \autoref{sec:pre-processing} vorverarbeitet werden. \\ 
+Der DeepGlobe-Datensatz kann ohne Weiteres übernommen und nach den Regeln in \autoref{sec:pre-processing} vorverarbeitet werden. \\ 
 Für den Massachusetts-Datensatz wird eine weitere Vorverarbeitung vorgenommen. Der Massachusetts-Datensatz 
 besteht aus einem Ausschnitt von Massachusetts in Form eines unregelmäßigen Polygons. Viele der $512{\times}512$-Zuschnitte enthalten 
 also große, weiße Flächen ohne Bild. Der BikeSat-Datensatz enthält ebenfalls Zuschnitte mit schwarzen Flächen, 
@@ -994,7 +994,7 @@ Schließlich werden beide Datensätze gemischt und in einen Training-Validation-
 	\centering
 	\includegraphics[width=.5\textwidth]{Bilder/problem_mass.png} 
 	\caption{Beispiel des Problems im Massachusetts-Datensatz: In den Randbereichen sind Masken (rotes Overlay) in Bereichen eingezeichnet, 
-	in denen kein Bild vorhanden ist.}
+	zu denen kein Bild vorhanden ist.}
 	\label{fig:problem-mass}
 \end{figure} 
 
