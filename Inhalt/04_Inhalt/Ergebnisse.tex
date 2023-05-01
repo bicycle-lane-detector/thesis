@@ -114,7 +114,7 @@ In der Prediction von VBUNet ist dieser Teil jedoch ausgespart.
 \autoref{tab:results} zeigt die Test-Ergebnisse der Modelle nach Training (s. \autoref{sec:training} für Details) auf dem BikeSat-Datensatz 
 (s. \autoref{sec:bike-data}) für jede Augmentierungsmethode (Basic- u. Color-Augmentation) während des Trainings in Prozent. 
 Zusätzlich zeigt die Tabelle die Test-Ergebnisse auf allen 196 $512{\times}512$-Ausschnitten 
-des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}) in Prozent. Der Karlsruhe-Datensatz in dieser Tabelle
+des Karlsruhe-Datensatzes (s. \autoref{sec:karlsruhe}) in Prozent. Der Karlsruhe-Datensatz in dieser Tabelle
 enthält auch Ausschnitte, die \textit{keine} Radwege enthalten. \\ 
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen. 
 Außerdem sind pro Spalte das arithmetische Mittel $\bar{x}$ und die Standardabweichung s angegeben. 
@@ -124,7 +124,7 @@ Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:bio
 		$p = 2,143\cdot 10^{-8}$ für die IoU und $p = 0,00639$ für die BIoU für Basic-Aug. und 
 		$p = 2,937\cdot 10^{-7}$ für die IoU und $p = 7,06 \cdot 10^{-4}$ für die BIoU für Color-Aug.
 		des einseitigen Zweistichproben-Welch-Tests zwischen BikeSat und Karlsruhe. 
-	} stärker auf der Testpartition des BikeSat-Datensatzes, mit ein paar Ausnahmen, wie z.B. dem RBUNet$^r$ auf Color-Augmentation trainiert, 
+	} stärker auf der Testpartition des BikeSat-Datensatzes mit ein paar Ausnahmen, wie z.B. dem RBUNet$^r$ auf Color-Augmentation trainiert, 
 	als auf dem Karlsruhe-Datensatz. 
 	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, weisen also eine signifikant \footnote{
 		$p = 0,0035$ für die IoU und $p = 4,38\cdot 10^{-4}$ für die BIoU für Basic-Aug. und 
@@ -237,7 +237,7 @@ des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Basic-Augmentati
 	\item RBUNet$^*$ kann die ersten sieben Bilder qualitativ recht gut predicten, erkennt aber auf den letzten 
 	drei Bildern auch eher Radwege, wo keine sind - viele Falsch-Positive also. 
 	Das Modell weist eine eher relativ hohe Sensitivität auf. \\
-	RBUNet$^l$ hingegen erkennt generell kaum Radwege, aber weist auch keine Falsch-Positiven auf, 
+	RBUNet$^l$ hingegen erkennt generell kaum Radwege, aber weist auch keine Falsch-Positiven auf; 
 	was kein Radweg ist, wird auch zuverlässig als negativ eingestuft. Dieses Modell hat also eine hohe Spezifität.     
 \end{itemize}
 
@@ -374,7 +374,7 @@ Weiter sind die Predictions größtenteils sehr scharf, bis auf die erste Predic
 
 \autoref{tab:results-ka-small} zeigt die Test-Ergebnisse der Modelle aus \autoref{tab:results} 
 auf allen 49 $512{\times}512$-Ausschnitten des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}), 
-\textit{die Radwegen enthalten}, in Prozent. 
+\textit{die Radwege enthalten}, in Prozent. 
 Ein Ausschnitt enthält einen Radweg, wenn in der zugehörigen Label-Maske mindestens ein Pixel als Radweg annotiert ist. \\
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
 Außerdem sind pro Spalte das arithmetische Mittel $\bar{x}$ und die Standardabweichung s angegeben. 
@@ -421,7 +421,7 @@ gefilterten Karlsruhe-Datensatz durch die kürzere gelbe Strecke zu erkennen.
 
 Wie in \autoref{sec:bike-data} und \ref{sec:karlsruhe} beschrieben, wurde der BikeSat-Datensatz automatisch 
 annotiert und der Karlsruhe-Datensatz von Menschen. Die Netze sind mit dem BikeSat-Datensatz trainiert. 
-Wie bereits in \autoref{sec:bike-data} erwähnt, erhält die Datengrundlage zum BikeSat-Datensatz 
+Wie bereits in \autoref{sec:bike-data} erwähnt, enthält die Datengrundlage zum BikeSat-Datensatz 
 in einer von Menschen gesichteten und bewerteten Stichprobe \textbf{722} von \textbf{724} realen Radwegen.
 Es fehlen also zwei Radwege. 
 
@@ -465,7 +465,7 @@ blauen Dachs auf der rechten Bildseite annotiert sind.
 		\caption{}
 	\end{subfigure}
 
-	\caption{(a) zeigt ein manuell annotierten Ausschnitt aus dem Karlsruhe-Datensatz, wobei Radwege 
+	\caption{(a) zeigt einen manuell annotierten Ausschnitt aus dem Karlsruhe-Datensatz, wobei Radwege 
 	fälschlicherweise nicht annotiert sind. Abbildungen (b), (c) und (d) zeigen die Predictions von \ac{DBUNet}$^r$,
 	\ac{VBUNet}$^r$, bzw. \ac{VBUNet}$^*$.}
 	\label{fig:annotation-mistake}
