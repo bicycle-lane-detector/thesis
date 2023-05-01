@@ -27,7 +27,7 @@ Diese neue dilatierte IoU erhöht aber auch die Anzahl an absolut Falsch-Positiv
 weswegen gilt: $IoU \leq IoU_{dilatiert} \leq BIoU$. Allerdings ist die dilatierte IoU sehr schwierig zu interpretieren.
 Während die IoU die strikte Überdeckung von Prediction zu Ground-Truth misst und die BIoU die gepufferte, also 
 die Frage, ob die Prediction grob in der Nähe der Ground-Truth positioniert ist, beantwortet, misst die dilatierte IoU die strikte 
-Überdeckung, falls die Prediction und Ground-Truth umfangreicher, also die Radwege breiter, wären. 
+Überdeckung, als ob die Prediction und Ground-Truth umfangreicher, also die Radwege breiter wären. 
 Diese Information ist neben der IoU und BIoU aber nicht sonderlich hilfreich, weswegen darauf verzichtet wird. \\ 
 Aufgrund der genannten Einschränkungen ist die \ac{IoU} ungeeignet als Verlustfunktion, kann jedoch als ein Maß 
 in die Bewertung der Modellperformanz mit einfließen. 
@@ -35,7 +35,7 @@ in die Bewertung der Modellperformanz mit einfließen.
 Dice gewichtet die $tp$ mehr als die \ac{IoU}. Damit wird das Ungleichgewichtsproblem vermindert und Dice ist 
 besser geeignet als Verlustfunktion gegenüber der \ac{IoU}. Wie die \ac{IoU} hat Dice allerdings keine Toleranz 
 gegenüber leichter Verschiebung der Radwege. Auf einem handannotierten Datensatz funktioniert Dice besser. 
-Aufgrund der Beliebtheit von Dice in der semantsichen Segmentierung 
+Aufgrund der Beliebtheit von Dice in der semantischen Segmentierung 
 wird ein guter Vergleich mit anderen Modellen ermöglicht. 
 Aus diesen Gründen wird Dice für die Radwegerkennung als Verlustfunktion herangezogen.
 
@@ -65,7 +65,7 @@ Nachfolgende Auflistung beschreibt detailliert, wie die \acp{BUNet} \ac{BUNet2} 
 	In jedem Fall wird ein Bild mit drei Kanälen (RGB) verwendet. 
 	In der Abbildung ist exemplarisch $512 \times 512 \times 3$ gewählt. \\
 	Der Output verwendet lediglich ein Output-Neuron pro Input-Pixel, wobei keine Aktivierung einen Hintergrundpixel 
-	und eine Aktivieriung ein Radweg-Pixel impliziert, wie in \autoref{sec:state-of-the-art-roads} beschrieben. 
+	und eine Aktivieriung einen Radweg-Pixel impliziert, wie in \autoref{sec:state-of-the-art-roads} beschrieben. 
 	\item Bei den Convolutional-Layern wird Padding eingesetzt,
 	um die Dimensionen der Feature-Maps nicht nach und nach zu verkleinern und so einen exakt symmetrischen Aufbau zu gewährleisten.
 	Ebenso wurde bei den Up-Convolutions Padding eingefügt, um auch hier eine Verkleinerung der Feature-Maps zu verhindern.
@@ -121,12 +121,12 @@ VGG16-Bike-U-Net enthält 23,7 Mio. Parameter. Grob die Hälfte davon (14,7 Mio.
 
 \textit{\ac{RBUNet}} nutzt das in \autoref{sec:pretrained-backbones:resnet} beschriebene Netz ResNet34 
 mit auf ImageNet vortrainierten Gewichten als Backbone. 
-Hierzu wird die eine Fully-Connected-Layer am Schluss des Netzes entfernt und um einen Decoder ersetzt. 
+Hierzu wird die eine Fully-Connected-Layer am Schluss des Netzes entfernt und mit einem Decoder ersetzt. 
 Anders als bei \ac{VBUNet} ist der mittlere Block der U-Net-Struktur von ResNet34 
 und nicht zusätzlich neu ergänzt. Grund dafür ist die höhere Anzahl an Parametern 
 von ResNet34, welche ohne die Fully-Connected-Schicht bereits bei 24,4 Mio. liegt, im Gegensatz zu VGG16. 
 Da der mittlere Block die meisten Parameter beinhaltet, wird keine weitere Vertiefung des Netzes vorgenommen,
-um die Anzahl der Parameter nicht drastisch zu erhöhen. An Stelle dessen wird nach Ende der Convolution-Schichten von 
+um die Anzahl der Parameter nicht drastisch zu erhöhen. Anstelle dessen wird nach Ende der Convolution-Schichten von 
 ResNet34 direkt mit dem Upsampling begonnen, welches wie bei \ac{VBUNet} mit Upsampling-Schichten 
 bewerkstelligt wird. Auch wird im Widerspruch zu \ac{VBUNet} der Encoder - also ResNet34 - nicht gespiegelt, 
 um eine Verdoppelung der Parameteranzahl zu vermeiden. Stattdessen wird ein einfacher, U-Net-ähnlicher Decoder
