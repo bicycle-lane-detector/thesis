@@ -1013,11 +1013,11 @@ Schließlich werden beide Datensätze gemischt und in einen Training-Validation-
 
 Nach der Erstellung des Datensatzes werden alle in \autoref{sec:architecture} vorgestellten Netze
 auf dem Combined-Datensatz trainiert. 
-Die \autoref{acro:BUNet}-Netze werden dabei von Grund auf neu trainiert, nach den Regeln aus \autoref{sec:training}, 
+Die \autoref{acro:BUNet}-Netze werden dabei nach den Regeln aus \autoref{sec:training} von Grund auf neu trainiert, 
 wobei für die Backbone-Netze folgende Form des Fine-Tunings angewandt wird (vgl. \autoref{sec:transfer-learning}): 
-Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert. Der Encoder ist für die ersten 12 Epochen des Trainings eingefroren, 
+Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert und für die ersten 12 Epochen des Trainings eingefroren, 
 während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 10 verringert, der Encoder 
-auf trainierbar gestellt und das Training fortgesetzt bis entweder 100 Epochen verstrichen sind oder das Training 
+auf trainierbar gestellt und das Training fortgesetzt, bis entweder 100 Epochen verstrichen sind oder das Training 
 zuvor gestoppt wird, wie in \autoref{sec:training} detailliert.    
 
 Generell ist es auch möglich, unüberwachtes Lernen auf die Straßendatensätze (bzw. irgendwelche 
@@ -1036,11 +1036,11 @@ Wege relevant sind, wie die Farbe, die Straßenmarkierungen, die Breite im Verh�
 Zunächst folgt Allgemeines zum Training:
 Der Validation-Datensatz wird genutzt, um nach jeder Trainingsepoche den Verlust dieses Datensatzes zu bestimmen. 
 Verbessert sich der Validation-Verlust nach fünf Epochen nicht, wird die Lernrate um Faktor 10 verringert. 
-Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, mit der Epoche mit geringstem 
+Verbessert sich der Validation-Verlust nach sieben Epochen nicht, wird der beste Stand, die Epoche mit dem geringsten 
 Validation-Verlust, wiederhergestellt und das Training vorzeitig beendet.  \\
 Am Ende jeder Epoche wird der Trainingsdatensatz gemischt, sodass in der nächsten Epoche neue zufällige 
 Batches mit neuer Augmentierung entstehen. \\
-Es wird maximal 100 Epochen trainiert.
+Es wird mit maximal 100 Epochen trainiert.
 
 \begin{figure}[h]
 	\centering
@@ -1057,10 +1057,10 @@ Abzweigende Pfeile bedeuten, dass der Input dupliziert wird und beide Wege verfo
 Die Architekturen sind links im Diagramm zu sehen, wobei \ac{BUNet2} und \ac{BUNet15} den \ac{BUNet}-Block 
 bilden und die Backbone-Architekturen einen Block. Die \acp{BUNet} werden jeweils direkt auf 
 dem BikeSat-Datensatz trainiert (Pfeil ganz oben) und jeweils direkt auf dem Combined-Datensatz aus \autoref{sec:pre-training-roads}
-vortrainiert und dann diese vortrainierten \acp{BUNet} jeweils fine-tuned, indem einmal die linke Hälfte des 
-Netzes (der Encoder) und einmal die rechte Hälfte (der Decoder) eingefroren, also als nicht modifizierbar gesetzt, werden,
-das Training so 12 Epochen vollzogen wird, dann die Lernrate verkleinert wird um Faktor 10 und daraufhin weiter 
-das \textit{ganze} Netz trainiert wird, bis es zum vorzeitigen Ende kommt oder die 100. Epoche erreicht wird. \\
+vortrainiert. Diese vortrainierten \acp{BUNet} werden jeweils fine-tuned, indem einmal die linke Hälfte des 
+Netzes (der Encoder) und einmal die rechte Hälfte (der Decoder) eingefroren, also als nicht modifizierbar gesetzt, werden.
+Das Training wird so 12 Epochen vollzogen, dann wird die Lernrate verkleinert um Faktor 10 und daraufhin weiter 
+das \textit{ganze} Netz trainiert, bis es zum vorzeitigen Ende kommt oder die 100. Epoche erreicht ist. \\
 Die Backbone-Netze werden, wie in \autoref{sec:pre-training-roads} beschrieben, jeweils auf dem Combined-Datensatz vortrainiert
 (wobei natürlich nur die linke Hälfte, also der Encoder, eingefroren wird) und dann jeweils auf dem BikeSat-Datensatz 
 fine-tuned, wie die \acp{BUNet}. Die Backbone-Netze werden zusätzlich ohne Pre-Training direkt auf dem BikeSat-Datensatz 
