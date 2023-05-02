@@ -20,7 +20,7 @@ Möglicherweise funktioniert also ResNet, welches eine viel höhere Komplexität
 als Spezialisierung auf einer der beiden Landschaften, ist also besonders angepasst auf die jeweilige Landschaft, 
 während VGG mit der geringeren Komplexität besser Straßen generalisieren kann und deshalb robuster ist. 
 Eine weitere, simplere Erklärung ist, dass in dieser Arbeit die Netze lediglich mit einem Satz 
-an Hyperparametern und einem festen Seed genau ein mal trainiert sind. Außerdem sind die Ergebnisse 
+an Hyperparametern und einem festen Seed genau einmal trainiert sind. Außerdem sind die Ergebnisse 
 nicht mit einer Kreuzvalidierung überprüft.
 Es kann also lediglich eine schlechte Besetzung der Hyperparameter und Startwerte für das ResNet und eine 
 gute für VGG vorliegen. \\
@@ -56,7 +56,7 @@ Performance-Verbesserungen herbeizuführen.
 	% \vspace{-20pt}
 \end{wrapfigure}
 
-Im Gegensatz zu den Radweg-Datensätzen bei der Maskenerstellung des Straßendatensatzes keinerlei Schätzung 
+Im Gegensatz zu den Radweg-Datensätzen ist bei der Maskenerstellung des Straßendatensatzes keinerlei Schätzung 
 über die Lage der Wege eingesetzt worden. Die Masken sind also überwiegend deckungsgleich mit den tatsächlichen 
 Straßen im Input-Bild, während bei den Radwegen manche Radwege grob versetzt positioniert sind. 
 Deswegen muss die BIoU bei der Straßenerkennung keine komplette Verschiebung der Prediction zur Ground-Truth ausgleichen, 
@@ -84,15 +84,15 @@ Radwegerkennung statistisch signifikant\footnote{
 \begin{enumerate}
 	\item Das Problem der Radwegerkennung ist schwerer. Für die Radwegerkennung fällt es selbst Menschen schwer, 
 	diese auf Luftbildern zu erkennen. Für Fahrradstreifen am Straßenrand ist das noch gut möglich, 
-	aber für oft überdeckte und überschattete Fahrradwege neben der Straße, die zum Beispiel durch einen Grünstreifen 
-	von der Straße getrennt sind und mit dem Fußweg verbunden sind, ist schwierig festzustellen, ob ein Radweg 
+	aber für oft überdeckte und beschattete Fahrradwege neben der Straße, die zum Beispiel durch einen Grünstreifen 
+	von der Straße getrennt und mit dem Fußweg verbunden sind, ist schwierig festzustellen, ob ein Radweg 
 	vorhanden ist, oder ob es sich nur um einen Gehweg handelt. Außerdem weisen Radwege weitaus 
-	heterogenere Beläge auf, als städtische Straßen. Für Radwege kommen Asphalt, unterschiedlich farbige Pflastersteine,
+	heterogenere Beläge auf als städtische Straßen. Für Radwege kommen Asphalt, unterschiedlich farbige Pflastersteine,
 	Schotter, rot oder grün gefärbter Asphalt und andere Untergründe zum Einsatz, 
 	während die allermeisten Straßen in der Stadt aus Asphalt bestehen.
 	Weiterhin gibt es viel weniger Radwege als Straßen, wodurch in den Trainingsdaten eine große Imabalance 
-	und generell weniger Beispiele vorhanden sind, als in einem ähnlich großen Datensatz für die Straßenerkennung. 
-	Auch unterscheiden sich Radwege zwischen Ländern und selbst Städten eines Landes weitaus stärker, als Straßen.
+	und generell weniger Beispiele vorhanden sind als in einem ähnlich großen Datensatz für die Straßenerkennung. 
+	Auch unterscheiden sich Radwege zwischen Ländern und selbst Städten eines Landes weitaus stärker als Straßen.
 	\item Die automatisch generierten Annotationen sind überwiegend (ca. zu 83\%; vgl. \autoref{sec:quality-of-masks})
 	auf dem Niveau einer Annotation durch Menschen, allerdings könnte der Anteil der Annotationen, die schlichtweg
 	falsch sind, die Ergebnisse stark beeinträchtigen. Um diese Hypothese zu verifizieren, sind weitere 
@@ -115,15 +115,15 @@ Radwegerkennung statistisch signifikant\footnote{
 \end{enumerate}
 Obwohl die Radwegerkennung nicht so gute Ergebnisse liefert, wie die Straßenerkennung, und die Ergebnisse 
 für die Radwegerkennung durchaus Verbesserungspotential bieten, lässt sich aus der Arbeit 
-schließen, dass es möglich ist, andere Strukturen der städtischen Infrastruktur aus Luftbildern zu erkennen, 
+schließen, dass es möglich ist, andere Strukturen der städtischen Infrastruktur aus Luftbildern zu erkennen 
 als Straßen. 
 
 \subsection{Ergebnisse auf Karlsruhe gegenüber BikeSat und Wolfsburg}
 
 Aus allen Experimenten geht hervor, dass die Performance auf dem (ungefilterten und gefilterten) Karlsruhe-Datensatz deutlich schlechter ist, 
 als auf dem BikeSat- und Wolfsburg-Datensatz. Außerdem hat die Color-Aug. keine Verbesserung gegenüber 
-Basic-Aug. hervorgerufen. Auch ist der Wolfsburg-Datensatz, der eine andere Stadt, bei gleicher Optik der Bilder, 
-zeigt, als der BikeSat-Datensatz, gleich auf mit dem BikeSat-Datensatz. Wolfsburg weist aber eine sehr ähnliche 
+Basic-Aug. hervorgerufen. Auch ist der Wolfsburg-Datensatz, der eine andere Stadt bei gleicher Optik der Bilder 
+zeigt als der BikeSat-Datensatz, gleichauf mit dem BikeSat-Datensatz. Wolfsburg weist aber eine sehr ähnliche 
 Infrastruktur zu den anderen Städten aus Niedersachsen (BikeSat) auf. Daraus lässt sich schließen, 
 dass für die schlechte Performance auf dem Karlsruhe-Datensatz wahrscheinlich nicht die Optik der Bilder verantwortlich 
 ist, sondern die sehr unterschiedliche Infrastruktur der Fahrradwege oder das allgemeine Stadtbild. 
@@ -133,7 +133,7 @@ Diese Beobachtung beantwortet die Forschungsfrage, ob Ergebnisse auf Städten un
 die die Stärke des Unterschieds der Infrastrukturen widerspiegeln. 
 Um diese These zu belegen, bedarf es jedoch weiterer Experimente mit mehr Städten. Eventuell ist dann 
 auch eine Proportionalität zwischen Performance-Einbußen auf für das Modell unbekannten Städten und der Stärke 
-des Unterschieds der Städte erkennbar. Insofern eine Quantifizierung des Unterschieds der Städte gelingt. 
+des Unterschieds der Städte erkennbar, insofern eine Quantifizierung des Unterschieds der Städte gelingt. 
 
 Die signifikant bessere BIoU von Wolfsburg im Gegensatz zu BikeSat wird darauf zurückgeführt, dass 
 Wolfsburg eine sehr ähnliche Fahrrad-Infrastruktur aufweist, wie der BikeSat-Datensatz, aber weniger 
@@ -157,21 +157,20 @@ In dieser Arbeit wird zweimal Pre-Training angewandt: Zunächst sind die Backbon
 auf dem ImageNet-Datensatz vortrainiert, während das die BUNet-Netze nicht sind. Dann sind die Netze 
 mit \{B,VB,RB,DB\}UNet$^{\{l,r\}}$ auf dem Combined-Datensatz der Straßenerkennung fine-tuned bzw. für die 
 Radwegerkennung vortrainiert. Zunächst lässt sich sagen, dass das links- bzw. rechtsseitige Fine-Tuning 
-keinen generellen Effekt hat und eher ein Hyperparameter darstellt, welcher pro Modell optimiert werden muss. 
+keinen generellen Effekt hat und eher einen Hyperparameter darstellt, welcher pro Modell optimiert werden muss. 
 Allgemein erzielt das Pre-Training auf dem Straßendatensatz nur für Basic-Aug. einen positiven Effekt, 
 während es für Color-Aug. unterschiedliche Effekte, von destruktiv bis konstruktiv, hat. 
 Das scheint zu zeigen, dass durch das Pre-Training im Basic-Aug.-Fall vermutlich die Farbe von Straßen als 
 grau (Asphalt) gelernt wird, was bei der Radwegerkennung ohne farbverändernde Augmentierungen hilfreich ist.  
 Möglicherweise ist dann die Performance von vortrainierten Modellen mit Color-Aug. schlechter, 
-da der Datensatz zu klein ist, um die Struktur anstelle der Farbe ausreichend zu gut zu lernen. \\ 
+da der Datensatz zu klein ist, um die Struktur anstelle der Farbe ausreichend gut zu lernen. \\ 
 Bezüglich des Vortrainings auf dem ImageNet-Datensatz lässt sich nicht folgern, 
 ob diese Vortrainings-Methode effektiv ist, da es ohne ein Vortraining der BUNet-Modelle auf dem ImageNet-Datensatz 
 nicht möglich ist festzustellen, ob die bessere Performance der Backbone-Modelle an dem Pre-Training oder 
-besserer Archtiektur liegt. In weiteren Experimenten kann BUNet2 und BUNet15 auf ImageNet vortrainiert werden, 
-für eine vergleichbare Gegenüberstellung mit den Backbone-Netzen. \\
+besserer Archtiektur liegt. In weiteren Experimenten kann BUNet2 und BUNet15 auf ImageNet für eine vergleichbare Gegenüberstellung mit den Backbone-Netzen vortrainiert werden. \\
 Insgesamt spielt das Pre-Training aber eine eher geringe Rolle und kann eher zur Optimierung genutzt werden. 
 Davor sollte aber der Datensatz oder die grundlegende Funktionsweise der Radwegerkennung verbessert werden (vgl. \autoref{sec:disc:recog}). \\
-Insbesondere mit Hinsicht auf den Performanceabfall bei unbekannten Städten, kann ein Pre-Training 
+Insbesondere mit Hinsicht auf den Performanceabfall bei unbekannten Städten kann ein Pre-Training 
 als unüberwachtes Lernen durchgeführt werden, um die Merkmale von unterschiedlichen Städten zu lernen, 
 ohne dafür einen Datensatz annotieren zu müssen. 
 
@@ -186,7 +185,7 @@ Die Ergebnisse aus \autoref{tab:results} und \autoref{tab:results-ka-small} mit 
 \autoref{fig:iou-biou-corr-ka} zeigen, dass die BIoU auf dem gefilterten Datensatz $K_{fil}$ signifikant 
 schlechter ist, als auf dem ungefilterten. Da die BIoU als arithmetisches Mittel der BIoU-Werte der einzelnen Bilder 
 berechnet wird und die Predictions auf den Bildern von $K_{fil} \cap K_{unfil} = K_{fil}$ gleich ausfallen, 
-lässt sich aus den durchschnittlichen Ergebnissen den beiden Datensätze die durchschnittliche BIoU auf den leeren Bildern 
+lässt sich aus den durchschnittlichen Ergebnissen der beiden Datensätze die durchschnittliche BIoU auf den leeren Bildern 
 $K_{leer} := K_{unfil} \setminus K_{fil};~ |K_{leer}| = |K_{unfil}| - |K_{fil}| = 147$ über   
 \begin{align}
 	\overbar{BIoU_{K_{unfil}}} = \frac{|K_{fil}| \cdot \overbar{BIoU_{K_{fil}}} + |K_{leer}| \cdot \overbar{BIoU_{K_{leer}}}}{|K_{unfil}|} \nonumber \\
@@ -201,7 +200,7 @@ $\overbar{BIoU_{K_{fil}, basic}} = 48,16\%; ~\overbar{BIoU_{K_{unfil}, basic}} =
 $\overbar{BIoU_{K_{fil}, color}} = 42,68\%; ~\overbar{BIoU_{K_{unfil}, color}} = 35,14\%$
 sind die Werte also höher. Weiterhin gilt $\forall (x, y) \in K_{leer}: BIoU(Prediction_m(x), y) \in \{0; 1\}$ für alle Modelle $m$. 
 Das liegt daran, dass die Ground-Truth $y$ per Definition von $K_{leer}$ stets leer ist, woraus folgt, dass die Kardinalität der 
-Schnittmenge mit der Prediction für einen Input $x$ immer $0$ ist. Das heißt, die BIoU ist immer $0$, es sei denn 
+Schnittmenge mit der Prediction für einen Input $x$ immer $0$ ist. Das heißt, die BIoU ist immer $0$, es sei denn, 
 das Modell $m$ annotiert keine Pixel als Radwege, dann ist die Kardinalität der Vereinigungsmenge auch $0$ und 
 die BIoU definitionsgemäß gleich $1$. Selbige Schlussfolgerung gilt analog für die IoU. \\ 
 Aus den Werten für $BIoU_{K_{leer}}$ folgt, dass in circa der Hälfte der Fälle die Modelle keinen einzigen Pixel 
