@@ -68,7 +68,7 @@ Nachfolgende Auflistung beschreibt detailliert, wie die \acp{BUNet} \ac{BUNet2} 
 	und eine Aktivieriung einen Radweg-Pixel impliziert, wie in \autoref{sec:state-of-the-art-roads} beschrieben. 
 	\item Bei den Convolutional-Layern wird Padding eingesetzt,
 	um die Dimensionen der Feature-Maps nicht nach und nach zu verkleinern und so einen exakt symmetrischen Aufbau zu gewährleisten.
-	Ebenso wurde bei den Up-Convolutions Padding eingefügt, um auch hier eine Verkleinerung der Feature-Maps zu verhindern.
+	Ebenso wurde bei den Up-Convolutions Padding eingefügt, um die exakte Original-Größe wiederherzustellen.
 	Diese Anpassung wurde eingesetzt, um kein Zuschneiden bei den Skip-Connections zu benötigen, was die Lokalisierung verbessern soll,
 	und so bei den in \autoref{sec:state-of-the-art-roads} beschriebenen Netzen gewöhnlich ist.
 	\item 
@@ -163,7 +163,7 @@ Auch hier werden wieder vier Skip-Connections eingebaut, um die U-Net-Architektu
 Diese Skip-Connections sind im Falle von \ac{DBUNet} im Encoderteil nach der ersten $7 \times 7$-Convolution 
 und dann jeweils nach jeder weiteren $1\times 1$-Convolution der DenseNet-Transition-Zonen eingesetzt. 
 Im Decoder-Teil sind diese wie bei \ac{RBUNet} zu Beginn jedes Decoder-Blocks bis auf den letzten eingebaut. \\
-DenseNet121-Bike-U-Net enthält 12,1 Mio. Parameter, wovon 6,9 Mio. zum DenseNet121 und 5,1 Mio. neu hinzugefügt 
+DenseNet121-Bike-U-Net enthält 12,1 Mio. Parameter, wovon 6,9 Mio. zum DenseNet121 gehören und 5,1 Mio. neu hinzugefügt 
 wurden. Trotz doppelter bzw. sogar vierfacher Tiefe besteht \ac{DBUNet} nur aus ungefähr halb so vielen 
 Parametern wie \ac{RBUNet} und \ac{VBUNet}. 
 

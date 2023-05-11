@@ -1013,7 +1013,7 @@ Schließlich werden beide Datensätze gemischt und in einen Training-Validation-
 
 Nach der Erstellung des Datensatzes werden alle in \autoref{sec:architecture} vorgestellten Netze
 auf dem Combined-Datensatz trainiert. 
-Die \autoref{acro:BUNet}-Netze werden dabei nach den Regeln aus \autoref{sec:training} von Grund auf neu trainiert, 
+Die BUNet-Netze werden dabei nach den Regeln aus \autoref{sec:training} von Grund auf neu trainiert, 
 wobei für die Backbone-Netze folgende Form des Fine-Tunings angewandt wird (vgl. \autoref{sec:transfer-learning}): 
 Der Encoder der Backbone-Netze ist auf ImageNet vortrainiert und für die ersten 12 Epochen des Trainings eingefroren, 
 während nur der Decoder trainiert wird. Dann  wird die Learning-Rate um Faktor 10 verringert, der Encoder 
