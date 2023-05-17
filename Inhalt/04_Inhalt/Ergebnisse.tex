@@ -9,9 +9,11 @@ wird eine Übersicht über die benötigte Trainingszeit für die Modelle gegeben
     \item Eine Epoche des Pre-Trainings auf dem Combined-Straßendatensatz dauert zwischen 40 und 50 Minuten. 
     \item Eine Epoche des Trainings auf dem BikeSat-Datensatz dauert zwischen 10 und 17 Minuten. 
     \item Die Netze konvergieren nach circa 33-57 Epochen auf beiden Datensätzen. 
-    \item Das Training wird immer vorzeitig vor dem Ablaufen der 100 Epochen beendet.
+    \item Das Training wird immer vorzeitig 
+	(Ergebnisse auf Validations-Partition verbessern sich nach mehreren Epochen \textit{nicht}) 
+	vor dem Ablauf der 100 Epochen beendet.
     \item Der zeitliche Mehraufwand durch die Bild-Augmentierung während des Trainings (vgl. \autoref{sec:pre-processing}) 
-    liegt im Schnitt bei 3 min 30s pro Epoche für beide Augmentierungsmethoden (Basic-Augmentation und Color-Augmentation).  
+    liegt im Schnitt bei 3 min 30 s pro Epoche für beide Augmentierungsmethoden (Basic-Augmentation und Color-Augmentation).  
 \end{itemize}
 
 \section{Pre-Training-Ergebnisse zur Straßenerkennung}
@@ -126,7 +128,7 @@ Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:bio
 		des einseitigen Zweistichproben-Welch-Tests zwischen BikeSat und Karlsruhe. 
 	} stärker auf der Testpartition des BikeSat-Datensatzes mit ein paar Ausnahmen, wie z.B. dem RBUNet$^r$ auf Color-Augmentation trainiert, 
 	als auf dem Karlsruhe-Datensatz. 
-	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, weisen also eine signifikant \footnote{
+	\item Die Ergebnisse auf dem BikeSat-Datensatz sind deutlich stabiler und zwischen den Netzen ähnlicher, weisen also eine signifikant\footnote{
 		$p = 0,0035$ für die IoU und $p = 4,38\cdot 10^{-4}$ für die BIoU für Basic-Aug. und 
 		$p = 6,21\cdot 10^{-4}$ für die IoU und $p = 1,72 \cdot 10^{-4}$ für die BIoU für Color-Aug.
 		des F-Tests zwischen BikeSat und Karlsruhe. 
@@ -186,8 +188,7 @@ Die \ac{BIoU} hat eine Puffergröße von 15 Pixeln, wie in \autoref{sec:eval:bio
 \end{table}
 
 \autoref{tab:results-wolfsburg} ergänzt \autoref{tab:results} um die Ergebnisse auf dem Wolfsburg-Datensatz für 
-Training mit Color-Augmentation. Zur besseren Übersichtlichkeit sind die Ergebnisse für Basic-Aug. hier ausgespart, 
-da diese weniger interessant sind. 
+Training mit Color-Augmentation. 
 \begin{enumerate}
 	\item Es fällt auf, dass sowohl die \ac{IoU} als auch die \ac{BIoU} für alle Modelle
 	auf dem Wolfsburg-Datensatz besser ist, als auf der Testpartition des BikeSat-Datensatzes 
@@ -235,9 +236,9 @@ des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Basic-Augmentati
 	BikeSat-Datensatz. So gibt es kaum mit den Masken kongruente Bereiche und die Radwege sind oft nur 
 	qualitativ durch unterbrochene oder gepunktete Linien angedeutet. 
 	\item RBUNet$^*$ kann die ersten sieben Bilder qualitativ recht gut predicten, erkennt aber auf den letzten 
-	drei Bildern auch eher Radwege, wo keine sind - viele Falsch-Positive also. 
+	drei Bildern auch eher Radwege, wo keine sind. Es existieren also viele Falsch-Positive. 
 	Das Modell weist eine eher relativ hohe Sensitivität auf. \\
-	RBUNet$^l$ hingegen erkennt generell kaum Radwege, aber weist auch keine Falsch-Positiven auf; 
+	RBUNet$^l$ hingegen erkennt generell kaum Radwege, aber weist auch keine Falsch-Positiven auf: 
 	was kein Radweg ist, wird auch zuverlässig als negativ eingestuft. Dieses Modell hat also eine hohe Spezifität.     
 \end{itemize}
 
@@ -251,7 +252,7 @@ des $RBUNet^*$ (b) auf dem Karlsruhe-Datensatz bei Training mit Color-Augmentati
 \autoref{fig:wolfsburg-samples-rbunet-l-rbunet-s-color} zeigt ausgewählte Beispielpredictions des $RBUNet^l$ (a) und 
 des $RBUNet^*$ (b) auf dem Wolfsburg-Datensatz bei Training mit Color-Augmentation. \\
 Die Predicitions auf dem Wolfsburg-Datensatz sind von der Qualität ähnlich zu den Predictions auf dem BikeSat-Datensatz.
-Bis auf in Bild sechs sind so gut wie alle Radwege, die in der Maske existieren, predicted worden. 
+Bis auf in Bild sechs sind so gut wie alle Radwege, die in der Maske existieren, korrekt predicted worden. 
 Beide Modelle zeigen also eine hohe Sensitivität. In den Predictions beider Netzen 
 sind überwiegend dieselben Falsch-Positiven vorhanden.
 Weiter sind die Predictions größtenteils sehr scharf, bis auf die erste Prediction links oben. 
@@ -373,7 +374,7 @@ Weiter sind die Predictions größtenteils sehr scharf, bis auf die erste Predic
 \end{table}
 
 \autoref{tab:results-ka-small} zeigt die Test-Ergebnisse der Modelle aus \autoref{tab:results} 
-auf allen 49 $512{\times}512$-Ausschnitten des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}), 
+auf allen 49 von 196 $512{\times}512$-Ausschnitten des Karlsruhe-Datensatz (s. \autoref{sec:karlsruhe}), 
 \textit{die Radwege enthalten}, in Prozent. 
 Ein Ausschnitt enthält einen Radweg, wenn in der zugehörigen Label-Maske mindestens ein Pixel als Radweg annotiert ist. \\
 Pro Spalte sind die höchsten drei Ergebnisse hervorgehoben und das höchste unterstrichen.
@@ -435,7 +436,7 @@ Radwege in der Straße, die von links unten nach rechts oben verläuft, überseh
 In den Ausschnitten (c) und (d) sind die Radwege trotzdem erkannt, während es aber auch 
 Beispiele wie (b) gibt, worin die querenden Radwege nicht getroffen sind. Ausschnitte (c) 
 und (d) zeigen allerdings, dass die Netze Radwege erkennen können, die ein Mensch übersieht.
-Es war allerdings kein Netz in der Lage, für den gegebenen Bildausschnitt alle Radwege korrekt 
+Es war allerdings kein Netz in der Lage für den gegebenen Bildausschnitt alle Radwege korrekt 
 zu erkennen. \\
 Was außerdem auffällig ist, ist, dass in Bild (c) der Radweg rechts unten genau getroffen ist 
 (vgl. menschliche Annotation aus (a)), während in Bild (c) und (d) der Gehweg neben dem eigentlichen 
